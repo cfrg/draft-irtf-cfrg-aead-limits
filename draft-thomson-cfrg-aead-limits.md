@@ -50,12 +50,12 @@ informative:
     title: "The Poly1305-AES message-authentication code"
     target: https://link.springer.com/content/pdf/10.1007/11502760_3.pdf
     author:
-      - D. J. Bernstein
+      - ins: D. J. Bernstein
     seriesinfo: "International Workshop on Fast Software Encryption, 2005"
   ChaCha20Poly1305Bounds:
     title: "A Security Analysis of the Composition of ChaCha20 and Poly1305"
     author:
-      - G. Procter
+      - ins: G. Procter
     date: 2014
     target: https://eprint.iacr.org/2014/613.pdf
   AEBounds:
