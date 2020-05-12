@@ -2,9 +2,9 @@
 
 This is the working area for the individual Internet-Draft, "Limits on AEAD Algorithms".
 
-* [Editor's Copy](https://chris-wood.github.io/draft-thomson-cfrg-aead-limits/#go.draft-thomson-cfrg-aead-limits.html)
-* [Individual Draft](https://tools.ietf.org/html/draft-thomson-cfrg-aead-limits)
-* [Compare Editor's Copy to Individual Draft](https://chris-wood.github.io/draft-thomson-cfrg-aead-limits/#go.draft-thomson-cfrg-aead-limits.diff)
+* [Editor's Copy](https://chris-wood.github.io/draft-wood-cfrg-aead-limits/#go.draft-wood-cfrg-aead-limits.html)
+* [Individual Draft](https://tools.ietf.org/html/draft-wood-cfrg-aead-limits)
+* [Compare Editor's Copy to Individual Draft](https://chris-wood.github.io/draft-wood-cfrg-aead-limits/#go.draft-wood-cfrg-aead-limits.diff)
 
 ## Building the Draft
 
@@ -21,4 +21,4 @@ This requires that you have the necessary software installed.  See
 ## Contributing
 
 See the
-[guidelines for contributions](https://github.com/chris-wood/draft-thomson-cfrg-aead-limits/blob/master/CONTRIBUTING.md).
+[guidelines for contributions](https://github.com/chris-wood/draft-wood-cfrg-aead-limits/blob/master/CONTRIBUTING.md).

@@ -20,7 +20,7 @@ subject to a Simplified BSD License) in Contributions.
 ## Other Resources
 
 Discussion of this work occurs on the
-[CFRG research group mailing list](https://mailarchive.ietf.org/arch/browse/cfrg/)
+[cfrg working group mailing list](https://mailarchive.ietf.org/arch/browse/cfrg/)
 ([subscribe](https://www.ietf.org/mailman/listinfo/cfrg)).  In addition to
 contributions in GitHub, you are encouraged to participate in discussions there.
 
@@ -28,4 +28,4 @@ contributions in GitHub, you are encouraged to participate in discussions there.
 technical issues needs to occur on the mailing list.
 
 You might also like to familiarize yourself with other
-[research group documents](https://datatracker.ietf.org/rg/cfrg/documents/).
+[working group documents](https://datatracker.ietf.org/wg/cfrg/documents/).
