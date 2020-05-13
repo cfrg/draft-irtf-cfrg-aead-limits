@@ -41,6 +41,13 @@ informative:
       - ins: J. Somorovsky
       - ins: P. Jovanovic
     date: 2016-05-17
+  GCMProofs:
+    title: "Breaking and Repairing GCM Security Proofs"
+    target: https://eprint.iacr.org/2012/438.pdf
+    author:
+      - ins: T. Iwata
+      - ins: K. Ohashi
+      - ins: K. Minematsu
   Poly1305:
     title: "The Poly1305-AES message-authentication code"
     target: https://link.springer.com/content/pdf/10.1007/11502760_3.pdf
@@ -159,7 +166,7 @@ defines a process for determining two overall limits:
   authenticated additional data (AAD) an application can encrypt before given
   the adversary a non-negligible CA.
 
-- Integrity limit (IL): The number of bytes of ciphertext and maybe auehtnciated
+- Integrity limit (IL): The number of bytes of ciphertext and maybe authenticated
   additional data (AAD) an application can process, either successfully or not,
   before giving the adversary a non-negligible IA.
 
@@ -176,23 +183,18 @@ protected messages (q) or the number of forgery attempts (v); which correspond
 to CL and IL respectively.
 
 Limits are then derived from those bounds using a target attacker probability.
-For example, given an advantage of q\*v and attacker success probability of p,
-the algorithm remains secure with respect provided that q\*v <= p. In turn, this
-implies that v <= p/q is the corresponding limit.
-
-<!-- I'm not happy with this example as it implies that multiplying q and v is a
-     thing, but it is not as far as I know.  Maybe pick a semi-real example. -->
-
-<!-- So p is either CA or IA here.  Do we need to use two characters instead (c
-     and i for confidentiality and integrity? e and d for encryption and
-     decryption?  s and o for seal and open?) -->
+For example, given a confidentiality advantage of v \* (8l / 2^106) and attacker
+success probability of pC, the algorithm remains secure, i.e., the adversary's
+advantage does not exceed the probability of success, provided that
+v <= (pC \* 2^106) / 8l. In turn, this implies that v <= (pC \* 2^106) / 8l is
+the corresponding limit.
 
 <!-- We have a lot of cases here where it might be nice to express numbers
      differently.  For instance, most of these equations are a lot simpler if
      you use 2^v rather than v because you can say that q = 106-2l-p/2 or
      something like that.  That might help as you can say that CL = 2^q, rather
      than have to awkwardly say that CL is q. -->
-
+<!-- Yeah, we'll have to play with the expressions and see if we can't simplify or rewrite them. -->
 
 # AEAD Limits and Requirements {#limits}
 
@@ -206,12 +208,8 @@ Alongside each value, we also specify these bounds.
 ## AEAD_AES_128_GCM and AEAD_AES_256_GCM
 
 The CL and IL values for AES-GCM are derived in {{AEBounds}} and summarized below.
-
-<!-- Do we want to use n and t in formulae, but start by saying that n=t=128? -->
-
-<!-- It seems like the analysis in AEBounds didn't really consider the role that
-     the AAD plays in all of this.  What do we want to say about the simplifying
-     assumptions here? -->
+For this AEAD, n = 128 and t = 128. In this example, the length s is the sum of AAD
+and plaintext, as described in {{GCMProofs}}.
 
 ### Confidentiality Limit
 
@@ -244,6 +242,7 @@ v <= (p * 2^127) / (l + 1)
 The only known analysis for AEAD_CHACHA20_POLY1305 {{ChaCha20Poly1305Bounds}}
 combines the confidentiality and integrity limits into a single expression,
 covered below:
+
 <!-- I've got to say that this is a pretty unsatisfactory situation. -->
 
 ~~~
@@ -260,7 +259,7 @@ v <= (p * 2^106) / 8l
 ## AEAD_AES_128_CCM
 
 The CL and IL values for AEAD_AES_128_CCM are derived from {{?CCM-ANALYSIS=DOI.10.1007/3-540-36492-7_7}}
-and specified in the QUIC-TLS mapping specification {{?I-D.ietf-quic-tls}}.
+and specified in the QUIC-TLS mapping specification {{?I-D.ietf-quic-tls}}. For this AEAD, n = 128 and t = 128.
 
 ### Confidentiality Limit
 
