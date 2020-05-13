@@ -155,7 +155,7 @@ ciphertext that will be accepted as valid.
 
 Each application requires a different application of limits in order to keep CA
 and IA sufficiently small.  For instance, TLS aims to keep CA below 2^-60 and IA
-below 2^-57.
+below 2^-57. See {{?RFC8446}}, Section 5.5.
 
 # Calculating Limits
 
