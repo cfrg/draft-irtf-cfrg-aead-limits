@@ -259,7 +259,17 @@ v <= (p * 2^106) / 8l
 ## AEAD_AES_128_CCM
 
 The CL and IL values for AEAD_AES_128_CCM are derived from {{?CCM-ANALYSIS=DOI.10.1007/3-540-36492-7_7}}
-and specified in the QUIC-TLS mapping specification {{?I-D.ietf-quic-tls}}. For this AEAD, n = 128 and t = 128.
+and specified in the QUIC-TLS mapping specification {{?I-D.ietf-quic-tls}}. This analysis uses the total
+number of underlying block cipher operations to derive its bound. For CCM, this number is the sum of:
+the length of the associated data in blocks, the length of the ciphertext in blocks, the length of
+the plaintext in blocks, plus 1.
+
+In the following limits, this is simplified to a value of twice the length of the packet in blocks,
+i.e., 2l represents the effective length, in number of block cipher operations, of a message with
+l blocks. This simplification is based on the observation that common applications of this AEAD carry
+only a small amount of associated data compared to ciphertext. For example, QUIC has 1 to 3 blocks of AAD.
+
+For this AEAD, n = 128 and t = 128.
 
 ### Confidentiality Limit
 
@@ -276,13 +286,13 @@ q <= sqrt((p * (2^127)) / l^2)
 ### Integrity Limit
 
 ~~~
-IA: v / 2^t + (2l * (v + q))^2 / 2^n
+IA: v / 2^128 + (2l * (v + q))^2 / 2^128
 ~~~
 
 This implies the following limit:
 
 ~~~
-TODO(caw)
+v + (2l * (v + q))^2 <= 2^128 * p
 ~~~
 
 ## AEAD_AES_128_CCM_8
