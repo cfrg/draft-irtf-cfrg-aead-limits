@@ -234,8 +234,6 @@ This implies the following limit:
 ~~~
 v <= (p * 2^127) / (l + 1)
 ~~~
-<!-- Let's simplify that `+1` away, it's awkward.  We'll have to clearly signal
-     that for l < ? then you might instead want p * 2^(127-2l) instead though. -->
 
 ## AEAD_CHACHA20_POLY1305
 
@@ -246,7 +244,7 @@ covered below:
 <!-- I've got to say that this is a pretty unsatisfactory situation. -->
 
 ~~~
-v * (8l / 2^106)
+CA = IA = v * (8l / 2^106)
 ~~~
 
 This advantage is a tight reduction based on the underlying Poly1305 PRF {{Poly1305}}.
@@ -274,7 +272,7 @@ For this AEAD, n = 128 and t = 128.
 ### Confidentiality Limit
 
 ~~~
-CA: (2l * q)^2 / 2^128
+CA = (2l * q)^2 / 2^128
 ~~~
 
 This implies the following limit:
@@ -286,7 +284,7 @@ q <= sqrt((p * (2^127)) / l^2)
 ### Integrity Limit
 
 ~~~
-IA: v / 2^128 + (2l * (v + q))^2 / 2^128
+IA = v / 2^128 + (2l * (v + q))^2 / 2^128
 ~~~
 
 This implies the following limit:
