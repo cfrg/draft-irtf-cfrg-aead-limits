@@ -183,18 +183,11 @@ protected messages (q) or the number of forgery attempts (v); which correspond
 to CL and IL respectively.
 
 Limits are then derived from those bounds using a target attacker probability.
-For example, given a confidentiality advantage of v \* (8l / 2^106) and attacker
+For example, given a confidentiality advantage of `v \* (8l / 2^106)` and attacker
 success probability of pC, the algorithm remains secure, i.e., the adversary's
 advantage does not exceed the probability of success, provided that
-v <= (pC \* 2^106) / 8l. In turn, this implies that v <= (pC \* 2^106) / 8l is
-the corresponding limit.
-
-<!-- We have a lot of cases here where it might be nice to express numbers
-     differently.  For instance, most of these equations are a lot simpler if
-     you use 2^v rather than v because you can say that q = 106-2l-p/2 or
-     something like that.  That might help as you can say that CL = 2^q, rather
-     than have to awkwardly say that CL is q. -->
-<!-- Yeah, we'll have to play with the expressions and see if we can't simplify or rewrite them. -->
+`v <= (pC \* 2^106) / 8l`. In turn, this implies that `v <= (pC \* 2^106) / 8l`
+is the corresponding limit.
 
 # AEAD Limits and Requirements {#limits}
 
