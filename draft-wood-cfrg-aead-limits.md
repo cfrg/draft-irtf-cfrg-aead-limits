@@ -210,10 +210,17 @@ and plaintext, as described in {{GCMProofs}}.
 CA = ((s + q + 1)^2) / 2^127
 ~~~
 
-This implies the following limit:
+This implies the following usage limit:
 
 ~~~
-q <= p^(1/2) * 2^(127/2) - s - 1
+q + s <= p^(1/2) * 2^(127/2) - 1
+~~~
+
+Which, for a message-based protocol with `s <= q * l`, if we assume that every
+packet is size `l`, produces the limit:
+
+~~~
+q <= (p^(1/2) * 2^(127/2) - 1) / (l + 1)
 ~~~
 
 ### Integrity Limit
