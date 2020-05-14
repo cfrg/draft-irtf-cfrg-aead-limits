@@ -256,7 +256,7 @@ v <= (p * 2^106) / 8l
 
 ## AEAD_AES_128_CCM
 
-The CL and IL values for AEAD_AES_128_CCM are derived from {{?CCM-ANALYSIS=DOI.10.1007/3-540-36492-7_7}}
+The CL and IL values for AEAD_AES_128_CCM are derived from {{!CCM-ANALYSIS=DOI.10.1007/3-540-36492-7_7}}
 and specified in the QUIC-TLS mapping specification {{?I-D.ietf-quic-tls}}. This analysis uses the total
 number of underlying block cipher operations to derive its bound. For CCM, this number is the sum of:
 the length of the associated data in blocks, the length of the ciphertext in blocks, the length of
@@ -272,7 +272,8 @@ For this AEAD, n = 128 and t = 128.
 ### Confidentiality Limit
 
 ~~~
-CA = (2l * q)^2 / 2^128
+CA = (2l * q)^2 / 2^n
+   = (2l * q)^2 / 2^128
 ~~~
 
 This implies the following limit:
@@ -284,18 +285,37 @@ q <= sqrt((p * (2^127)) / l^2)
 ### Integrity Limit
 
 ~~~
-IA = v / 2^128 + (2l * (v + q))^2 / 2^128
+IA = v / 2^t + (2l * (v + q))^2 / 2^n
+   = v / 2^128 + (2l * (v + q))^2 / 2^128
 ~~~
 
 This implies the following limit:
 
 ~~~
-v + (2l * (v + q))^2 <= 2^128 * p
+v + (2l * (v + q))^2 <= p * 2^128
+~~~
+
+In a setting where `v` or `q` is sufficiently large, this can be simplified to:
+
+~~~
+v + q <= p^(1/2) * 2^62 / l^2
 ~~~
 
 ## AEAD_AES_128_CCM_8
 
-TODO
+The analysis in {{!CCM-ANALYSIS}} also applies to this AEAD, but the reduced tag
+length of 64 bits changes the integrity limit calculation considerably.
+
+~~~
+IA = v / 2^t + (2l * (v + q))^2 / 2^n
+   = v / 2^64 + (2l * (v + q))^2 / 2^128
+~~~
+
+This results in reducing the limit on `v` by a factor of 2^64.
+
+~~~
+v * 2^64 + (2l * (v + q))^2 <= p * 2^128
+~~~
 
 # Security Considerations {#sec-considerations}
 
