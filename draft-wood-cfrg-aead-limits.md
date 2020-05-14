@@ -133,7 +133,7 @@ This document defines limitations in part using the quantities below.
 | n | Size of the AEAD block cipher (in bits) |
 | t | Size of the authentication tag (in bits) |
 | l | Length of each message (in blocks)
-| s | Total plaintext length (in blocks) |
+| s | Total plaintext length in all messages (in blocks) |
 | q | Number of encryption attempts |
 | v | Number of forgery attempts |
 | p | Adversary attack probability |
