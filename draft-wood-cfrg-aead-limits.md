@@ -29,18 +29,6 @@ normative:
       - ins: M. Dworkin
     seriesinfo:
       NIST: Special Publication 800-38D
-
-informative:
-  NonceDisrespecting:
-    target: https://eprint.iacr.org/2016/475.pdf
-    title: "Nonce-Disrespecting Adversaries -- Practical Forgery Attacks on GCM in TLS"
-    author:
-      - ins: H. Bock
-      - ins: A. Zauner
-      - ins: S. Devlin
-      - ins: J. Somorovsky
-      - ins: P. Jovanovic
-    date: 2016-05-17
   GCMProofs:
     title: "Breaking and Repairing GCM Security Proofs"
     target: https://eprint.iacr.org/2012/438.pdf
@@ -67,6 +55,18 @@ informative:
       - ins: K. Paterson
     date: 2016-03-08
     target: http://www.isg.rhul.ac.uk/~kp/TLS-AEbounds.pdf
+
+informative:
+  NonceDisrespecting:
+    target: https://eprint.iacr.org/2016/475.pdf
+    title: "Nonce-Disrespecting Adversaries -- Practical Forgery Attacks on GCM in TLS"
+    author:
+      - ins: H. Bock
+      - ins: A. Zauner
+      - ins: S. Devlin
+      - ins: J. Somorovsky
+      - ins: P. Jovanovic
+    date: 2016-05-17
 
 --- abstract
 
