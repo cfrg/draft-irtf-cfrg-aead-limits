@@ -297,7 +297,21 @@ v + (2l * (v + q))^2 <= 2^128 * p
 
 ## AEAD_AES_128_CCM_8
 
-TODO
+As specified in {{!RFC6655}}, AEAD_AES_128_CCM_8 is identical to AEAD_AES_128_CCM with the exception
+that the tag length is 64 bits instead of 128 bits. Specifically, n = 128 and t = 64. Thus,
+AEAD_AES_128_CCM_8 has the same CA and CL as AEAD_AES_128_CCM. The IA and IL are defined below.
+
+### Integrity Limit
+
+~~~
+IA: v / 2^64 + (2l * (v + q))^2 / 2^128
+~~~
+
+This implies the following limit:
+
+~~~
+(v * 2^64) + (2l * (v + q))^2 <= 2^128 * p
+~~~
 
 # Security Considerations {#sec-considerations}
 
