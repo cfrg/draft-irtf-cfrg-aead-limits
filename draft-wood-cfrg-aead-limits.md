@@ -1,5 +1,5 @@
 ---
-title: Limits on AEAD Algorithms
+title: Usage Limits on AEAD Algorithms
 abbrev: AEAD Limits
 docname: draft-wood-cfrg-aead-limits-latest
 date:
