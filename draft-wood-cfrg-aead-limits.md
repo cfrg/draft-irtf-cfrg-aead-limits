@@ -1,5 +1,5 @@
 ---
-title: Limits on AEAD Algorithms
+title: Usage Limits on AEAD Algorithms
 abbrev: AEAD Limits
 docname: draft-wood-cfrg-aead-limits-latest
 date:
@@ -29,18 +29,6 @@ normative:
       - ins: M. Dworkin
     seriesinfo:
       NIST: Special Publication 800-38D
-
-informative:
-  NonceDisrespecting:
-    target: https://eprint.iacr.org/2016/475.pdf
-    title: "Nonce-Disrespecting Adversaries -- Practical Forgery Attacks on GCM in TLS"
-    author:
-      - ins: H. Bock
-      - ins: A. Zauner
-      - ins: S. Devlin
-      - ins: J. Somorovsky
-      - ins: P. Jovanovic
-    date: 2016-05-17
   GCMProofs:
     title: "Breaking and Repairing GCM Security Proofs"
     target: https://eprint.iacr.org/2012/438.pdf
@@ -67,6 +55,18 @@ informative:
       - ins: K. Paterson
     date: 2016-03-08
     target: http://www.isg.rhul.ac.uk/~kp/TLS-AEbounds.pdf
+
+informative:
+  NonceDisrespecting:
+    target: https://eprint.iacr.org/2016/475.pdf
+    title: "Nonce-Disrespecting Adversaries -- Practical Forgery Attacks on GCM in TLS"
+    author:
+      - ins: H. Bock
+      - ins: A. Zauner
+      - ins: S. Devlin
+      - ins: J. Somorovsky
+      - ins: P. Jovanovic
+    date: 2016-05-17
 
 --- abstract
 
@@ -133,7 +133,7 @@ This document defines limitations in part using the quantities below.
 | n | Size of the AEAD block cipher (in bits) |
 | t | Size of the authentication tag (in bits) |
 | l | Length of each message (in blocks)
-| s | Total plaintext length (in blocks) |
+| s | Total plaintext length in all messages (in blocks) |
 | q | Number of encryption attempts |
 | v | Number of forgery attempts |
 | p | Adversary attack probability |
@@ -183,18 +183,11 @@ protected messages (q) or the number of forgery attempts (v); which correspond
 to CL and IL respectively.
 
 Limits are then derived from those bounds using a target attacker probability.
-For example, given a confidentiality advantage of v \* (8l / 2^106) and attacker
+For example, given a confidentiality advantage of `v * (8l / 2^106)` and attacker
 success probability of pC, the algorithm remains secure, i.e., the adversary's
 advantage does not exceed the probability of success, provided that
-v <= (pC \* 2^106) / 8l. In turn, this implies that v <= (pC \* 2^106) / 8l is
-the corresponding limit.
-
-<!-- We have a lot of cases here where it might be nice to express numbers
-     differently.  For instance, most of these equations are a lot simpler if
-     you use 2^v rather than v because you can say that q = 106-2l-p/2 or
-     something like that.  That might help as you can say that CL = 2^q, rather
-     than have to awkwardly say that CL is q. -->
-<!-- Yeah, we'll have to play with the expressions and see if we can't simplify or rewrite them. -->
+`v <= (pC * 2^106) / 8l`. In turn, this implies that `v <= (pC * 2^106) / 8l`
+is the corresponding limit.
 
 # AEAD Limits and Requirements {#limits}
 
@@ -217,10 +210,17 @@ and plaintext, as described in {{GCMProofs}}.
 CA = ((s + q + 1)^2) / 2^127
 ~~~
 
-This implies the following limit:
+This implies the following usage limit:
 
 ~~~
-q <= p^(1/2) * 2^(127/2) - s - 1
+q + s <= p^(1/2) * 2^(127/2) - 1
+~~~
+
+Which, for a message-based protocol with `s <= q * l`, if we assume that every
+packet is size `l`, produces the limit:
+
+~~~
+q <= (p^(1/2) * 2^(127/2) - 1) / (l + 1)
 ~~~
 
 ### Integrity Limit
@@ -234,8 +234,6 @@ This implies the following limit:
 ~~~
 v <= (p * 2^127) / (l + 1)
 ~~~
-<!-- Let's simplify that `+1` away, it's awkward.  We'll have to clearly signal
-     that for l < ? then you might instead want p * 2^(127-2l) instead though. -->
 
 ## AEAD_CHACHA20_POLY1305
 
@@ -246,7 +244,7 @@ covered below:
 <!-- I've got to say that this is a pretty unsatisfactory situation. -->
 
 ~~~
-v * (8l / 2^106)
+CA = IA = v * (8l / 2^106)
 ~~~
 
 This advantage is a tight reduction based on the underlying Poly1305 PRF {{Poly1305}}.
@@ -258,7 +256,7 @@ v <= (p * 2^106) / 8l
 
 ## AEAD_AES_128_CCM
 
-The CL and IL values for AEAD_AES_128_CCM are derived from {{?CCM-ANALYSIS=DOI.10.1007/3-540-36492-7_7}}
+The CL and IL values for AEAD_AES_128_CCM are derived from {{!CCM-ANALYSIS=DOI.10.1007/3-540-36492-7_7}}
 and specified in the QUIC-TLS mapping specification {{?I-D.ietf-quic-tls}}. This analysis uses the total
 number of underlying block cipher operations to derive its bound. For CCM, this number is the sum of:
 the length of the associated data in blocks, the length of the ciphertext in blocks, the length of
@@ -274,7 +272,8 @@ For this AEAD, n = 128 and t = 128.
 ### Confidentiality Limit
 
 ~~~
-CA: (2l * q)^2 / 2^128
+CA = (2l * q)^2 / 2^n
+   = (2l * q)^2 / 2^128
 ~~~
 
 This implies the following limit:
@@ -286,18 +285,37 @@ q <= sqrt((p * (2^127)) / l^2)
 ### Integrity Limit
 
 ~~~
-IA: v / 2^128 + (2l * (v + q))^2 / 2^128
+IA = v / 2^t + (2l * (v + q))^2 / 2^n
+   = v / 2^128 + (2l * (v + q))^2 / 2^128
 ~~~
 
 This implies the following limit:
 
 ~~~
-v + (2l * (v + q))^2 <= 2^128 * p
+v + (2l * (v + q))^2 <= p * 2^128
+~~~
+
+In a setting where `v` or `q` is sufficiently large, this can be simplified to:
+
+~~~
+v + q <= p^(1/2) * 2^62 / l^2
 ~~~
 
 ## AEAD_AES_128_CCM_8
 
-TODO
+The analysis in {{!CCM-ANALYSIS}} also applies to this AEAD, but the reduced tag
+length of 64 bits changes the integrity limit calculation considerably.
+
+~~~
+IA = v / 2^t + (2l * (v + q))^2 / 2^n
+   = v / 2^64 + (2l * (v + q))^2 / 2^128
+~~~
+
+This results in reducing the limit on `v` by a factor of 2^64.
+
+~~~
+v * 2^64 + (2l * (v + q))^2 <= p * 2^128
+~~~
 
 # Security Considerations {#sec-considerations}
 
