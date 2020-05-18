@@ -12,6 +12,10 @@ stand_alone: yes
 pi: [toc, sortrefs, symrefs]
 
 author:
+ -  ins: F. Günther
+    name: Felix Günther
+    org: ETH Zurich
+    email: mail@felixguenther.info
  -  ins: M. Thomson
     name: Martin Thomson
     org: Mozilla
