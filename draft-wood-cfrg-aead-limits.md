@@ -295,10 +295,11 @@ This implies the following limit:
 v + (2l * (v + q))^2 <= p * 2^128
 ~~~
 
-In a setting where `v` or `q` is sufficiently large, this can be simplified to:
+In a setting where `v` or `q` is sufficiently large, `v` is negligible compared to
+`(2l * (v + q))^2`, so this this can be simplified to:
 
 ~~~
-v + q <= p^(1/2) * 2^62 / l^2
+v + q <= p^(1/2) * 2^63 / l
 ~~~
 
 ## AEAD_AES_128_CCM_8
