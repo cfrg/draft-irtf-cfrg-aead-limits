@@ -100,7 +100,7 @@ treatment.
 
 The number of times a single pair of key and nonce can be used might also be
 relevant to security.  For some algorithms, such as AEAD_AES_128_GCM or
-AEAD_AES_128_GCM, this limit is 1 and using the same pair of key and nonce has
+AEAD_AES_256_GCM, this limit is 1 and using the same pair of key and nonce has
 serious consequences for both confidentiality and integrity; see
 {{NonceDisrespecting}}.  Nonce-reuse resistant algorithms like
 AEAD_AES_128_GCM_SIV can tolerate a limited amount of nonce reuse.
@@ -167,7 +167,7 @@ Once an upper bound on CA and IA are determined, this document
 defines a process for determining two overall limits:
 
 - Confidentiality limit (CL): The number of bytes of plaintext and maybe
-  authenticated additional data (AAD) an application can encrypt before given
+  authenticated additional data (AAD) an application can encrypt before giving
   the adversary a non-negligible CA.
 
 - Integrity limit (IL): The number of bytes of ciphertext and maybe authenticated
@@ -188,9 +188,9 @@ to CL and IL respectively.
 
 Limits are then derived from those bounds using a target attacker probability.
 For example, given a confidentiality advantage of `v * (8l / 2^106)` and attacker
-success probability of pC, the algorithm remains secure, i.e., the adversary's
+success probability of `p`, the algorithm remains secure, i.e., the adversary's
 advantage does not exceed the probability of success, provided that
-`v <= (pC * 2^106) / 8l`. In turn, this implies that `v <= (pC * 2^106) / 8l`
+`v <= (p * 2^106) / 8l`. In turn, this implies that `v <= (p * 2^106) / 8l`
 is the corresponding limit.
 
 # AEAD Limits and Requirements {#limits}
