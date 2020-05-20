@@ -159,7 +159,7 @@ ciphertext that will be accepted as valid.
 
 Each application requires a different application of limits in order to keep CA
 and IA sufficiently small.  For instance, TLS aims to keep CA below 2^-60 and IA
-below 2^-57. See {{?RFC8446}}, Section 5.5.
+below 2^-57. See {{?TLS=RFC8446}}, Section 5.5.
 
 # Calculating Limits
 
@@ -197,7 +197,7 @@ is the corresponding limit.
 
 This section summarizes the confidentiality and integrity bounds and limits for modern AEAD algorithms
 used in IETF protocols, including: AEAD_AES_128_GCM {{!RFC5116}}, AEAD_AES_256_GCM {{!RFC5116}},
-AEAD_AES_128_CCM {{!RFC5116}}, AEAD_CHACHA20_POLY1305 {{!RFC7539}}, AEAD_AES_128_CCM_8 {{!RFC6655}}.
+AEAD_AES_128_CCM {{!RFC5116}}, AEAD_CHACHA20_POLY1305 {{!RFC8439}}, AEAD_AES_128_CCM_8 {{!RFC6655}}.
 
 The CL and IL values bound the total number of encryption and forgery queries (q and v).
 Alongside each value, we also specify these bounds.
@@ -205,8 +205,8 @@ Alongside each value, we also specify these bounds.
 ## AEAD_AES_128_GCM and AEAD_AES_256_GCM
 
 The CL and IL values for AES-GCM are derived in {{AEBounds}} and summarized below.
-For this AEAD, n = 128 and t = 128. In this example, the length s is the sum of AAD
-and plaintext, as described in {{GCMProofs}}.
+For this AEAD, n = 128 and t = 128 {{GCM}}. In this example, the length s is the sum
+of AAD and plaintext, as described in {{GCMProofs}}.
 
 ### Confidentiality Limit
 
