@@ -279,7 +279,7 @@ CA = (2l * q)^2 / 2^n
 This implies the following limit:
 
 ~~~
-q <= sqrt((p * (2^127)) / l^2)
+q <= sqrt((p * 2^126) / l^2)
 ~~~
 
 ### Integrity Limit
