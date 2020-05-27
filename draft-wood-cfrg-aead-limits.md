@@ -211,7 +211,7 @@ of AAD and plaintext, as described in {{GCMProofs}}.
 ### Confidentiality Limit
 
 ~~~
-CA = ((s + q + 1)^2) / 2^129
+CA <= ((s + q + 1)^2) / 2^129
 ~~~
 
 This implies the following usage limit:
@@ -230,7 +230,7 @@ q <= (p^(1/2) * 2^(129/2) - 1) / (l + 1)
 ### Integrity Limit
 
 ~~~
-IA = 2 * (v * (l + 1)) / 2^128
+IA <= 2 * (v * (l + 1)) / 2^128
 ~~~
 
 This implies the following limit:
@@ -248,7 +248,8 @@ covered below:
 <!-- I've got to say that this is a pretty unsatisfactory situation. -->
 
 ~~~
-CA = IA = v * (8l / 2^106)
+CA <= v * (8l / 2^106)
+IA <= v * (8l / 2^106)
 ~~~
 
 This advantage is a tight reduction based on the underlying Poly1305 PRF {{Poly1305}}.
@@ -276,8 +277,8 @@ For this AEAD, n = 128 and t = 128.
 ### Confidentiality Limit
 
 ~~~
-CA = (2l * q)^2 / 2^n
-   = (2l * q)^2 / 2^128
+CA <= (2l * q)^2 / 2^n
+   <= (2l * q)^2 / 2^128
 ~~~
 
 This implies the following limit:
@@ -289,8 +290,8 @@ q <= sqrt((p * 2^126) / l^2)
 ### Integrity Limit
 
 ~~~
-IA = v / 2^t + (2l * (v + q))^2 / 2^n
-   = v / 2^128 + (2l * (v + q))^2 / 2^128
+IA <= v / 2^t + (2l * (v + q))^2 / 2^n
+   <= v / 2^128 + (2l * (v + q))^2 / 2^128
 ~~~
 
 This implies the following limit:
@@ -312,8 +313,8 @@ The analysis in {{!CCM-ANALYSIS}} also applies to this AEAD, but the reduced tag
 length of 64 bits changes the integrity limit calculation considerably.
 
 ~~~
-IA = v / 2^t + (2l * (v + q))^2 / 2^n
-   = v / 2^64 + (2l * (v + q))^2 / 2^128
+IA <= v / 2^t + (2l * (v + q))^2 / 2^n
+   <= v / 2^64 + (2l * (v + q))^2 / 2^128
 ~~~
 
 This results in reducing the limit on `v` by a factor of 2^64.
