@@ -60,7 +60,7 @@ normative:
     date: 2016-03-08
     target: http://www.isg.rhul.ac.uk/~kp/TLS-AEbounds.pdf
   MUSecurity:
-    title: "Public-Key Encryption in a Multi-user Set- ting: Security Proofs and Improvements"
+    title: "Public-Key Encryption in a Multi-user Setting: Security Proofs and Improvements"
     author:
       - ins: M. Bellare
       - ins: A. Boldyreva
