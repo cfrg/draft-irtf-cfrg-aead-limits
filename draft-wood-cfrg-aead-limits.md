@@ -105,14 +105,19 @@ does describe limits on its inputs, but these are formulated as strict
 functional limits, such as the maximum length of inputs, which are determined by
 the properties of the underlying AEAD composition.  Degradation of the security
 of the AEAD as a single key is used multiple times is not given a thorough
-treatment. These limits might also be influenced by the number of "users" of
+treatment.
+
+These limits might also be influenced by the number of "users" of
 a given key. In the traditional setting, there is one key shared between a two
-parties, and any limits on the maximum length of inputs or encryption operations
-apply to that single key. However, in practice, there are often many users with
-independent keys. In this "multi-user" setting, the attacker is assumed to have
-done some offline work to help break security (confidentiality or integrity)
-of a single key chosen at random. As a result, AEAD algorithm limits may depend
-on this amount of offline work and the number of users.
+parties. Any limits on the maximum length of inputs or encryption operations
+apply to that single key. The attacker's goal is to break security
+(confidentiality or integrity) of that specific key. However, in practice, there
+are often many users with independent keys. In this "multi-user" setting, the
+attacker is assumed to have done some offline work to help break security of a
+single key (or user) chosen at random. As a result, AEAD algorithm limits may
+depend on offline work and the number of users. However, given that a multi-user
+attacker does not target any specific user, acceptable advantages may differ from
+that of the single-user setting.
 
 The number of times a single pair of key and nonce can be used might also be
 relevant to security.  For some algorithms, such as AEAD_AES_128_GCM or
@@ -159,6 +164,7 @@ This document defines limitations in part using the quantities below.
 | v | Number of forgery attempts |
 | p | Adversary attack probability |
 | o | Offline adversary work (in number of encryption and decryption queries; multi-user setting only) |
+| u | Number of users (multi-user setting only) |
 
 For each AEAD algorithm, we define the confidentiality and integrity advantage
 roughly as the advantage an attacker has in breaking the corresponding security
@@ -385,41 +391,60 @@ CA <= (1 / 2^1024) + ((2 * v) / 2^256) + ((2 * o * v) / 2^(k + 128))
         + (128 * (v + (v * l)) / 2^k)
 ~~~
 
-The last term in this inequality dominates. Thus, we can simplify this to:
+When k = 128, the last term in this inequality dominates. Thus, we can simplify
+this to:
 
 ~~~
-CA <= (128(v + (v * l)) / 2^k)
+CA <= (128(v + (v * l)) / 2^128)
 ~~~
 
 This implies the following limit:
 
 ~~~
-v <= (p * 2^k) / (128 * (l + 1))
-~~~
-
-For AEAD_AES_128_GCM, this results in:
-
-~~~
 v <= (p * 2^128) / (128 * (l + 1))
 ~~~
 
-For AEAD_AES_256_GCM, this results in:
+When k = 256, the second and fourth terms in the CA inequality dominate. Thus, we
+can simplify this to:
 
 ~~~
-v <= (p * 2^256) / (128 * (l + 1))
+CA <= ((2 * v) / 2^256) + (128 * (v + (v * l)) / 2^256)
+~~~
+
+This implies the following limit:
+
+~~~
+v <= (p * 2^255) / ((64 * l) + 65)
 ~~~
 
 ## AEAD_CHACHA20_POLY1305, AEAD_AES_128_CCM, and AEAD_AES_128_CCM_8
 
-There are no concrete multi-user bounds for AEAD_CHACHA20_POLY1305, AEAD_AES_128_CCM,
-or AEAD_AES_128_CCM_8. Thus, to account for the additional factor `u`, i.e.,
-the number of users, each `p` term in the confidentiality and integrity limits
-is replaced with `p/u`. For example, the corresponding limit for
-AEAD_CHACHA20_POLY1305 is as follows.
+There are currently no concrete multi-user bounds for AEAD_CHACHA20_POLY1305,
+AEAD_AES_128_CCM, or AEAD_AES_128_CCM_8. Thus, to account for the additional
+factor `u`, i.e., the number of users, each `p` term in the confidentiality and
+integrity limits is replaced with `p/u`.
+
+### AEAD_CHACHA20_POLY1305
+
+The integrity limit for AEAD_CHACHA20_POLY1305 is as follows.
 
 ~~~
 v <= ((p/u) * 2^106) / 8l
   <= (p * 2^106) / (8l * u)
+~~~
+
+### AEAD_AES_128_CCM and AEAD_AES_128_CCM_8
+
+The integrity limit for AEAD_AES_128_CCM is as follows.
+
+~~~
+v + q <= (p/u)^(1/2) * 2^63 / l
+~~~
+
+Likewise, the integrity limit for AEAD_AES_128_CCM_8 is as follows.
+
+~~~
+v * 2^64 + (2l * (v + q))^2 <= (p/u) * 2^128
 ~~~
 
 # Security Considerations {#sec-considerations}
