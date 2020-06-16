@@ -113,8 +113,8 @@ parties. Any limits on the maximum length of inputs or encryption operations
 apply to that single key. The attacker's goal is to break security
 (confidentiality or integrity) of that specific key. However, in practice, there
 are often many users with independent keys. In this "multi-user" setting, the
-attacker is assumed to have done some offline work to help break security of a
-single key (or user) chosen at random. As a result, AEAD algorithm limits may
+attacker is assumed to have done some offline work to help break security of
+single key (or user), where the attacker cannot choose which key is attacked. As a result, AEAD algorithm limits may
 depend on offline work and the number of users. However, given that a multi-user
 attacker does not target any specific user, acceptable advantages may differ from
 that of the single-user setting.
@@ -164,7 +164,7 @@ This document defines limitations in part using the quantities below.
 | v | Number of forgery attempts |
 | p | Adversary attack probability |
 | o | Offline adversary work (in number of encryption and decryption queries; multi-user setting only) |
-| u | Number of users (multi-user setting only) |
+| u | Number of users or keys (multi-user setting only) |
 
 For each AEAD algorithm, we define the confidentiality and integrity advantage
 roughly as the advantage an attacker has in breaking the corresponding security
