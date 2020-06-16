@@ -389,8 +389,8 @@ v + q <= sqrt(p * u * 2^128) / l
 <!-- From Bad_8 advantage contribution to the inequality from 4.3 in {{GCM-MU}},
   assuming \sigma = (v+q)*l -->
 ~~~
-CA <= (1 / 2^1024) + ((2 * v) / 2^256) + ((2 * o * v) / 2^(k + 128))
-        + (128 * (v + (v * l)) / 2^k)
+CA <= (1 / 2^1024) + ((2 * (v + q)) / 2^256) + ((2 * o * (v + q)) / 2^(k + 128))
+        + (128 * ((v + q) + ((v + q) * l)) / 2^k)
 ~~~
 
 When k = 128, the last term in this inequality dominates. Thus, we can simplify
