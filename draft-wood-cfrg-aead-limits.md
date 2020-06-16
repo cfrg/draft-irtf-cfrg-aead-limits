@@ -272,15 +272,15 @@ covered below:
 <!-- I've got to say that this is a pretty unsatisfactory situation. -->
 
 ~~~
-CA <= v * (8l / 2^106)
-IA <= v * (8l / 2^106)
+CA <= v * ((8 * l) / 2^106)
+IA <= v * ((8 * l) / 2^106)
 ~~~
 
 This advantage is a tight reduction based on the underlying Poly1305 PRF {{Poly1305}}.
 It implies the following limit:
 
 ~~~
-v <= (p * 2^106) / 8l
+v <= (p * 2^103) / l
 ~~~
 
 ## AEAD_AES_128_CCM
@@ -365,27 +365,29 @@ Alongside each value, we also specify these bounds.
 ## AEAD_AES_128_GCM and AEAD_AES_256_GCM
 
 Concrete multi-user bounds for AEAD_AES_128_GCM and AEAD_AES_256_GCM exist
-due to {{?GCM-MU=DOI.10.1145/3243734.3243816}}.
+due to {{?GCM-MU=DOI.10.1145/3243734.3243816}}. AES-GCM without nonce
+randomization is also discussed in {{?GCM-MU}}, though this section does not
+include those results as they do not apply to protocols such as TLS 1.3 {{?RFC8446}}.
 
 ### Confidentiality Limit
 
-<!-- From (1) in {{GCM-MU}}, assuming n=2^7, \sigma = v*l, dropping the last term
+<!-- From (1) in {{GCM-MU}}, assuming n=2^7, \sigma = (v+q)*l, B = \sigma/u, dropping the last term
   (with denominator 2^(k+n), and dropping the first term since the adversary's
   offline work dominates -->
 ~~~
-CA <= ((v + q) * l * s) / 2^128)
+CA <= ((v + q) * l)^2 / (u * 2^128)
 ~~~
 
 This implies the following limit:
 
 ~~~
-v + q <= (p * 2^128) / (l * s)
+v + q <= sqrt(p * u * 2^128) / l
 ~~~
 
 ### Integrity Limit
 
 <!-- From Bad_8 advantage contribution to the inequality from 4.3 in {{GCM-MU}},
-  assuming \sigma = v*l -->
+  assuming \sigma = (v+q)*l -->
 ~~~
 CA <= (1 / 2^1024) + ((2 * v) / 2^256) + ((2 * o * v) / 2^(k + 128))
         + (128 * (v + (v * l)) / 2^k)
@@ -395,26 +397,26 @@ When k = 128, the last term in this inequality dominates. Thus, we can simplify
 this to:
 
 ~~~
-CA <= (128(v + (v * l)) / 2^128)
+CA <= (128 * ((v + q) + ((v + q) * l)) / 2^128)
 ~~~
 
 This implies the following limit:
 
 ~~~
-v <= (p * 2^128) / (128 * (l + 1))
+v + q <= (p * 2^128) / (128 * (l + 1))
 ~~~
 
 When k = 256, the second and fourth terms in the CA inequality dominate. Thus, we
 can simplify this to:
 
 ~~~
-CA <= ((2 * v) / 2^256) + (128 * (v + (v * l)) / 2^256)
+CA <= ((2 * (v + q)) / 2^256) + (128 * ((v + q) + ((v + q) * l)) / 2^256)
 ~~~
 
 This implies the following limit:
 
 ~~~
-v <= (p * 2^255) / ((64 * l) + 65)
+v + q <= (p * 2^255) / ((64 * l) + 65)
 ~~~
 
 ## AEAD_CHACHA20_POLY1305, AEAD_AES_128_CCM, and AEAD_AES_128_CCM_8
@@ -426,11 +428,12 @@ integrity limits is replaced with `p/u`.
 
 ### AEAD_CHACHA20_POLY1305
 
-The integrity limit for AEAD_CHACHA20_POLY1305 is as follows.
+The combined confidentiality and integrity limit for AEAD_CHACHA20_POLY1305 is
+as follows.
 
 ~~~
 v <= ((p/u) * 2^106) / 8l
-  <= (p * 2^106) / (8l * u)
+  <= (p * 2^103) / (l * u)
 ~~~
 
 ### AEAD_AES_128_CCM and AEAD_AES_128_CCM_8
