@@ -160,8 +160,9 @@ This document defines limitations in part using the quantities below.
 | t | Size of the authentication tag (in bits) |
 | l | Length of each message (in blocks)
 | s | Total plaintext length in all messages (in blocks) |
-| q | Number of encryption attempts |
-| v | Number of forgery attempts |
+| q | Number of user encryption attempts |
+| v | Number of attacker forgery attempts |
+| e | Number of attacker encryption attempts |
 | p | Adversary attack probability |
 | o | Offline adversary work (in number of encryption and decryption queries; multi-user setting only) |
 | u | Number of users or keys (multi-user setting only) |
@@ -371,52 +372,52 @@ include those results as they do not apply to protocols such as TLS 1.3 {{?RFC84
 
 ### Confidentiality Limit
 
-<!-- From (1) in {{GCM-MU}}, assuming n=2^7, \sigma = (v+q)*l, B = \sigma/u, dropping the last term
+<!-- From (1) in {{GCM-MU}}, assuming n=2^7, \sigma = (v+e)*l, B = \sigma/u, dropping the last term
   (with denominator 2^(k+n), and dropping the first term since the adversary's
   offline work dominates -->
 ~~~
-CA <= ((v + q) * l)^2 / (u * 2^128)
+CA <= ((v + e) * l)^2 / (u * 2^128)
 ~~~
 
 This implies the following limit:
 
 ~~~
-v + q <= sqrt(p * u * 2^128) / l
+v + e <= sqrt(p * u * 2^128) / l
 ~~~
 
 ### Integrity Limit
 
 <!-- From Bad_8 advantage contribution to the inequality from 4.3 in {{GCM-MU}},
-  assuming \sigma = (v+q)*l -->
+  assuming \sigma = (v+e)*l -->
 ~~~
-CA <= (1 / 2^1024) + ((2 * (v + q)) / 2^256) + ((2 * o * (v + q)) / 2^(k + 128))
-        + (128 * ((v + q) + ((v + q) * l)) / 2^k)
+CA <= (1 / 2^1024) + ((2 * (v + e)) / 2^256) + ((2 * o * (v + e)) / 2^(k + 128))
+        + (128 * ((v + e) + ((v + e) * l)) / 2^k)
 ~~~
 
 When k = 128, the last term in this inequality dominates. Thus, we can simplify
 this to:
 
 ~~~
-CA <= (128 * ((v + q) + ((v + q) * l)) / 2^128)
+CA <= (128 * ((v + e) + ((v + e) * l)) / 2^128)
 ~~~
 
 This implies the following limit:
 
 ~~~
-v + q <= (p * 2^128) / (128 * (l + 1))
+v + e <= (p * 2^128) / (128 * (l + 1))
 ~~~
 
 When k = 256, the second and fourth terms in the CA inequality dominate. Thus, we
 can simplify this to:
 
 ~~~
-CA <= ((2 * (v + q)) / 2^256) + (128 * ((v + q) + ((v + q) * l)) / 2^256)
+CA <= ((2 * (v + e)) / 2^256) + (128 * ((v + e) + ((v + e) * l)) / 2^256)
 ~~~
 
 This implies the following limit:
 
 ~~~
-v + q <= (p * 2^255) / ((64 * l) + 65)
+v + e <= (p * 2^255) / ((64 * l) + 65)
 ~~~
 
 ## AEAD_CHACHA20_POLY1305, AEAD_AES_128_CCM, and AEAD_AES_128_CCM_8
