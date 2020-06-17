@@ -59,6 +59,14 @@ normative:
       - ins: K. Paterson
     date: 2016-03-08
     target: http://www.isg.rhul.ac.uk/~kp/TLS-AEbounds.pdf
+  MUSecurity:
+    title: "Public-Key Encryption in a Multi-user Setting: Security Proofs and Improvements"
+    author:
+      - ins: M. Bellare
+      - ins: A. Boldyreva
+      - ins: S. Micali
+    date: 2000
+    target: https://cseweb.ucsd.edu/~mihir/papers/musu.pdf
 
 informative:
   NonceDisrespecting:
@@ -78,7 +86,8 @@ An Authenticated Encryption with Associated Data (AEAD) algorithm provides
 confidentiality and integrity.  Excessive use of the same key can give an
 attacker advantages in breaking these properties.  This document provides simple
 guidance for users of common AEAD functions about how to limit the use of keys
-in order to bound the advantage given to an attacker.
+in order to bound the advantage given to an attacker.  It considers limits in
+both single- and multi-user settings.
 
 --- middle
 
@@ -97,6 +106,18 @@ functional limits, such as the maximum length of inputs, which are determined by
 the properties of the underlying AEAD composition.  Degradation of the security
 of the AEAD as a single key is used multiple times is not given a thorough
 treatment.
+
+These limits might also be influenced by the number of "users" of
+a given key. In the traditional setting, there is one key shared between a two
+parties. Any limits on the maximum length of inputs or encryption operations
+apply to that single key. The attacker's goal is to break security
+(confidentiality or integrity) of that specific key. However, in practice, there
+are often many users with independent keys. In this "multi-user" setting, the
+attacker is assumed to have done some offline work to help break security of
+single key (or user), where the attacker cannot choose which key is attacked. As a result, AEAD algorithm limits may
+depend on offline work and the number of users. However, given that a multi-user
+attacker does not target any specific user, acceptable advantages may differ from
+that of the single-user setting.
 
 The number of times a single pair of key and nonce can be used might also be
 relevant to security.  For some algorithms, such as AEAD_AES_128_GCM or
@@ -135,12 +156,16 @@ This document defines limitations in part using the quantities below.
 | Symbol  | Description |
 |-:-|:-|
 | n | Size of the AEAD block cipher (in bits) |
+| k | Size of the AEAD key (in bits) |
 | t | Size of the authentication tag (in bits) |
 | l | Length of each message (in blocks)
 | s | Total plaintext length in all messages (in blocks) |
-| q | Number of encryption attempts |
-| v | Number of forgery attempts |
+| q | Number of user encryption attempts |
+| v | Number of attacker forgery attempts |
+| e | Number of attacker encryption attempts |
 | p | Adversary attack probability |
+| o | Offline adversary work (in number of encryption and decryption queries; multi-user setting only) |
+| u | Number of users or keys (multi-user setting only) |
 
 For each AEAD algorithm, we define the confidentiality and integrity advantage
 roughly as the advantage an attacker has in breaking the corresponding security
@@ -193,7 +218,7 @@ advantage does not exceed the probability of success, provided that
 `v <= (p * 2^106) / 8l`. In turn, this implies that `v <= (p * 2^106) / 8l`
 is the corresponding limit.
 
-# AEAD Limits and Requirements {#limits}
+# Single-User AEAD Limits {#limits}
 
 This section summarizes the confidentiality and integrity bounds and limits for modern AEAD algorithms
 used in IETF protocols, including: AEAD_AES_128_GCM {{!RFC5116}}, AEAD_AES_256_GCM {{!RFC5116}},
@@ -248,15 +273,15 @@ covered below:
 <!-- I've got to say that this is a pretty unsatisfactory situation. -->
 
 ~~~
-CA <= v * (8l / 2^106)
-IA <= v * (8l / 2^106)
+CA <= v * ((8 * l) / 2^106)
+IA <= v * ((8 * l) / 2^106)
 ~~~
 
 This advantage is a tight reduction based on the underlying Poly1305 PRF {{Poly1305}}.
 It implies the following limit:
 
 ~~~
-v <= (p * 2^106) / 8l
+v <= (p * 2^103) / l
 ~~~
 
 ## AEAD_AES_128_CCM
@@ -321,6 +346,109 @@ This results in reducing the limit on `v` by a factor of 2^64.
 
 ~~~
 v * 2^64 + (2l * (v + q))^2 <= p * 2^128
+~~~
+
+# Multi-User AEAD Limits {#mu-limits}
+
+In the public-key, multi-user setting, {{MUSecurity}} proves that the success
+probability in attacking one of many independently users is bounded by the
+success probability of attacking a single user multiplied by the number of users
+present. Each user is assumed to have an independent and identically distributed
+key, though some may share nonces with some very small probability. Absent
+concrete multi-user bounds, this means the attacker advantage in the multi-user
+setting is the product of the single-user advantage and the number of users.
+
+This section summarizes the confidentiality and integrity bounds and limits for
+the same algorithms as in {{limits}}, except in the multi-user setting. The CL
+and IL values bound the total number of encryption and forgery queries (q and v).
+Alongside each value, we also specify these bounds.
+
+## AEAD_AES_128_GCM and AEAD_AES_256_GCM
+
+Concrete multi-user bounds for AEAD_AES_128_GCM and AEAD_AES_256_GCM exist
+due to {{?GCM-MU=DOI.10.1145/3243734.3243816}}. AES-GCM without nonce
+randomization is also discussed in {{?GCM-MU}}, though this section does not
+include those results as they do not apply to protocols such as TLS 1.3 {{?RFC8446}}.
+
+### Confidentiality Limit
+
+<!-- From (1) in {{GCM-MU}}, assuming n=2^7, \sigma = (v+e)*l, B = \sigma/u, dropping the last term
+  (with denominator 2^(k+n), and dropping the first term since the adversary's
+  offline work dominates -->
+~~~
+CA <= ((v + e) * l)^2 / (u * 2^128)
+~~~
+
+This implies the following limit:
+
+~~~
+v + e <= sqrt(p * u * 2^128) / l
+~~~
+
+### Integrity Limit
+
+<!-- From Bad_8 advantage contribution to the inequality from 4.3 in {{GCM-MU}},
+  assuming \sigma = (v+e)*l -->
+~~~
+CA <= (1 / 2^1024) + ((2 * (v + e)) / 2^256) + ((2 * o * (v + e)) / 2^(k + 128))
+        + (128 * ((v + e) + ((v + e) * l)) / 2^k)
+~~~
+
+When k = 128, the last term in this inequality dominates. Thus, we can simplify
+this to:
+
+~~~
+CA <= (128 * ((v + e) + ((v + e) * l)) / 2^128)
+~~~
+
+This implies the following limit:
+
+~~~
+v + e <= (p * 2^128) / (128 * (l + 1))
+~~~
+
+When k = 256, the second and fourth terms in the CA inequality dominate. Thus, we
+can simplify this to:
+
+~~~
+CA <= ((2 * (v + e)) / 2^256) + (128 * ((v + e) + ((v + e) * l)) / 2^256)
+~~~
+
+This implies the following limit:
+
+~~~
+v + e <= (p * 2^255) / ((64 * l) + 65)
+~~~
+
+## AEAD_CHACHA20_POLY1305, AEAD_AES_128_CCM, and AEAD_AES_128_CCM_8
+
+There are currently no concrete multi-user bounds for AEAD_CHACHA20_POLY1305,
+AEAD_AES_128_CCM, or AEAD_AES_128_CCM_8. Thus, to account for the additional
+factor `u`, i.e., the number of users, each `p` term in the confidentiality and
+integrity limits is replaced with `p/u`.
+
+### AEAD_CHACHA20_POLY1305
+
+The combined confidentiality and integrity limit for AEAD_CHACHA20_POLY1305 is
+as follows.
+
+~~~
+v <= ((p/u) * 2^106) / 8l
+  <= (p * 2^103) / (l * u)
+~~~
+
+### AEAD_AES_128_CCM and AEAD_AES_128_CCM_8
+
+The integrity limit for AEAD_AES_128_CCM is as follows.
+
+~~~
+v + q <= (p/u)^(1/2) * 2^63 / l
+~~~
+
+Likewise, the integrity limit for AEAD_AES_128_CCM_8 is as follows.
+
+~~~
+v * 2^64 + (2l * (v + q))^2 <= (p/u) * 2^128
 ~~~
 
 # Security Considerations {#sec-considerations}
