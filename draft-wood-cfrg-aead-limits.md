@@ -162,7 +162,6 @@ This document defines limitations in part using the quantities below.
 | s | Total plaintext length in all messages (in blocks) |
 | q | Number of user encryption attempts |
 | v | Number of attacker forgery attempts |
-| e | Number of attacker encryption attempts |
 | p | Adversary attack probability |
 | o | Offline adversary work (in number of encryption and decryption queries; multi-user setting only) |
 | u | Number of users or keys (multi-user setting only) |
@@ -372,17 +371,17 @@ include those results as they do not apply to protocols such as TLS 1.3 {{?RFC84
 
 ### Confidentiality Limit
 
-<!-- From (1) in {{GCM-MU}}, assuming n=2^7, \sigma = (v+e)*l, B = \sigma/u, dropping the last term
+<!-- From (1) in {{GCM-MU}}, assuming n=2^7, \sigma = (v+q)*l, B = \sigma/u, dropping the last term
   (with denominator 2^(k+n), and dropping the first term since the adversary's
   offline work dominates -->
 ~~~
-CA <= ((v + e) * l)^2 / (u * 2^128)
+CA <= ((v + q) * l)^2 / (u * 2^128)
 ~~~
 
 This implies the following limit:
 
 ~~~
-v + e <= sqrt(p * u * 2^128) / l
+v + q <= sqrt(p * u * 2^128) / l
 ~~~
 
 ### Integrity Limit
@@ -390,34 +389,34 @@ v + e <= sqrt(p * u * 2^128) / l
 <!-- From Bad_8 advantage contribution to the inequality from 4.3 in {{GCM-MU}},
   assuming \sigma = (v+e)*l -->
 ~~~
-CA <= (1 / 2^1024) + ((2 * (v + e)) / 2^256) + ((2 * o * (v + e)) / 2^(k + 128))
-        + (128 * ((v + e) + ((v + e) * l)) / 2^k)
+CA <= (1 / 2^1024) + ((2 * (v + q)) / 2^256) + ((2 * o * (v + q)) / 2^(k + 128))
+        + (128 * ((v + q) + ((v + q) * l)) / 2^k)
 ~~~
 
 When k = 128, the last term in this inequality dominates. Thus, we can simplify
 this to:
 
 ~~~
-CA <= (128 * ((v + e) + ((v + e) * l)) / 2^128)
+CA <= (128 * ((v + q) + ((v + q) * l)) / 2^128)
 ~~~
 
 This implies the following limit:
 
 ~~~
-v + e <= (p * 2^128) / (128 * (l + 1))
+v + q <= (p * 2^128) / (128 * (l + 1))
 ~~~
 
 When k = 256, the second and fourth terms in the CA inequality dominate. Thus, we
 can simplify this to:
 
 ~~~
-CA <= ((2 * (v + e)) / 2^256) + (128 * ((v + e) + ((v + e) * l)) / 2^256)
+CA <= ((2 * (v + q)) / 2^256) + (128 * ((v + q) + ((v + q) * l)) / 2^256)
 ~~~
 
 This implies the following limit:
 
 ~~~
-v + e <= (p * 2^255) / ((64 * l) + 65)
+v + q <= (p * 2^255) / ((64 * l) + 65)
 ~~~
 
 ## AEAD_CHACHA20_POLY1305, AEAD_AES_128_CCM, and AEAD_AES_128_CCM_8
@@ -425,7 +424,7 @@ v + e <= (p * 2^255) / ((64 * l) + 65)
 There are currently no concrete multi-user bounds for AEAD_CHACHA20_POLY1305,
 AEAD_AES_128_CCM, or AEAD_AES_128_CCM_8. Thus, to account for the additional
 factor `u`, i.e., the number of users, each `p` term in the confidentiality and
-integrity limits is replaced with `p/u`.
+integrity limits is replaced with `p / u`.
 
 ### AEAD_CHACHA20_POLY1305
 
@@ -433,7 +432,7 @@ The combined confidentiality and integrity limit for AEAD_CHACHA20_POLY1305 is
 as follows.
 
 ~~~
-v <= ((p/u) * 2^106) / 8l
+v <= ((p / u) * 2^106) / 8l
   <= (p * 2^103) / (l * u)
 ~~~
 
@@ -442,13 +441,13 @@ v <= ((p/u) * 2^106) / 8l
 The integrity limit for AEAD_AES_128_CCM is as follows.
 
 ~~~
-v + q <= (p/u)^(1/2) * 2^63 / l
+v + q <= (p / u)^(1/2) * 2^63 / l
 ~~~
 
 Likewise, the integrity limit for AEAD_AES_128_CCM_8 is as follows.
 
 ~~~
-v * 2^64 + (2l * (v + q))^2 <= (p/u) * 2^128
+v * 2^64 + (2l * (v + q))^2 <= (p / u) * 2^128
 ~~~
 
 # Security Considerations {#sec-considerations}
