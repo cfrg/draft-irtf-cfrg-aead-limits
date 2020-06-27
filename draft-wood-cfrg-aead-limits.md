@@ -114,10 +114,10 @@ apply to that single key. The attacker's goal is to break security
 (confidentiality or integrity) of that specific key. However, in practice, there
 are often many users with independent keys. In this "multi-user" setting, the
 attacker is assumed to have done some offline work to help break security of
-single key (or user), where the attacker cannot choose which key is attacked. As a result, AEAD algorithm limits may
-depend on offline work and the number of users. However, given that a multi-user
-attacker does not target any specific user, acceptable advantages may differ from
-that of the single-user setting.
+single key (or user), where the attacker cannot choose which key is attacked.
+As a result, AEAD algorithm limits may depend on offline work and the number
+of users. However, given that a multi-user attacker does not target any specific
+user, acceptable advantages may differ from that of the single-user setting.
 
 The number of times a single pair of key and nonce can be used might also be
 relevant to security.  For some algorithms, such as AEAD_AES_128_GCM or
