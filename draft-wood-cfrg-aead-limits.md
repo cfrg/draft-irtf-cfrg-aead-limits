@@ -384,7 +384,8 @@ v + q <= sqrt(p * u * 2^128) / l
 <!-- From Bad_8 advantage contribution to the inequality from 4.3 in {{GCM-MU}},
   assuming \sigma = (v+e)*l -->
 ~~~
-CA <= (1 / 2^1024) + ((2 * (v + q)) / 2^256) + ((2 * o * (v + q)) / 2^(k + 128))
+CA <= (1 / 2^1024) + ((2 * (v + q)) / 2^256)
+        + ((2 * o * (v + q)) / 2^(k + 128))
         + (128 * ((v + q) + ((v + q) * l)) / 2^k)
 ~~~
 
@@ -405,7 +406,8 @@ When k = 256, the second and fourth terms in the CA inequality dominate. Thus, w
 can simplify this to:
 
 ~~~
-CA <= ((2 * (v + q)) / 2^256) + (128 * ((v + q) + ((v + q) * l)) / 2^256)
+CA <= ((2 * (v + q)) / 2^256)
+        + (128 * ((v + q) + ((v + q) * l)) / 2^256)
 ~~~
 
 This implies the following limit:
