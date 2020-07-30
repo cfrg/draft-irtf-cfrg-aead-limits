@@ -150,7 +150,7 @@ This document defines limitations in part using the quantities below.
 
 | Symbol  | Description |
 |-:-|:-|
-| n | Size of the AEAD block cipher (in bits) |
+| n | Number of bits per block |
 | k | Size of the AEAD key (in bits) |
 | t | Size of the authentication tag (in bits) |
 | l | Length of each message (in blocks)
@@ -168,8 +168,8 @@ property for the algorithm. Specifically:
 - Confidentiality advantage (CA): The advantage of an attacker succeeding in breaking
 the confidentiality properties of the AEAD. In this document, the definition of
 confidentiality advantage is the increase in the probability that an attacker is
-able to successfully distinguish an AEAD ciphertext from the output of an ideal
-pseudorandom permutation (PRP).
+able to successfully distinguish an AEAD ciphertext from the output of a random
+function.
 
 - Integrity advantage (IA): The probability of an attacker succeeding in breaking
 the integrity properties of the AEAD. In this document, the definition of
