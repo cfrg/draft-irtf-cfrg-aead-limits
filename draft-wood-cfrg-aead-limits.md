@@ -36,21 +36,16 @@ normative:
   GCMProofs:
     title: "Breaking and Repairing GCM Security Proofs"
     target: https://eprint.iacr.org/2012/438.pdf
+    date: 2012-08-01
     author:
       - ins: T. Iwata
       - ins: K. Ohashi
       - ins: K. Minematsu
-  Poly1305:
-    title: "The Poly1305-AES message-authentication code"
-    target: https://link.springer.com/content/pdf/10.1007/11502760_3.pdf
-    author:
-      - ins: D. J. Bernstein
-    seriesinfo: "International Workshop on Fast Software Encryption, 2005"
   ChaCha20Poly1305Bounds:
     title: "A Security Analysis of the Composition of ChaCha20 and Poly1305"
     author:
       - ins: G. Procter
-    date: 2014
+    date: 2014-08-11
     target: https://eprint.iacr.org/2014/613.pdf
   AEBounds:
     title: "Limits on Authenticated Encryption Use in TLS"
@@ -65,7 +60,7 @@ normative:
       - ins: M. Bellare
       - ins: A. Boldyreva
       - ins: S. Micali
-    date: 2000
+    date: 2000-05
     target: https://cseweb.ucsd.edu/~mihir/papers/musu.pdf
 
 informative:
@@ -276,7 +271,7 @@ CA <= v * ((8 * l) / 2^106)
 IA <= v * ((8 * l) / 2^106)
 ~~~
 
-This advantage is a tight reduction based on the underlying Poly1305 PRF {{Poly1305}}.
+This advantage is a tight reduction based on the underlying Poly1305 PRF {{!Poly1305=DOI.10.1007/11502760_3}}.
 It implies the following limit:
 
 ~~~
