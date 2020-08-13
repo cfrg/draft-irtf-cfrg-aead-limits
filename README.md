@@ -1,6 +1,14 @@
-# Limits on AEAD Algorithms
+# CFRG Drafts
 
-This is the working area for the individual Internet-Draft, "Limits on AEAD Algorithms".
+This is the working area for individual Internet-Drafts.
+
+## Usage Limits on AEAD Algorithms
+
+* [Editor's Copy](https://chris-wood.github.io/draft-wood-cfrg-aead-limits/#go.draft-irtf-cfrg-aead-limits.html)
+* [Individual Draft](https://tools.ietf.org/html/draft-irtf-cfrg-aead-limits)
+* [Compare Editor's Copy to Individual Draft](https://chris-wood.github.io/draft-wood-cfrg-aead-limits/#go.draft-irtf-cfrg-aead-limits.diff)
+
+## Usage Limits on AEAD Algorithms
 
 * [Editor's Copy](https://chris-wood.github.io/draft-wood-cfrg-aead-limits/#go.draft-wood-cfrg-aead-limits.html)
 * [Individual Draft](https://tools.ietf.org/html/draft-wood-cfrg-aead-limits)
