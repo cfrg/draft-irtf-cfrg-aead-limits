@@ -387,9 +387,24 @@ For this AEAD, n = 128, t = 128, and r = 96.
 
 <!-- OLD: From (1) in {{GCM-MU2}}, assuming n=2^7, \sigma = (v+q)*l, B = \sigma/u, dropping the last term
   (with denominator 2^(k+n), and dropping the first term since the adversary's
-  offline work dominates -->
+  offline work dominates
 ~~~
 CA <= ((v + q) * l)^2 / (u * 2^128)
+~~~
+-->
+
+<!-- NEW: From Theorem 4.3 in {{GCM-MU2}},
+    letting
+        - #blocks encrypted/verified overall:   \sigma = (q + v) * l
+        - max. #blocks of data encrypted by each user:   B = \sigma/u
+    ignoring
+        - offline work (?)   o = 0
+        - 1st term (../2^k) since dominated by 2nd
+        - 3rd term (../2^2n) since dominated by 2nd
+        - 4th term (../2^(k+n)) since domianted by 2nd (for u < 2^128)
+-->
+~~~
+CA <= ((v + q) * l)^2 / (u * 2^127) + 1/2^(r/2)
 ~~~
 
 This implies the following limit:
