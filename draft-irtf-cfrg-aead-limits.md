@@ -103,14 +103,14 @@ of the AEAD as a single key is used multiple times is not given a thorough
 treatment.
 
 These limits might also be influenced by the number of "users" of
-a given key. In the traditional setting, there is one key shared between a two
+a given key. In the traditional setting, there is one key shared between two
 parties. Any limits on the maximum length of inputs or encryption operations
 apply to that single key. The attacker's goal is to break security
 (confidentiality or integrity) of that specific key. However, in practice, there
-are often many users with independent keys. In this "multi-user" setting, the
-attacker is assumed to have done some offline work to help break security of
-single key (or user), where the attacker cannot choose which key is attacked.
-As a result, AEAD algorithm limits may depend on offline work and the number
+are often many users with independent keys. The "multi-user" security setting
+hence considers an attacker's advantage in breaking security of any of these many
+keys, further assuming the attacker may have done some offline work to help break
+security. As a result, AEAD algorithm limits may depend on offline work and the number
 of users. However, given that a multi-user attacker does not target any specific
 user, acceptable advantages may differ from that of the single-user setting.
 
@@ -182,7 +182,7 @@ below 2^-57. See {{?TLS=RFC8446}}, Section 5.5.
 
 # Calculating Limits
 
-Once an upper bound on CA and IA are determined, this document
+Once upper bounds on CA and IA are determined, this document
 defines a process for determining two overall limits:
 
 - Confidentiality limit (CL): The number of bytes of plaintext and maybe
@@ -206,10 +206,10 @@ protected messages (q) or the number of forgery attempts (v); which correspond
 to CL and IL respectively.
 
 Limits are then derived from those bounds using a target attacker probability.
-For example, given a confidentiality advantage of `v * (8l / 2^106)` and attacker
+For example, given an integrity advantage of `v * (8l / 2^106)` and attacker
 success probability of `p`, the algorithm remains secure, i.e., the adversary's
-advantage does not exceed the probability of success, provided that
-`v <= (p * 2^106) / 8l`. In turn, this implies that `v <= (p * 2^106) / 8l`
+advantage does not exceed the targeted probability of success, provided that
+`v <= (p * 2^106) / 8l`. In turn, this implies that `v <= (p * 2^103) / l`
 is the corresponding limit.
 
 # Single-User AEAD Limits {#limits}
