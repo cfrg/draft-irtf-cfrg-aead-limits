@@ -62,6 +62,22 @@ normative:
       - ins: S. Micali
     date: 2000-05
     target: https://cseweb.ucsd.edu/~mihir/papers/musu.pdf
+  GCM-MU:
+    title: "The Multi-User Security of Authenticated Encryption: AES-GCM in TLS 1.3"
+    target: https://eprint.iacr.org/2016/564.pdf
+    date: 2017-11-27
+    author:
+      - ins: M. Bellare
+      - ins: B. Tackmann
+  GCM-MU2:
+    title: "The Multi-user Security of GCM, Revisited: Tight Bounds for Nonce Randomization"
+    target: https://eprint.iacr.org/2018/993.pdf
+    date: 2018-10-15
+    author:
+      - ins: V. T. Hoang
+      - ins: S. Tessaro
+      - ins: A. Thiruvengadam
+  
 
 informative:
   NonceDisrespecting:
@@ -150,10 +166,11 @@ This document defines limitations in part using the quantities below.
 
 | Symbol  | Description |
 |-:-|:-|
-| n | Number of bits per block |
-| k | Size of the AEAD key (in bits) |
+| n | AEAD block length (in bits) |
+| k | AEAD key length (in bits) |
+| r | AEAD nonce length (in bits) |
 | t | Size of the authentication tag (in bits) |
-| l | Length of each message (in blocks)
+| l | Length of each message (in blocks) |
 | s | Total plaintext length in all messages (in blocks) |
 | q | Number of user encryption attempts |
 | v | Number of attacker forgery attempts |
@@ -212,7 +229,7 @@ advantage does not exceed the probability of success, provided that
 `v <= (p * 2^106) / 8l`. In turn, this implies that `v <= (p * 2^106) / 8l`
 is the corresponding limit.
 
-# Single-User AEAD Limits {#limits}
+# Single-User AEAD Limits {#su-limits}
 
 This section summarizes the confidentiality and integrity bounds and limits for modern AEAD algorithms
 used in IETF protocols, including: AEAD_AES_128_GCM {{!RFC5116}}, AEAD_AES_256_GCM {{!RFC5116}},
@@ -344,29 +361,31 @@ v * 2^64 + (2l * (v + q))^2 <= p * 2^128
 
 # Multi-User AEAD Limits {#mu-limits}
 
-In the public-key, multi-user setting, {{MUSecurity}} proves that the success
-probability in attacking one of many independently users is bounded by the
-success probability of attacking a single user multiplied by the number of users
-present. Each user is assumed to have an independent and identically distributed
-key, though some may share nonces with some very small probability. Absent
-concrete multi-user bounds, this means the attacker advantage in the multi-user
+In the multi-user setting, each user is assumed to have an independent and
+identically distributed key, though nonces may be re-used across users with some
+very small probability. The success probability in attacking one of these many
+independent user keys can be generically bounded by the success probability of
+attacking a single user multiplied by the number of users present {{MUSecurity}}, {{GCM-MU}}.
+Absent concrete multi-user bounds, this means the attacker advantage in the multi-user
 setting is the product of the single-user advantage and the number of users.
 
 This section summarizes the confidentiality and integrity bounds and limits for
-the same algorithms as in {{limits}}, except in the multi-user setting. The CL
+the same algorithms as in {{su-limits}} for the multi-user setting. The CL
 and IL values bound the total number of encryption and forgery queries (q and v).
 Alongside each value, we also specify these bounds.
 
 ## AEAD_AES_128_GCM and AEAD_AES_256_GCM
 
 Concrete multi-user bounds for AEAD_AES_128_GCM and AEAD_AES_256_GCM exist
-due to {{?GCM-MU=DOI.10.1145/3243734.3243816}}. AES-GCM without nonce
-randomization is also discussed in {{?GCM-MU}}, though this section does not
+due to {{GCM-MU2}}. AES-GCM without nonce
+randomization is also discussed in {{GCM-MU2}}, though this section does not
 include those results as they do not apply to protocols such as TLS 1.3 {{?RFC8446}}.
+
+For this AEAD, n = 128, t = 128, and r = 96.
 
 ### Confidentiality Limit
 
-<!-- From (1) in {{GCM-MU}}, assuming n=2^7, \sigma = (v+q)*l, B = \sigma/u, dropping the last term
+<!-- OLD: From (1) in {{GCM-MU2}}, assuming n=2^7, \sigma = (v+q)*l, B = \sigma/u, dropping the last term
   (with denominator 2^(k+n), and dropping the first term since the adversary's
   offline work dominates -->
 ~~~
@@ -381,7 +400,7 @@ v + q <= sqrt(p * u * 2^128) / l
 
 ### Integrity Limit
 
-<!-- From Bad_8 advantage contribution to the inequality from 4.3 in {{GCM-MU}},
+<!-- From Bad_8 advantage contribution to the inequality from 4.3 in {{GCM-MU2}},
   assuming \sigma = (v+e)*l -->
 ~~~
 CA <= (1 / 2^1024) + ((2 * (v + q)) / 2^256)
