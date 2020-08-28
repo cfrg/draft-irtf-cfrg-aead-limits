@@ -451,40 +451,10 @@ q <= p * 2^127 / (l * B)
 
 ### Integrity Limit
 
-<!-- From Bad_8 advantage contribution to the inequality from 4.3 in {{GCM-MU2}},
-  assuming \sigma = (v+e)*l -->
-~~~
-CA <= (1 / 2^1024) + ((2 * (v + q)) / 2^256)
-        + ((2 * o * (v + q)) / 2^(k + 128))
-        + (128 * ((v + q) + ((v + q) * l)) / 2^k)
-~~~
+There is currently no dedicated multi-user integrity bound for
+AEAD_AES_128_GCM and AEAD_AES_256_GCM. The AE limit above applies as
+integrity limit.
 
-When k = 128, the last term in this inequality dominates. Thus, we can simplify
-this to:
-
-~~~
-CA <= (128 * ((v + q) + ((v + q) * l)) / 2^128)
-~~~
-
-This implies the following limit:
-
-~~~
-v + q <= (p * 2^128) / (128 * (l + 1))
-~~~
-
-When k = 256, the second and fourth terms in the CA inequality dominate. Thus, we
-can simplify this to:
-
-~~~
-CA <= ((2 * (v + q)) / 2^256)
-        + (128 * ((v + q) + ((v + q) * l)) / 2^256)
-~~~
-
-This implies the following limit:
-
-~~~
-v + q <= (p * 2^255) / ((64 * l) + 65)
-~~~
 
 ## AEAD_CHACHA20_POLY1305, AEAD_AES_128_CCM, and AEAD_AES_128_CCM_8
 
