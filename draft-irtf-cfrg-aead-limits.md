@@ -176,7 +176,8 @@ This document defines limitations in part using the quantities below.
 | v | Number of attacker forgery attempts |
 | p | Adversary attack probability |
 | o | Offline adversary work (in number of encryption and decryption queries; multi-user setting only) |
-| u | Number of users or keys (multi-user setting only) |
+| u | Number of users/keys (multi-user setting only) |
+| B | Max. number of blocks encrypted by any user/key (multi-user setting only) |
 
 For each AEAD algorithm, we define the confidentiality and integrity advantage
 roughly as the advantage an attacker has in breaking the corresponding security
@@ -381,30 +382,52 @@ due to {{GCM-MU2}}. AES-GCM without nonce
 randomization is also discussed in {{GCM-MU2}}, though this section does not
 include those results as they do not apply to protocols such as TLS 1.3 {{?RFC8446}}.
 
-For this AEAD, n = 128, t = 128, and r = 96.
+For this AEAD, n = 128, t = 128, and r = 96; the key length is k = 128 or k = 256.
+
+### Authenticated Encryption Security Limit
+
+<!--
+    From {{GCM-MU2}} Theorem 4.3.
+
+    Let:
+        - #blocks encrypted/verified overall:   \sigma = (q + v) * l
+        - worst-case  o (offline work), q+v, \sigma <= 2^95
+          (Theorem 4.3 requires q <= 2^(1-e)r ; this yields e >= 0.0104, hence
+          d = 1,5/e -1 <= 143 <= 2^8.)
+
+    We can simplify as follows:
+        - Note: Last term is 2^-48; hence any other term <= 2^-50 is negligible.
+        - 1st term (../2^k):  roughly <= 2^8 * (o + q+v + \sigma) / 2^k
+           roughly <= (o + (q+v)*l) / 2^(k-8)
+          This is negligible for k = 256.
+          For k = 128, it is negligible if o, (q+v)*l <= 2^70.
+          For o <= 2^70 and B >= 2^8, it is dominated by the 2nd term;
+            we assume that and hence omit the 1st term.
+        - 2nd term (../2^n):  roughly  = \sigma*B/2^127
+        - 3rd term (../2^2n):  <= 2^-160, negligible.
+        - 4th term (../2^(k+n)):  roughly <= (\sigma^2 + 2o(q+v)) / 2^256
+          <= 2^-64, negligible.
+        - 5th term (2^(-r/2)):  = 2^48
+-->
+~~~
+AE <= (q+v)*l*B / 2^127 + 1/2^48
+~~~
+
+This implies the following limit (where the adversary attack probability `p` is
+always `>= 2^-48`):
+
+~~~
+q + v <= p * 2^127 / (l * B)
+~~~
 
 ### Confidentiality Limit
 
 <!-- OLD: From (1) in {{GCM-MU2}}, assuming n=2^7, \sigma = (v+q)*l, B = \sigma/u, dropping the last term
   (with denominator 2^(k+n), and dropping the first term since the adversary's
   offline work dominates
+-->
 ~~~
 CA <= ((v + q) * l)^2 / (u * 2^128)
-~~~
--->
-
-<!-- NEW: From Theorem 4.3 in {{GCM-MU2}},
-    letting
-        - #blocks encrypted/verified overall:   \sigma = (q + v) * l
-        - max. #blocks of data encrypted by each user:   B = \sigma/u
-    ignoring
-        - offline work (?)   o = 0
-        - 1st term (../2^k) since dominated by 2nd
-        - 3rd term (../2^2n) since dominated by 2nd
-        - 4th term (../2^(k+n)) since domianted by 2nd (for u < 2^128)
--->
-~~~
-CA <= ((v + q) * l)^2 / (u * 2^127) + 1/2^(r/2)
 ~~~
 
 This implies the following limit:
