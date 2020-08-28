@@ -422,18 +422,31 @@ q + v <= p * 2^127 / (l * B)
 
 ### Confidentiality Limit
 
-<!-- OLD: From (1) in {{GCM-MU2}}, assuming n=2^7, \sigma = (v+q)*l, B = \sigma/u, dropping the last term
-  (with denominator 2^(k+n), and dropping the first term since the adversary's
-  offline work dominates
+<!--
+    From {{GCM-MU2}} Theorem 4.3,
+    substracting terms for Pr[Bad_7] and Pr[Bad_8],
+    and applying simplifications as above (note there a no verification queries),
+    we obtain:
+
+    Adv^{mu-ae w/o INT}_RCAU <=
+        2^8 * (o + q) / 2^k   +  \sigma*B/2^127  +  2^48
+
+    For o <= 2^70 and any B, the 1st term is dominated by the 2nd term;
+    we assume that and hence again omit the 1st term.
 -->
-~~~
-CA <= ((v + q) * l)^2 / (u * 2^128)
-~~~
 
-This implies the following limit:
+The confidentiality advantage is essentially dominated by the same terms as
+the AE advantage:
 
 ~~~
-v + q <= sqrt(p * u * 2^128) / l
+CA <= q*l*B / 2^127 + 1/2^48
+~~~
+
+This implies the following limit (where the adversary attack probability `p` is
+always `>= 2^-48`):
+
+~~~
+q <= p * 2^127 / (l * B)
 ~~~
 
 ### Integrity Limit
