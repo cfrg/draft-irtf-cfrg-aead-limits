@@ -161,37 +161,60 @@ This document defines limitations in part using the quantities below.
 | o | Offline adversary work (in number of encryption and decryption queries; multi-user setting only) |
 | u | Number of users or keys (multi-user setting only) |
 
-For each AEAD algorithm, we define the confidentiality and integrity advantage
-roughly as the advantage an attacker has in breaking the corresponding security
-property for the algorithm. Specifically:
+For each AEAD algorithm, we define the (passive) confidentiality and (active)
+integrity advantage roughly as the advantage an attacker has in breaking the
+corresponding classical security property for the algorithm. Moreover, we 
+define the combined authenticated encryption advantage guaranteeing both
+confidentiality and integrity against an active network attacker. Specifically:
 
-- Confidentiality advantage (CA): The advantage of an attacker succeeding in breaking
-the confidentiality properties of the AEAD. In this document, the definition of
-confidentiality advantage is the increase in the probability that an attacker is
-able to successfully distinguish an AEAD ciphertext from the output of a random
-function.
+- Confidentiality advantage (CA): The probability of a network-passive attacker
+succeeding in breaking the confidentiality properties (IND-CPA) of the AEAD scheme.
+In this document, the definition of confidentiality advantage roughly is the
+probability that an attacker successfully distinguishes the ciphertext outputs
+of the AEAD scheme from the outputs of a random function.
 
-- Integrity advantage (IA): The probability of an attacker succeeding in breaking
-the integrity properties of the AEAD. In this document, the definition of
-integrity advantage is the probability that an attacker is able to forge a
-ciphertext that will be accepted as valid.
+- Integrity advantage (IA): The probability of a network-active attacker succeeding
+in breaking the integrity properties (INT-CTXT) of the AEAD scheme. In this document,
+the definition of integrity advantage roughly is the probability that an attacker
+is able to forge a ciphertext that will be accepted as valid.
 
-Each application requires a different application of limits in order to keep CA
+- Authenticated Encryption advantage (AEA): The probability of a network-active
+attacker succeeding in breaking the authenticated-encryption properties of the
+AEAD scheme. In this document, the definition of authenticated encryption
+advantage roughly is the probability that an attacker successfully distinguishes
+the ciphertext outputs of the AEAD scheme from the outputs of a random function
+OR is able to forge a ciphertext that will be accepted as valid.
+  The authenticated encryption advantage subsumes, and can be derived as the
+combination of, both CA and IA:
+
+~~~
+CA <= AEA
+IA <= AEA
+AEA <= CA + IA
+~~~
+
+Each application requires an individual determination of limits in order to keep CA
 and IA sufficiently small.  For instance, TLS aims to keep CA below 2^-60 and IA
 below 2^-57. See {{?TLS=RFC8446}}, Section 5.5.
 
 # Calculating Limits
 
-Once upper bounds on CA and IA are determined, this document
-defines a process for determining two overall limits:
+Once upper bounds on CA, IA, or AEA are determined, this document
+defines a process for determining three overall operational limits:
 
-- Confidentiality limit (CL): The number of bytes of plaintext and maybe
-  authenticated additional data (AAD) an application can encrypt before giving
-  the adversary a non-negligible CA.
+- Confidentiality limit (CL): The number of messages (possibly depending on the
+  number of bytes of plaintext and maybe authenticated additional data (AAD))
+  an application can encrypt before giving the adversary a confidentiality
+  advantage higher than CA.
 
-- Integrity limit (IL): The number of bytes of ciphertext and maybe authenticated
-  additional data (AAD) an application can process, either successfully or not,
-  before giving the adversary a non-negligible IA.
+- Integrity limit (IL): The number ciphertexts (possibly depending on the
+  number of bytes of ciphertext and maybe authenticated additional data (AAD))
+  an application can decrypt, either successfully or not,
+  before giving the adversary an integrity advantage higher than IA.
+
+- Authenticated encryption limit (AEL): The combined number of messages and
+  number of ciphertext an appliation can en-/decrypt before giving the adversary
+  an authenticated enryption advantage higher than AEA.
 
 For an AEAD based on a block function, it is common for these limits to be
 expressed instead in terms of the number of blocks rather than bytes.
@@ -206,11 +229,11 @@ protected messages (q) or the number of forgery attempts (v); which correspond
 to CL and IL respectively.
 
 Limits are then derived from those bounds using a target attacker probability.
-For example, given an integrity advantage of `v * (8l / 2^106)` and attacker
-success probability of `p`, the algorithm remains secure, i.e., the adversary's
-advantage does not exceed the targeted probability of success, provided that
-`v <= (p * 2^106) / 8l`. In turn, this implies that `v <= (p * 2^103) / l`
-is the corresponding limit.
+For example, given an integrity advantage of `IA = v * (8l / 2^106)` and a
+targeted maximum attacker success probability of `IA = p`, the algorithm remains
+secure, i.e., the adversary's advantage does not exceed the targeted probability
+of success, provided that `v <= (p * 2^106) / 8l`. In turn, this implies that
+`v <= (p * 2^103) / l` is the corresponding limit.
 
 # Single-User AEAD Limits {#limits}
 
