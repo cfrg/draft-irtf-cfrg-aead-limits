@@ -155,8 +155,8 @@ This document defines limitations in part using the quantities below.
 | t | Size of the authentication tag (in bits) |
 | l | Length of each message (in blocks)
 | s | Total plaintext length in all messages (in blocks) |
-| q | Number of user encryption attempts |
-| v | Number of attacker forgery attempts |
+| q | Number of protected messages (AEAD encryption invocations) |
+| v | Number of attacker forgery attempts (failed AEAD decryption invocations) |
 | p | Adversary attack probability |
 | o | Offline adversary work (in number of encryption and decryption queries; multi-user setting only) |
 | u | Number of users or keys (multi-user setting only) |
