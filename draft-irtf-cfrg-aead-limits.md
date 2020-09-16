@@ -413,11 +413,10 @@ For this AEAD, n = 128, t = 128, and r = 96; the key length is k = 128 or k = 25
 AE <= (q+v)*l*B / 2^127 + 1/2^48
 ~~~
 
-This implies the following limit (where the adversary attack probability `p` is
-always `>= 2^-48`):
+This implies the following limit:
 
 ~~~
-q + v <= p * 2^127 / (l * B)
+q + v <= (p * 2^127 - 2^79) / (l * B)
 ~~~
 
 ### Confidentiality Limit
@@ -442,18 +441,28 @@ the AE advantage:
 CA <= q*l*B / 2^127 + 1/2^48
 ~~~
 
-This implies the following limit (where the adversary attack probability `p` is
-always `>= 2^-48`):
+This implies the following limit:
 
 ~~~
-q <= p * 2^127 / (l * B)
+q <= (p * 2^127 - 2^79) / (l * B)
 ~~~
 
 ### Integrity Limit
 
-There is currently no dedicated multi-user integrity bound for
-AEAD_AES_128_GCM and AEAD_AES_256_GCM. The AE limit above applies as
-integrity limit.
+There is currently no dedicated integrity multi-user bound available for
+AEAD_AES_128_GCM and AEAD_AES_256_GCM. The AE limit can be used to derive
+an integrity limit as
+
+~~~
+IA <= AE <= (q+v)*l*B / 2^127 + 1/2^48
+~~~
+
+This implies the following limit:
+
+~~~
+q + v <= (p * 2^127 - 2^79) / (l * B)
+~~~
+
 
 
 ## AEAD_CHACHA20_POLY1305, AEAD_AES_128_CCM, and AEAD_AES_128_CCM_8
