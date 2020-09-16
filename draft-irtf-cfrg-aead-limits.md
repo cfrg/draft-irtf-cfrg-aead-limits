@@ -410,7 +410,7 @@ For this AEAD, n = 128, t = 128, and r = 96; the key length is k = 128 or k = 25
         - 5th term (2^(-r/2)):  = 2^48
 -->
 ~~~
-AE <= (q+v)*l*B / 2^127 + 1/2^48
+AE <= ((q+v)*l*B / 2^127) + (1 / 2^48)
 ~~~
 
 This implies the following limit:
