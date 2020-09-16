@@ -54,6 +54,19 @@ normative:
       - ins: K. Paterson
     date: 2016-03-08
     target: http://www.isg.rhul.ac.uk/~kp/TLS-AEbounds.pdf
+  AEComposition:
+    title: "Authenticated Encryption: Relations among notions and analysis of the generic composition paradigm"
+    author:
+      - ins: M. Bellare
+      - ins: C. Namprempre
+    date: 2007-07
+    target: http://cseweb.ucsd.edu/~mihir/papers/oem.pdf
+  AEAD:
+    title: "Authenticated-Encryption with Associated-Data"
+    author:
+      - ins: P. Rogaway
+    date: 2002-09
+    target: https://cseweb.ucsd.edu/~mihir/papers/musu.pdf
   MUSecurity:
     title: "Public-Key Encryption in a Multi-user Setting: Security Proofs and Improvements"
     author:
@@ -184,7 +197,11 @@ AEAD scheme. In this document, the definition of authenticated encryption
 advantage roughly is the probability that an attacker successfully distinguishes
 the ciphertext outputs of the AEAD scheme from the outputs of a random function
 or is able to forge a ciphertext that will be accepted as valid.
-  The authenticated encryption advantage subsumes, and can be derived as the
+
+See {{AEComposition}}, {{AEAD}} for the formal definitions of and relations
+between passive confidentiality (IND-CPA), ciphertext integrity (INT-CTXT),
+and authenticated encryption security (AE).
+The authenticated encryption advantage subsumes, and can be derived as the
 combination of, both CA and IA:
 
 ~~~
@@ -195,34 +212,31 @@ AEA <= CA + IA
 
 Each application requires an individual determination of limits in order to keep CA
 and IA sufficiently small.  For instance, TLS aims to keep CA below 2^-60 and IA
-below 2^-57. See {{?TLS=RFC8446}}, Section 5.5.
+below 2^-57 (in the single-user setting). See {{?TLS=RFC8446}}, Section 5.5.
 
 # Calculating Limits
 
 Once upper bounds on CA, IA, or AEA are determined, this document
 defines a process for determining three overall operational limits:
 
-- Confidentiality limit (CL): The number of messages (possibly depending on the
-  number of bytes of plaintext and maybe authenticated additional data (AAD))
-  an application can encrypt before giving the adversary a confidentiality
-  advantage higher than CA.
+- Confidentiality limit (CL): The number of messages an application can encrypt
+  before giving the adversary a confidentiality advantage higher than CA.
 
-- Integrity limit (IL): The number ciphertexts (possibly depending on the
-  number of bytes of ciphertext and maybe authenticated additional data (AAD))
-  an application can decrypt, either successfully or not,
-  before giving the adversary an integrity advantage higher than IA.
+- Integrity limit (IL): The number ciphertexts an application can decrypt,
+  either successfully or not, before giving the adversary an integrity advantage
+  higher than IA.
 
 - Authenticated encryption limit (AEL): The combined number of messages and
-  number of ciphertexts an application can encrypt or decrypt before giving the adversary
-  an authenticated encryption advantage higher than AEA.
+  number of ciphertexts an application can encrypt or decrypt before giving the
+  adversary an authenticated encryption advantage higher than AEA.
 
-For an AEAD based on a block function, it is common for these limits to be
-expressed instead in terms of the number of blocks rather than bytes.
-Furthermore, it might be more appropriate to track the number of messages rather
-than track bytes.  Therefore, the guidance is usually based on the total number
-of blocks processed (s).  To aid in calculating limits for message-based
-protocols, a formulation of limits that includes a maximum message size (l) is
-included.
+When limits are expressed as a number of messages an application can encrypt or
+decrypt, this requires assumptions about the size of messages and any
+authenticated additional data (AAD).  Limits can instead be expressed in terms
+of the number of bytes, or blocks, of plaintext and maybe AAD in total.
+To aid in translating between message-based and byte/block-based limits,
+a formulation of limits that includes a maximum message size (l) and the AEAD
+schemes' block length in bits (n) is provided.
 
 All limits are based on the total number of messages, either the number of
 protected messages (q) or the number of forgery attempts (v); which correspond
