@@ -424,7 +424,7 @@ q + v <= (p * 2^127 - 2^79) / (l * B)
 <!--
     From {{GCM-MU2}} Theorem 4.3,
     substracting terms for Pr[Bad_7] and Pr[Bad_8],
-    and applying simplifications as above (note there a no verification queries),
+    and applying simplifications as above (note there are no verification queries),
     we obtain:
 
     Adv^{mu-ae w/o INT}_RCAU <=
