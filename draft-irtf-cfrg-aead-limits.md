@@ -75,6 +75,22 @@ normative:
       - ins: S. Micali
     date: 2000-05
     target: https://cseweb.ucsd.edu/~mihir/papers/musu.pdf
+  GCM-MU:
+    title: "The Multi-User Security of Authenticated Encryption: AES-GCM in TLS 1.3"
+    target: https://eprint.iacr.org/2016/564.pdf
+    date: 2017-11-27
+    author:
+      - ins: M. Bellare
+      - ins: B. Tackmann
+  GCM-MU2:
+    title: "The Multi-user Security of GCM, Revisited: Tight Bounds for Nonce Randomization"
+    target: https://eprint.iacr.org/2018/993.pdf
+    date: 2018-10-15
+    author:
+      - ins: V. T. Hoang
+      - ins: S. Tessaro
+      - ins: A. Thiruvengadam
+  
 
 informative:
   NonceDisrespecting:
@@ -163,16 +179,18 @@ This document defines limitations in part using the quantities below.
 
 | Symbol  | Description |
 |-:-|:-|
-| n | Number of bits per block |
-| k | Size of the AEAD key (in bits) |
+| n | AEAD block length (in bits) |
+| k | AEAD key length (in bits) |
+| r | AEAD nonce length (in bits) |
 | t | Size of the authentication tag (in bits) |
-| l | Length of each message (in blocks)
+| l | Length of each message (in blocks) |
 | s | Total plaintext length in all messages (in blocks) |
 | q | Number of protected messages (AEAD encryption invocations) |
 | v | Number of attacker forgery attempts (failed AEAD decryption invocations) |
 | p | Adversary attack probability |
 | o | Offline adversary work (in number of encryption and decryption queries; multi-user setting only) |
 | u | Number of users or keys (multi-user setting only) |
+| B | Maximum number of blocks encrypted by any user or key (multi-user setting only) |
 
 For each AEAD algorithm, we define the (passive) confidentiality and (active)
 integrity advantage roughly as the advantage an attacker has in breaking the
@@ -249,7 +267,7 @@ secure, i.e., the adversary's advantage does not exceed the targeted probability
 of success, provided that `v <= (p * 2^106) / 8l`. In turn, this implies that
 `v <= (p * 2^103) / l` is the corresponding limit.
 
-# Single-User AEAD Limits {#limits}
+# Single-User AEAD Limits {#su-limits}
 
 This section summarizes the confidentiality and integrity bounds and limits for modern AEAD algorithms
 used in IETF protocols, including: AEAD_AES_128_GCM {{!RFC5116}}, AEAD_AES_256_GCM {{!RFC5116}},
@@ -381,77 +399,108 @@ v * 2^64 + (2l * (v + q))^2 <= p * 2^128
 
 # Multi-User AEAD Limits {#mu-limits}
 
-In the public-key, multi-user setting, {{MUSecurity}} proves that the success
-probability in attacking one of many independently users is bounded by the
-success probability of attacking a single user multiplied by the number of users
-present. Each user is assumed to have an independent and identically distributed
-key, though some may share nonces with some very small probability. Absent
-concrete multi-user bounds, this means the attacker advantage in the multi-user
+In the multi-user setting, each user is assumed to have an independent and
+identically distributed key, though nonces may be re-used across users with some
+very small probability. The success probability in attacking one of these many
+independent user keys can be generically bounded by the success probability of
+attacking a single user multiplied by the number of users present {{MUSecurity}}, {{GCM-MU}}.
+Absent concrete multi-user bounds, this means the attacker advantage in the multi-user
 setting is the product of the single-user advantage and the number of users.
 
 This section summarizes the confidentiality and integrity bounds and limits for
-the same algorithms as in {{limits}}, except in the multi-user setting. The CL
+the same algorithms as in {{su-limits}} for the multi-user setting. The CL
 and IL values bound the total number of encryption and forgery queries (q and v).
 Alongside each value, we also specify these bounds.
 
 ## AEAD_AES_128_GCM and AEAD_AES_256_GCM
 
 Concrete multi-user bounds for AEAD_AES_128_GCM and AEAD_AES_256_GCM exist
-due to {{?GCM-MU=DOI.10.1145/3243734.3243816}}. AES-GCM without nonce
-randomization is also discussed in {{?GCM-MU}}, though this section does not
+due to {{GCM-MU2}}. AES-GCM without nonce
+randomization is also discussed in {{GCM-MU2}}, though this section does not
 include those results as they do not apply to protocols such as TLS 1.3 {{?RFC8446}}.
 
-### Confidentiality Limit
+For this AEAD, n = 128, t = 128, and r = 96; the key length is k = 128 or k = 256.
 
-<!-- From (1) in {{GCM-MU}}, assuming n=2^7, \sigma = (v+q)*l, B = \sigma/u, dropping the last term
-  (with denominator 2^(k+n), and dropping the first term since the adversary's
-  offline work dominates -->
+### Authenticated Encryption Security Limit
+
+<!--
+    From {{GCM-MU2}} Theorem 4.3.
+
+    Let:
+        - #blocks encrypted/verified overall:   \sigma = (q + v) * l
+        - worst-case  o (offline work), q+v, \sigma <= 2^95
+          (Theorem 4.3 requires q <= 2^(1-e)r ; this yields e >= 0.0104, hence
+          d = 1,5/e -1 <= 143 <= 2^8.)
+
+    We can simplify as follows:
+        - Note: Last term is 2^-48; hence any other term <= 2^-50 is negligible.
+        - 1st term (../2^k):  roughly <= 2^8 * (o + q+v + \sigma) / 2^k
+           roughly <= (o + (q+v)*l) / 2^(k-8)
+          This is negligible for k = 256.
+          For k = 128, it is negligible if o, (q+v)*l <= 2^70.
+          For o <= 2^70 and B >= 2^8, it is dominated by the 2nd term;
+            we assume that and hence omit the 1st term.
+        - 2nd term (../2^n):  roughly  = \sigma*B/2^127
+        - 3rd term (../2^2n):  <= 2^-160, negligible.
+        - 4th term (../2^(k+n)):  roughly <= (\sigma^2 + 2o(q+v)) / 2^256
+          <= 2^-64, negligible.
+        - 5th term (2^(-r/2)):  = 2^48
+-->
 ~~~
-CA <= ((v + q) * l)^2 / (u * 2^128)
+AE <= ((q+v)*l*B / 2^127) + (1 / 2^48)
 ~~~
 
 This implies the following limit:
 
 ~~~
-v + q <= sqrt(p * u * 2^128) / l
+q + v <= (p * 2^127 - 2^79) / (l * B)
+~~~
+
+### Confidentiality Limit
+
+<!--
+    From {{GCM-MU2}} Theorem 4.3,
+    substracting terms for Pr[Bad_7] and Pr[Bad_8],
+    and applying simplifications as above (note there are no verification queries),
+    we obtain:
+
+    Adv^{mu-ae w/o INT}_RCAU <=
+        2^8 * (o + q) / 2^k   +  \sigma*B/2^127  +  2^48
+
+    For o <= 2^70 and any B, the 1st term is dominated by the 2nd term;
+    we assume that and hence again omit the 1st term.
+-->
+
+The confidentiality advantage is essentially dominated by the same terms as
+the AE advantage:
+
+~~~
+CA <= (q*l*B / 2^127) + (1 / 2^48)
+~~~
+
+This implies the following limit:
+
+~~~
+q <= (p * 2^127 - 2^79) / (l * B)
 ~~~
 
 ### Integrity Limit
 
-<!-- From Bad_8 advantage contribution to the inequality from 4.3 in {{GCM-MU}},
-  assuming \sigma = (v+e)*l -->
-~~~
-CA <= (1 / 2^1024) + ((2 * (v + q)) / 2^256)
-        + ((2 * o * (v + q)) / 2^(k + 128))
-        + (128 * ((v + q) + ((v + q) * l)) / 2^k)
-~~~
-
-When k = 128, the last term in this inequality dominates. Thus, we can simplify
-this to:
+There is currently no dedicated integrity multi-user bound available for
+AEAD_AES_128_GCM and AEAD_AES_256_GCM. The AE limit can be used to derive
+an integrity limit as
 
 ~~~
-CA <= (128 * ((v + q) + ((v + q) * l)) / 2^128)
+IA <= AE <= (q+v)*l*B / 2^127 + 1/2^48
 ~~~
 
 This implies the following limit:
 
 ~~~
-v + q <= (p * 2^128) / (128 * (l + 1))
+q + v <= (p * 2^127 - 2^79) / (l * B)
 ~~~
 
-When k = 256, the second and fourth terms in the CA inequality dominate. Thus, we
-can simplify this to:
 
-~~~
-CA <= ((2 * (v + q)) / 2^256)
-        + (128 * ((v + q) + ((v + q) * l)) / 2^256)
-~~~
-
-This implies the following limit:
-
-~~~
-v + q <= (p * 2^255) / ((64 * l) + 65)
-~~~
 
 ## AEAD_CHACHA20_POLY1305, AEAD_AES_128_CCM, and AEAD_AES_128_CCM_8
 
