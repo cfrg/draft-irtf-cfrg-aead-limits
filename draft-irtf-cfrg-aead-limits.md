@@ -438,7 +438,7 @@ The confidentiality advantage is essentially dominated by the same terms as
 the AE advantage:
 
 ~~~
-CA <= q*l*B / 2^127 + 1/2^48
+CA <= (q*l*B / 2^127) + (1 / 2^48)
 ~~~
 
 This implies the following limit:
