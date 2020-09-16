@@ -177,7 +177,7 @@ This document defines limitations in part using the quantities below.
 | p | Adversary attack probability |
 | o | Offline adversary work (in number of encryption and decryption queries; multi-user setting only) |
 | u | Number of users or keys (multi-user setting only) |
-| B | Max. number of blocks encrypted by any user/key (multi-user setting only) |
+| B | Maximum number of blocks encrypted by any user or key (multi-user setting only) |
 
 For each AEAD algorithm, we define the confidentiality and integrity advantage
 roughly as the advantage an attacker has in breaking the corresponding security
