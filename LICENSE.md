@@ -1,4 +1,4 @@
 # License
 
 See the
-[guidelines for contributions](https://github.com/chris-wood/draft-wood-cfrg-aead-limits/blob/master/CONTRIBUTING.md).
+[guidelines for contributions](https://github.com/cfrg/draft-irtf-cfrg-aead-limits/blob/master/CONTRIBUTING.md).
