@@ -90,7 +90,7 @@ normative:
       - ins: V. T. Hoang
       - ins: S. Tessaro
       - ins: A. Thiruvengadam
-  
+
 
 informative:
   NonceDisrespecting:
@@ -103,6 +103,13 @@ informative:
       - ins: J. Somorovsky
       - ins: P. Jovanovic
     date: 2016-05-17
+  MF05:
+    title: Multiple forgery attacks against Message Authentication Codes
+    target: https://csrc.nist.gov/CSRC/media/Projects/Block-Cipher-Techniques/documents/BCM/Comments/CWC-GCM/multi-forge-01.pdf
+    author:
+      - ins: D. A. McGrew
+      - ins: S. R. Fluhrer
+    date: 2005-05-31
 
 --- abstract
 
@@ -111,7 +118,7 @@ confidentiality and integrity.  Excessive use of the same key can give an
 attacker advantages in breaking these properties.  This document provides simple
 guidance for users of common AEAD functions about how to limit the use of keys
 in order to bound the advantage given to an attacker.  It considers limits in
-both single- and multi-user settings.
+both single- and multi-key settings.
 
 --- middle
 
@@ -119,8 +126,8 @@ both single- and multi-user settings.
 
 An Authenticated Encryption with Associated Data (AEAD) algorithm
 provides confidentiality and integrity. {{!RFC5116}} specifies an AEAD
-as a function with four inputs -- secret key, nonce, plaintext,
-and optional associated data -- that produces ciphertext output and error code
+as a function with four inputs -- secret key, nonce, optional plaintext,
+and optional associated data -- that produces ciphertext output and an error code
 indicating success or failure. The ciphertext is typically composed of the encrypted
 plaintext bytes and an authentication tag.
 
@@ -136,12 +143,13 @@ a given key. In the traditional setting, there is one key shared between two
 parties. Any limits on the maximum length of inputs or encryption operations
 apply to that single key. The attacker's goal is to break security
 (confidentiality or integrity) of that specific key. However, in practice, there
-are often many users with independent keys. The "multi-user" security setting
+are often many users with independent keys. This multi-key security setting,
+often referred to as the multi-user setting in the academic literature,
 hence considers an attacker's advantage in breaking security of any of these many
 keys, further assuming the attacker may have done some offline work to help break
-security. As a result, AEAD algorithm limits may depend on offline work and the number
-of users. However, given that a multi-user attacker does not target any specific
-user, acceptable advantages may differ from that of the single-user setting.
+security. As a result, AEAD algorithm limits may depend on offline work and the
+number of keys. However, given that a multi-key attacker does not target any specific
+key, acceptable advantages may differ from that of the single-key setting.
 
 The number of times a single pair of key and nonce can be used might also be
 relevant to security.  For some algorithms, such as AEAD_AES_128_GCM or
@@ -183,22 +191,24 @@ This document defines limitations in part using the quantities below.
 | k | AEAD key length (in bits) |
 | r | AEAD nonce length (in bits) |
 | t | Size of the authentication tag (in bits) |
-| l | Length of each message (in blocks) |
+| l | Maximum length of each message (in blocks) |
 | s | Total plaintext length in all messages (in blocks) |
 | q | Number of protected messages (AEAD encryption invocations) |
 | v | Number of attacker forgery attempts (failed AEAD decryption invocations) |
-| p | Adversary attack probability |
-| o | Offline adversary work (in number of encryption and decryption queries; multi-user setting only) |
-| u | Number of users or keys (multi-user setting only) |
-| B | Maximum number of blocks encrypted by any user or key (multi-user setting only) |
+| p | Upper bound on adversary attack probability |
+| o | Offline adversary work (in number of encryption and decryption queries; multi-key setting only) |
+| u | Number of keys (multi-key setting only) |
+| B | Maximum number of blocks encrypted by any key (multi-key setting only) |
 
 For each AEAD algorithm, we define the (passive) confidentiality and (active)
 integrity advantage roughly as the advantage an attacker has in breaking the
-corresponding classical security property for the algorithm. Moreover, we 
-define the combined authenticated encryption advantage guaranteeing both
-confidentiality and integrity against an active attacker. Specifically:
+corresponding classical security property for the algorithm. A passive attacker
+can query ciphertexts for arbitrary plaintexts. An active attacker can additionally
+query plaintexts for arbitrary ciphertexts. Moreover, we define the combined
+authenticated encryption advantage guaranteeing both confidentiality and integrity
+against an active attacker. Specifically:
 
-- Confidentiality advantage (CA): The probability of a passive attacker
+- Confidentiality advantage (CA): The probability of a passive attacker capable of
 succeeding in breaking the confidentiality properties (IND-CPA) of the AEAD scheme.
 In this document, the definition of confidentiality advantage roughly is the
 probability that an attacker successfully distinguishes the ciphertext outputs
@@ -230,7 +240,7 @@ AEA <= CA + IA
 
 Each application requires an individual determination of limits in order to keep CA
 and IA sufficiently small.  For instance, TLS aims to keep CA below 2^-60 and IA
-below 2^-57 (in the single-user setting). See {{?TLS=RFC8446}}, Section 5.5.
+below 2^-57 (in the single-key setting). See {{?TLS=RFC8446}}, Section 5.5.
 
 # Calculating Limits
 
@@ -267,7 +277,7 @@ secure, i.e., the adversary's advantage does not exceed the targeted probability
 of success, provided that `v <= (p * 2^106) / 8l`. In turn, this implies that
 `v <= (p * 2^103) / l` is the corresponding limit.
 
-# Single-User AEAD Limits {#su-limits}
+# Single-Key AEAD Limits {#su-limits}
 
 This section summarizes the confidentiality and integrity bounds and limits for modern AEAD algorithms
 used in IETF protocols, including: AEAD_AES_128_GCM {{!RFC5116}}, AEAD_AES_256_GCM {{!RFC5116}},
@@ -397,24 +407,24 @@ This results in reducing the limit on `v` by a factor of 2^64.
 v * 2^64 + (2l * (v + q))^2 <= p * 2^128
 ~~~
 
-# Multi-User AEAD Limits {#mu-limits}
+# Multi-Key AEAD Limits {#mu-limits}
 
-In the multi-user setting, each user is assumed to have an independent and
+In the multi-key setting, each user is assumed to have an independent and
 identically distributed key, though nonces may be re-used across users with some
 very small probability. The success probability in attacking one of these many
-independent user keys can be generically bounded by the success probability of
-attacking a single user multiplied by the number of users present {{MUSecurity}}, {{GCM-MU}}.
-Absent concrete multi-user bounds, this means the attacker advantage in the multi-user
-setting is the product of the single-user advantage and the number of users.
+independent keys can be generically bounded by the success probability of
+attacking a single key multiplied by the number of keys present {{MUSecurity}}, {{GCM-MU}}.
+Absent concrete multi-key bounds, this means the attacker advantage in the multi-key
+setting is the product of the single-key advantage and the number of keys.
 
 This section summarizes the confidentiality and integrity bounds and limits for
-the same algorithms as in {{su-limits}} for the multi-user setting. The CL
+the same algorithms as in {{su-limits}} for the multi-key setting. The CL
 and IL values bound the total number of encryption and forgery queries (q and v).
 Alongside each value, we also specify these bounds.
 
 ## AEAD_AES_128_GCM and AEAD_AES_256_GCM
 
-Concrete multi-user bounds for AEAD_AES_128_GCM and AEAD_AES_256_GCM exist
+Concrete multi-key bounds for AEAD_AES_128_GCM and AEAD_AES_256_GCM exist
 due to {{GCM-MU2}}. AES-GCM without nonce
 randomization is also discussed in {{GCM-MU2}}, though this section does not
 include those results as they do not apply to protocols such as TLS 1.3 {{?RFC8446}}.
@@ -486,7 +496,7 @@ q <= (p * 2^127 - 2^79) / (l * B)
 
 ### Integrity Limit
 
-There is currently no dedicated integrity multi-user bound available for
+There is currently no dedicated integrity multi-key bound available for
 AEAD_AES_128_GCM and AEAD_AES_256_GCM. The AE limit can be used to derive
 an integrity limit as
 
@@ -502,9 +512,9 @@ q + v <= (p * 2^127 - 2^79) / (l * B)
 
 ## AEAD_CHACHA20_POLY1305, AEAD_AES_128_CCM, and AEAD_AES_128_CCM_8
 
-There are currently no concrete multi-user bounds for AEAD_CHACHA20_POLY1305,
+There are currently no concrete multi-key bounds for AEAD_CHACHA20_POLY1305,
 AEAD_AES_128_CCM, or AEAD_AES_128_CCM_8. Thus, to account for the additional
-factor `u`, i.e., the number of users, each `p` term in the confidentiality and
+factor `u`, i.e., the number of keys, each `p` term in the confidentiality and
 integrity limits is replaced with `p / u`.
 
 ### AEAD_CHACHA20_POLY1305
@@ -533,11 +543,24 @@ v * 2^64 + (2l * (v + q))^2 <= (p / u) * 2^128
 
 # Security Considerations {#sec-considerations}
 
-Many of the formulae in this document depend on simplifying assumptions that are
-not universally applicable.  When using this document to set limits, it is
-necessary to validate all these assumptions for the setting in which the limits
-might apply.  In most cases, the goal is to use assumptions that result in
-setting a more conservative limit, but this is not always the case.
+Many of the formulae in this document depend on simplifying assumptions,
+from differing models, that are not universally applicable. When using this
+document to set limits, it is necessary to validate all these assumptions
+for the setting in which the limits might apply. In most cases, the goal is
+to use assumptions that result in setting a more conservative limit, but this
+is not always the case. As an example of one such simplification, this document
+defines v as the total number of failed decryption queries, whereas in certain
+models, such as {{GCMProofs}}, it is defined as the total number of queries.
+
+The CA and IL values defined in this document are upper bounds based on existing
+cryptographic research. Future analysis may introduce tighter bounds. Applications
+SHOULD NOT assume these bounds are rigid, and SHOULD accommodate changes.
+
+Note that the limits in this document apply to the adversary's ability to
+conduct a single successful forgery. For some algorithms and in some cases,
+an adversary's success probability in repeating forgeries may be noticeably
+larger than that of the first forgery. As an example, {{MF05}} describes
+such multiple forgery attacks in the context of AES-GCM in more detail.
 
 # IANA Considerations
 
