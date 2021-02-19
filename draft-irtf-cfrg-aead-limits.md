@@ -208,7 +208,7 @@ query plaintexts for arbitrary ciphertexts. Moreover, we define the combined
 authenticated encryption advantage guaranteeing both confidentiality and integrity
 against an active attacker. Specifically:
 
-- Confidentiality advantage (CA): The probability of a passive attacker capable of
+- Confidentiality advantage (CA): The probability of a passive attacker
 succeeding in breaking the confidentiality properties (IND-CPA) of the AEAD scheme.
 In this document, the definition of confidentiality advantage roughly is the
 probability that an attacker successfully distinguishes the ciphertext outputs
@@ -554,7 +554,10 @@ models, such as {{GCMProofs}}, it is defined as the total number of queries.
 
 The CA and IL values defined in this document are upper bounds based on existing
 cryptographic research. Future analysis may introduce tighter bounds. Applications
-SHOULD NOT assume these bounds are rigid, and SHOULD accommodate changes.
+SHOULD NOT assume these bounds are rigid, and SHOULD accommodate changes. In
+particular, in two-party communication, one participant cannot regard apparent
+overuse of a key by other participants as being in error, when it could be that
+the other participant has better information about bounds.
 
 Note that the limits in this document apply to the adversary's ability to
 conduct a single successful forgery. For some algorithms and in some cases,
