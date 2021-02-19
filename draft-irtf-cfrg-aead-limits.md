@@ -550,8 +550,8 @@ document to set limits, it is necessary to validate all these assumptions
 for the setting in which the limits might apply. In most cases, the goal is
 to use assumptions that result in setting a more conservative limit, but this
 is not always the case. As an example of one such simplification, this document
-defines v as the total number of failed decryption queries, whereas in certain
-models, such as {{GCMProofs}}, it is defined as the total number of queries.
+defines v as the total number of failed decryption queries (that is, failed forgery
+attempts), whereas models usually count in v all forgery attempts.
 
 The CA and IL values defined in this document are upper bounds based on existing
 cryptographic research. Future analysis may introduce tighter bounds. Applications
