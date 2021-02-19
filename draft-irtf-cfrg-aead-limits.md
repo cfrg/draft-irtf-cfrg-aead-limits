@@ -126,8 +126,9 @@ both single- and multi-key settings.
 
 An Authenticated Encryption with Associated Data (AEAD) algorithm
 provides confidentiality and integrity. {{!RFC5116}} specifies an AEAD
-as a function with four inputs -- secret key, nonce, optional plaintext,
-and optional associated data -- that produces ciphertext output and an error code
+as a function with four inputs -- secret key, nonce, plaintext, associated data
+(of which plaintext and associated data can optionally be zero-length) -- that
+produces ciphertext output and an error code
 indicating success or failure. The ciphertext is typically composed of the encrypted
 plaintext bytes and an authentication tag.
 
