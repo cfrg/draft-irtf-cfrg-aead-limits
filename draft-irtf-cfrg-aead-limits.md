@@ -544,7 +544,7 @@ v * 2^64 + (2l * (v + q))^2 <= (p / u) * 2^128
 # Security Considerations {#sec-considerations}
 
 Many of the formulae in this document depend on simplifying assumptions,
-from differing models, that are not universally applicable. When using this
+from differing models, which means that results are not universally applicable. When using this
 document to set limits, it is necessary to validate all these assumptions
 for the setting in which the limits might apply. In most cases, the goal is
 to use assumptions that result in setting a more conservative limit, but this
