@@ -544,6 +544,13 @@ v * 2^64 + (2l * (v + q))^2 <= (p / u) * 2^128
 
 # Security Considerations {#sec-considerations}
 
+The different analyses of AEAD functions that this work is based upon generally
+assume that the underlying primitives are ideal.  That is, the pseudorandom
+function (PRF) or pseudorandom permutation (PRP) that the AEAD builds upon
+produces output that is indistinguishable from random.  Thus, the advantage
+estimates assume that the attacker is not able to exploit a weakness in an
+underlying primitive.
+
 Many of the formulae in this document depend on simplifying assumptions,
 from differing models, which means that results are not universally applicable. When using this
 document to set limits, it is necessary to validate all these assumptions
