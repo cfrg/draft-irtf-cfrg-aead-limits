@@ -547,7 +547,7 @@ v * 2^64 + (2l * (v + q))^2 <= (p / u) * 2^128
 The different analyses of AEAD functions that this work is based upon generally
 assume that the underlying primitives are ideal.  For example, that the
 pseudorandom function (PRF) or pseudorandom permutation (PRP) the AEAD builds
-upon produces output that is indistinguishable from random.  Thus, the advantage
+upon is indistinguishable from a truly random function.  Thus, the advantage
 estimates assume that the attacker is not able to exploit a weakness in an
 underlying primitive.
 
