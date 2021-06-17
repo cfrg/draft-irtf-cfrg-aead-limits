@@ -481,7 +481,7 @@ q + v <= (p * 2^127 - 2^79) / (l * B)
 ~~~
 
 This assumes that B is much larger than 100; that is, each user enciphers
-significantly more than 1600 bytes of data.  B should be increased by 97.5 for
+significantly more than 1600 bytes of data.  B should be increased by 161 for
 AEAD_AES_128_GCM and by 97 for AEAD_AES_256_GCM.
 
 Protocols without nonce randomization have limits that are substantially the
@@ -492,7 +492,7 @@ expression for AEA does not include the 2<sup>-48</sup> term:
 q + v <= p * 2^127 / (l * B)
 ~~~
 
-Without nonce randomization, B should be increased by an additional 64.
+Without nonce randomization, B should be increased by an additional 0.5.
 
 
 ### Confidentiality Limit
