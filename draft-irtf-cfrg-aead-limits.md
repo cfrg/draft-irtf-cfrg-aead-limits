@@ -458,7 +458,7 @@ For this AEAD, n = 128, t = 128, and r = 96; the key length is k = 128 or k =
           For o <= 2^70 and B >= 2^8, it is dominated by the 2nd term;
             we assume that and hence omit the 1st term.
           If B is small and k = 128, then \sigma might be relevant and
-            we can add \sigma/2^128
+            we can add n*\sigma/2^128
         - 2nd term (../2^n):
           \sigma*(2B + cn + 2) = \sigma*(B + 97)/2^127 in Theorem 4.3
           \sigma*(2B + cn + 3) = \sigma*(B + 97.5)/2^127 in Theorem 3.1
@@ -492,7 +492,7 @@ expression for AEA does not include the 2<sup>-48</sup> term:
 q + v <= p * 2^127 / (l * B)
 ~~~
 
-Without nonce randomization, B should be increased by an additional 0.5.
+Without nonce randomization, B should be increased by an additional 64.
 
 
 ### Confidentiality Limit
