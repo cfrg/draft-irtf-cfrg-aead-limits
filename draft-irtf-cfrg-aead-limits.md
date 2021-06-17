@@ -425,14 +425,16 @@ Alongside each value, we also specify these bounds.
 
 ## AEAD_AES_128_GCM and AEAD_AES_256_GCM
 
-Concrete multi-key bounds for AEAD_AES_128_GCM and AEAD_AES_256_GCM exist
-due to {{GCM-MU2}}. AES-GCM without nonce
-randomization is also discussed in {{GCM-MU2}}, though this section does not
-include those results as they do not apply to protocols such as TLS 1.3 {{?RFC8446}}.
+Concrete multi-key bounds for AEAD_AES_128_GCM and AEAD_AES_256_GCM exist due to
+Theorem 4.3 in {{GCM-MU2}}, which covers protocols with nonce randomization,
+like TLS 1.3 {{?RFC8446}} and QUIC {{?RFC9001}}.
+
+Results for AES-GCM without nonce randomization are captured by Theorem 3.1 in
+{{GCM-MU2}}, which apply to protocols such as TLS 1.2 {{?RFC5246}}.
 
 For this AEAD, n = 128, t = 128, and r = 96; the key length is k = 128 or k = 256.
 
-### Authenticated Encryption Security Limit
+### Authenticated Encryption Security Limit {#mu-gcm-ae}
 
 <!--
     From {{GCM-MU2}} Theorem 4.3.
@@ -451,12 +453,16 @@ For this AEAD, n = 128, t = 128, and r = 96; the key length is k = 128 or k = 25
           For k = 128, it is negligible if o, (q+v)*l <= 2^70.
           For o <= 2^70 and B >= 2^8, it is dominated by the 2nd term;
             we assume that and hence omit the 1st term.
-        - 2nd term (../2^n):  roughly  = \sigma*B/2^127
+        - 2nd term (../2^n):
+          \sigma*(2B + cn + 2) = \sigma*(B + 97)/2^127 in Theorem 4.3
+          \sigma*(2B + cn + 3) = \sigma*(B + 97.5)/2^127 in Theorem 3.1
+          assuming that B >> 100, the dominant term is \sigma*B/2^127
         - 3rd term (../2^2n):  <= 2^-160, negligible.
         - 4th term (../2^(k+n)):  roughly <= (\sigma^2 + 2o(q+v)) / 2^256
           <= 2^-64, negligible.
         - 5th term (2^(-r/2)):  = 2^48
 -->
+Protocols with nonce randomization have a limit of:
 ~~~
 AEA <= ((q+v)*l*B / 2^127) + (1 / 2^48)
 ~~~
@@ -466,6 +472,23 @@ This implies the following limit:
 ~~~
 q + v <= (p * 2^127 - 2^79) / (l * B)
 ~~~
+
+This assumes that B is much larger than 100; that is, each user enciphers
+significantly more than 1600 bytes of data.  If that does not hold, a lower
+limit applies:
+
+~~~
+q + v <= (p * 2^127 - 2^79) / (l * (B + 97))
+~~~
+
+Protocols without nonce randomization have limit that is substantially the same
+provided that p is not less than 2<sup>-48</sup>, as the simplified expression
+for AEA does not include the 2<sup>-48</sup> term:
+
+~~~
+q + v <= p * 2^127 / (l * (B + 97.5))
+~~~
+
 
 ### Confidentiality Limit
 
@@ -483,7 +506,7 @@ q + v <= (p * 2^127 - 2^79) / (l * B)
 -->
 
 The confidentiality advantage is essentially dominated by the same terms as
-the AE advantage:
+the AE advantage for protocols with nonce randomization:
 
 ~~~
 CA <= (q*l*B / 2^127) + (1 / 2^48)
@@ -492,24 +515,28 @@ CA <= (q*l*B / 2^127) + (1 / 2^48)
 This implies the following limit:
 
 ~~~
-q <= (p * 2^127 - 2^79) / (l * B)
+q <= (p * 2^127 - 2^79) / (l * (B + 97))
 ~~~
+
+As before, the limit without nonce randomization is:
+
+~~~
+q <= (p * 2^127) / (l * (B + 97.5))
+~~~
+
 
 ### Integrity Limit
 
 There is currently no dedicated integrity multi-key bound available for
 AEAD_AES_128_GCM and AEAD_AES_256_GCM. The AE limit can be used to derive
-an integrity limit as
+an integrity limit as:
 
 ~~~
-IA <= AEA <= (q+v)*l*B / 2^127 + 1/2^48
+IA <= AEA
 ~~~
 
-This implies the following limit:
+{{mu-gcm-ae}} therefore contains the integrity limits.
 
-~~~
-q + v <= (p * 2^127 - 2^79) / (l * B)
-~~~
 
 ## AEAD_CHACHA20_POLY1305, AEAD_AES_128_CCM, and AEAD_AES_128_CCM_8
 
