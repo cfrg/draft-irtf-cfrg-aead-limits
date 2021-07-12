@@ -290,7 +290,7 @@ maximum message size (l) of one to determine a limit for q that can be applied
 with byte counting.  This results in attributing per-message overheads to every
 byte, so the resulting limit could be significantly lower than necessary.
 Actions, like rekeying, that are taken to avoid the limit might occur more
-often.  This might be acceptable if the cost of that action is acceptable.
+often as a result.
 
 
 # Single-Key AEAD Limits {#su-limits}
