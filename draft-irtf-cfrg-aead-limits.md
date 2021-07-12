@@ -430,16 +430,16 @@ v * 2^64 + (2l * (v + q))^2 <= p * 2^128
 An example protocol might choose to aim for a single-key CA and IA that is at
 most 2<sup>-50</sup>.  If the messages exchanged in the protocol are at most a
 common Internet MTU of around 1500 bytes, then a value for l might be set to
-2<sup>11</sup>.  The values in {{ex-table}} show values of q and v that might be
+2<sup>7</sup>.  The values in {{ex-table}} show values of q and v that might be
 chosen under these conditions.
 
 | AEAD                   | Maximum q        | Maximum v      |
 |:-----------------------|-----------------:|---------------:|
-| AEAD_AES_128_GCM       | 2<sup>28.5</sup> | 2<sup>67</sup> |
-| AEAD_AES_256_GCM       | 2<sup>28.5</sup> | 2<sup>67</sup> |
-| AEAD_CHACHA20_POLY1305 | n/a              | 2<sup>42</sup> |
-| AEAD_AES_128_CCM       | 2<sup>26</sup>   | 2<sup>26</sup> |
-| AEAD_AES_128_CCM_8     | 2<sup>26.9</sup> | 2<sup>13</sup> |
+| AEAD_AES_128_GCM       | 2<sup>32.5</sup> | 2<sup>71</sup> |
+| AEAD_AES_256_GCM       | 2<sup>32.5</sup> | 2<sup>71</sup> |
+| AEAD_CHACHA20_POLY1305 | n/a              | 2<sup>46</sup> |
+| AEAD_AES_128_CCM       | 2<sup>30</sup>   | 2<sup>30</sup> |
+| AEAD_AES_128_CCM_8     | 2<sup>30.9</sup> | 2<sup>13</sup> |
 {: #ex-table title="Example limits"}
 
 AEAD_CHACHA20_POLY1305 provides no limit to q based on the provided analysis.
@@ -452,7 +452,7 @@ which permits a higher limit for q.
 
 Some protocols naturally limit v to 1, such as TCP-based variants of TLS, which
 terminate sessions on decryption failure.  If v is limited to 1, q can be
-increased to 2<sup>27</sup> for both CCM AEADs.
+increased to 2<sup>31</sup> for both CCM AEADs.
 
 
 
