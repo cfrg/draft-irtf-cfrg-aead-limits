@@ -484,7 +484,7 @@ This assumes that B is much larger than 100; that is, each user enciphers
 significantly more than 1600 bytes of data.  B should be increased by 161 for
 AEAD_AES_128_GCM and by 97 for AEAD_AES_256_GCM.
 
-Protocols without nonce randomization have limits that are substantially the
+Protocols without nonce randomization have limits that are essentially the
 same provided that p is not less than 2<sup>-48</sup>, as the simplified
 expression for AEA does not include the 2<sup>-48</sup> term:
 
