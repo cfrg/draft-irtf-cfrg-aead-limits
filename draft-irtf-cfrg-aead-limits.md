@@ -264,6 +264,7 @@ When limits are expressed as a number of messages an application can encrypt or
 decrypt, this requires assumptions about the size of messages and any
 authenticated additional data (AAD).  Limits can instead be expressed in terms
 of the number of bytes, or blocks, of plaintext and maybe AAD in total.
+
 To aid in translating between message-based and byte/block-based limits,
 a formulation of limits that includes a maximum message size (l) and the AEAD
 schemes' block length in bits (n) is provided.
@@ -278,6 +279,20 @@ targeted maximum attacker success probability of `IA = p`, the algorithm remains
 secure, i.e., the adversary's advantage does not exceed the targeted probability
 of success, provided that `v <= (p * 2^106) / 8l`. In turn, this implies that
 `v <= (p * 2^103) / l` is the corresponding limit.
+
+To apply these limits, implementations can count the number of messages that are
+protected or rejected against the determined limits (q and v respectively).
+This requires that messages cannot exceed the maximum message size (l) that is
+chosen.
+
+This analysis assumes a message-based approach to setting limits.
+Implementations that use byte counting rather than message counting could use a
+maximum message size (l) of one to determine a limit for q that can be applied
+with byte counting.  This results in attributing per-message overheads to every
+byte, so the resulting limit could be significantly lower than necessary.
+Actions, like rekeying, that are taken to avoid the limit might occur more
+often as a result.
+
 
 # Single-Key AEAD Limits {#su-limits}
 
