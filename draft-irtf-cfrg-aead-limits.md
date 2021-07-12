@@ -424,6 +424,7 @@ chosen under these conditions.
 | AEAD_CHACHA20_POLY1305 | n/a              | 2<sup>42</sup> |
 | AEAD_AES_128_CCM       | 2<sup>26</sup>   | 2<sup>26</sup> |
 | AEAD_AES_128_CCM_8     | 2<sup>26.9</sup> | 2<sup>13</sup> |
+{: #ex-table title="Example limits"}
 
 AEAD_CHACHA20_POLY1305 provides no limit to q based on the provided analysis.
 
