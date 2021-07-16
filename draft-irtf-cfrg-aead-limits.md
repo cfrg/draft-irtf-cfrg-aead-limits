@@ -137,17 +137,17 @@ The generic AEAD interface does not describe usage limits.  Each AEAD algorithm
 does describe limits on its inputs, but these are formulated as strict
 functional limits, such as the maximum length of inputs, which are determined by
 the properties of the underlying AEAD composition.  Degradation of the security
-of the AEAD as a single key is used multiple times is not given a thorough
-treatment.
+of the AEAD as a single key is used multiple times is not given the same
+thorough treatment.
 
-These limits might also be influenced by the number of "users" of
+Effective limits can be influenced by the number of "users" of
 a given key. In the traditional setting, there is one key shared between two
 parties. Any limits on the maximum length of inputs or encryption operations
 apply to that single key. The attacker's goal is to break security
 (confidentiality or integrity) of that specific key. However, in practice, there
 are often many users with independent keys. This multi-key security setting,
 often referred to as the multi-user setting in the academic literature,
-hence considers an attacker's advantage in breaking security of any of these many
+considers an attacker's advantage in breaking security of any of these many
 keys, further assuming the attacker may have done some offline work to help break
 security. As a result, AEAD algorithm limits may depend on offline work and the
 number of keys. However, given that a multi-key attacker does not target any specific
@@ -164,9 +164,17 @@ It is good practice to have limits on how many times the same key (or pair of
 key and nonce) are used.  Setting a limit based on some measurable property of
 the usage, such as number of protected messages or amount of data transferred,
 ensures that it is easy to apply limits.  This might require the application of
-simplifying assumptions.  For example, TLS 1.3 specifies limits on the number of
-records that can be protected, using the simplifying assumption that records are
-the same size; see {{Section 5.5 of TLS}}.
+simplifying assumptions.  For example, TLS 1.3 and QUIC both specify limits on
+the number of records that can be protected, using the simplifying assumption
+that records are the same size; see {{Section 5.5 of TLS}} and {{Section 6.6 of
+RFC9001}}.
+
+Exceeding the determined usage limit can be avoided using rekeying.  Rekeying
+uses a lightweight transform to produce new keys.  Rekeying effectively resets
+progress toward single-key limits, allowing a session to be extended without
+degrading security.  Rekeying can also provide a measure of post-compromise
+security.  {{?RFC8645}} contains a thorough survey of rekeying and the
+consequences of different design choices.
 
 Currently, AEAD limits and usage requirements are scattered among peer-reviewed
 papers, standards documents, and other RFCs. Determining the correct limits for
@@ -639,7 +647,7 @@ is not always the case. As an example of one such simplification, this document
 defines v as the total number of failed decryption queries (that is, failed forgery
 attempts), whereas models usually count in v all forgery attempts.
 
-The CA and IL values defined in this document are upper bounds based on existing
+The CA and IA values defined in this document are upper bounds based on existing
 cryptographic research. Future analysis may introduce tighter bounds. Applications
 SHOULD NOT assume these bounds are rigid, and SHOULD accommodate changes. In
 particular, in two-party communication, one participant cannot regard apparent
