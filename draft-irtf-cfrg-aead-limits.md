@@ -590,25 +590,25 @@ For k = 128, assuming o <= q+v, the limits are:
 
 <!--
     Simplifying
-      p <= (((q+v)*o + (q+v)^2) / 2^(k+26)) + ((q+v)*l*B / 2^127)
+      p >= (((q+v)*o + (q+v)^2) / 2^(k+26)) + ((q+v)*l*B / 2^127)
     
     to
     
-      1/2p <= (((q+v)*o + (q+v)^2) / 2^(k+26))
+      1/2p >= (((q+v)*o + (q+v)^2) / 2^(k+26))
       AND
-      1/2p <= ((q+v)*l*B / 2^127)
+      1/2p >= ((q+v)*l*B / 2^127)
 
     and assuming o <= q+v
     yields
 
-      q+v <= p * 2^126 / (l * B)
-      AND
       q+v <= sqrt(p) * 2^76
+      AND
+      q+v <= p * 2^126 / (l * B)
 -->
 
 ~~~
 AEA <= (((q+v)*o + (q+v)^2) / 2^154) + ((q+v)*l*B / 2^127)
-q + v <= min( p * 2^126 / (l * B),  sqrt(p) * 2^76 )
+q + v <= min( sqrt(p) * 2^76,  p * 2^126 / (l * B) )
 ~~~
 
 
@@ -655,7 +655,7 @@ Similarly, the limits for protocols with random, partially implicit nonces are:
 
 ~~~
 CA <= ((q*o + q^2) / 2^(k+26)) + (q*l*B / 2^127)
-q <= min( p * 2^126 / (l * B),  sqrt(p) * 2^76 )
+q <= min( sqrt(p) * 2^76,  p * 2^126 / (l * B) )
 ~~~
 
 
