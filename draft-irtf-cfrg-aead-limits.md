@@ -640,10 +640,22 @@ This implies the following limit:
 q <= (p * 2^127 - 2^79) / (l * B)
 ~~~
 
-As before, the limit without nonce randomization is:
+
+<!--
+    From {{GCM-MU2}} Theorem 5.3,
+    substracting terms for Pr[Bad_7] and Pr[Bad_8],
+    and applying simplifications as above (note there are no verification queries),
+    we obtain:
+
+    Adv^{mu-ae w/o INT}_CGCM <=
+        q * (o + q) / 2^(k+26)   +   \sigma*B/2^127
+-->
+
+Similarly, the limits for protocols with random, partially implicit nonces are:
 
 ~~~
-q <= (p * 2^127) / (l * B)
+CA <= ((q*o + q^2) / 2^(k+26)) + (q*l*B / 2^127)
+q <= min( p * 2^126 / (l * B),  sqrt(p) * 2^76 )
 ~~~
 
 
