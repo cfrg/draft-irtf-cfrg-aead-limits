@@ -548,22 +548,22 @@ AEAD_AES_128_GCM and by 97 for AEAD_AES_256_GCM.
 
     Let:
         - #blocks encrypted/verified overall:   \sigma = (q + v) * l
-		- length R of random implicit nonce part: R = 32 (bits), as in TLS 1.2/RFC5288
+        - length R of random implicit nonce part: R = 32 (bits), as in TLS 1.2/RFC5288
         - worst-case  o (offline work), q+v, \sigma <= 2^77  (as per 1st term)
-		  (Theorem 5.3 requires R >= 32 [satisfied], o <= 2^(n-2);
-		  yields d = (q+v)R/2^(R-1) = (q+v)/2^26.)
+          (Theorem 5.3 requires R >= 32 [satisfied], o <= 2^(n-2);
+          yields d = (q+v)R/2^(R-1) = (q+v)/2^26.)
 
     We can nsimplify the Theorem 5.3 advantage bound as follows:
         - 1st term (../2^k):  roughly <= ((q+v)/2^26 * (o + q+v) + n*\sigma) / 2^k
            roughly <= ((q+v)*o + (q+v)^2) / 2^(k+26) + (q+v)*l / 2^(k-7)
           This is negligible for k = 256.
-		  The second part ("(q+v)*l / 2^(k-7)") is negligible compared to the
-		     first part (and the 2nd term).
-		  For k = 128, what remains is:  ((q+v)*o + (q+v)^2) / 2^(k+26)
-		     which dominates the 2nd term if q+v > B*l*2^25.
+          The second part ("(q+v)*l / 2^(k-7)") is negligible compared to the
+             first part (and the 2nd term).
+          For k = 128, what remains is:  ((q+v)*o + (q+v)^2) / 2^(k+26)
+             which dominates the 2nd term if q+v > B*l*2^25.
         - 2nd term (../2^n):
-		  \sigma*(2B + cn + 2)/2^n = \sigma*(B + 97)/2^127
-		  Assuming that B >> 100, the dominant term is \sigma*B/2^127
+          \sigma*(2B + cn + 2)/2^n = \sigma*(B + 97)/2^127
+          Assuming that B >> 100, the dominant term is \sigma*B/2^127
         - 3rd term (../2^2n):  <= 2^-160, negligible.
         - 4th term (../2^(k+n)):  roughly <= (\sigma^2 + 2o(q+v)) / 2^256
           <= 2^-100, negligible.
