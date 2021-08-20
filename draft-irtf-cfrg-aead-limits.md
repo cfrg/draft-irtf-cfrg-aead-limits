@@ -553,7 +553,7 @@ AEAD_AES_128_GCM and by 97 for AEAD_AES_256_GCM.
           (Theorem 5.3 requires R >= 32 [satisfied], o <= 2^(n-2);
           yields d = (q+v)R/2^(R-1) = (q+v)/2^26.)
 
-    We can nsimplify the Theorem 5.3 advantage bound as follows:
+    We can simplify the Theorem 5.3 advantage bound as follows:
         - 1st term (../2^k):  roughly <= ((q+v)/2^26 * (o + q+v) + n*\sigma) / 2^k
            roughly <= ((q+v)*o + (q+v)^2) / 2^(k+26) + (q+v)*l / 2^(k-7)
           This is negligible for k = 256.
@@ -594,9 +594,9 @@ For k = 128, assuming o <= q+v, the limits are:
     
     to
     
-      1/2p >= (((q+v)*o + (q+v)^2) / 2^(k+26))
+      p/2 >= (((q+v)*o + (q+v)^2) / 2^(k+26))
       AND
-      1/2p >= ((q+v)*l*B / 2^127)
+      p/2 >= ((q+v)*l*B / 2^127)
 
     and assuming o <= q+v
     yields
@@ -643,7 +643,7 @@ q <= (p * 2^127 - 2^79) / (l * B)
 
 <!--
     From {{GCM-MU2}} Theorem 5.3,
-    substracting terms for Pr[Bad_7] and Pr[Bad_8],
+    subtracting terms for Pr[Bad_7] and Pr[Bad_8],
     and applying simplifications as above (note there are no verification queries),
     we obtain:
 
