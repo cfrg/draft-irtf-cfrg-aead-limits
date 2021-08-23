@@ -483,11 +483,15 @@ Alongside each value, we also specify these bounds.
 
 Concrete multi-key bounds for AEAD_AES_128_GCM and AEAD_AES_256_GCM exist due to
 Theorem 4.3 in {{GCM-MU2}}, which covers protocols with nonce randomization,
-like TLS 1.3 {{TLS}} and QUIC {{?RFC9001}}.
+like TLS 1.3 {{TLS}} and QUIC {{?RFC9001}}. Here, the full nonce is XORed with
+a secret, random offset.
 
-Results for AES-GCM without nonce randomization are captured by Theorem 3.1 in
-{{GCM-MU2}}, which apply to protocols such as TLS 1.2 {{?RFC5246}}.  This
-produces similar limits under most conditions.
+Results for AES-GCM with random, partially implicit nonces {{?RFC5288}} are
+captured by Theorem 5.3 in {{GCM-MU2}}, which apply to protocols such as
+TLS 1.2 {{?RFC5246}}. Here, the implicit part of the nonce is a random value,
+of length at least 32 bits and fixed per key, while the explicit part of the
+nonce is a non-repeating counter. The full nonce is the concatenation of the
+two parts. This produces similar limits under most conditions.
 
 For this AEAD, n = 128, t = 128, and r = 96; the key length is k = 128 or k =
 256 for AEAD_AES_128_GCM and AEAD_AES_128_GCM respectively.
@@ -496,7 +500,7 @@ For this AEAD, n = 128, t = 128, and r = 96; the key length is k = 128 or k =
 ### Authenticated Encryption Security Limit {#mu-gcm-ae}
 
 <!--
-    From {{GCM-MU2}} Theorem 4.3.
+    From {{GCM-MU2}} Theorem 4.3; for nonce randomization (XN transform).
 
     Let:
         - #blocks encrypted/verified overall:   \sigma = (q + v) * l
@@ -504,7 +508,7 @@ For this AEAD, n = 128, t = 128, and r = 96; the key length is k = 128 or k =
           (Theorem 4.3 requires q <= 2^(1-e)r ; this yields e >= 0.0104, hence
           d = 1,5/e -1 <= 143 <= 2^8.)
 
-    We can simplify as follows:
+    We can simplify the Theorem 4.3 advantage bound as follows:
         - Note: Last term is 2^-48; hence any other term <= 2^-50 is negligible.
         - 1st term (../2^k):  roughly <= 2^8 * (o + q+v + \sigma) / 2^k
            roughly <= (o + (q+v)*l) / 2^(k-8)
@@ -515,9 +519,8 @@ For this AEAD, n = 128, t = 128, and r = 96; the key length is k = 128 or k =
           If B is small and k = 128, then \sigma might be relevant and
             we can add n*\sigma/2^128
         - 2nd term (../2^n):
-          \sigma*(2B + cn + 2) = \sigma*(B + 97)/2^127 in Theorem 4.3
-          \sigma*(2B + cn + 3) = \sigma*(B + 97.5)/2^127 in Theorem 3.1
-          assuming that B >> 100, the dominant term is \sigma*B/2^127
+          \sigma*(2B + cn + 2)/2^n = \sigma*(B + 97)/2^127
+          Assuming that B >> 100, the dominant term is \sigma*B/2^127
         - 3rd term (../2^2n):  <= 2^-160, negligible.
         - 4th term (../2^(k+n)):  roughly <= (\sigma^2 + 2o(q+v)) / 2^256
           <= 2^-64, negligible.
@@ -539,15 +542,74 @@ This assumes that B is much larger than 100; that is, each user enciphers
 significantly more than 1600 bytes of data.  Otherwise, B should be increased by 161 for
 AEAD_AES_128_GCM and by 97 for AEAD_AES_256_GCM.
 
-Protocols without nonce randomization have limits that are essentially the
-same provided that p is not less than 2<sup>-48</sup>, as the simplified
-expression for AEA does not include the 2<sup>-48</sup> term:
+
+<!--
+    From {{GCM-MU2}} Theorem 5.3; for partial random nonces (CN transform).
+
+    Let:
+        - #blocks encrypted/verified overall:   \sigma = (q + v) * l
+        - length R of random implicit nonce part: R = 32 (bits), as in TLS 1.2/RFC5288
+        - worst-case  o (offline work), q+v, \sigma <= 2^77  (as per 1st term)
+          (Theorem 5.3 requires R >= 32 [satisfied], o <= 2^(n-2);
+          yields d = (q+v)R/2^(R-1) = (q+v)/2^26.)
+
+    We can simplify the Theorem 5.3 advantage bound as follows:
+        - 1st term (../2^k):  roughly <= ((q+v)/2^26 * (o + q+v) + n*\sigma) / 2^k
+           roughly <= ((q+v)*o + (q+v)^2) / 2^(k+26) + (q+v)*l / 2^(k-7)
+          This is negligible for k = 256.
+          The second part ("(q+v)*l / 2^(k-7)") is negligible compared to the
+             first part (and the 2nd term).
+          For k = 128, what remains is:  ((q+v)*o + (q+v)^2) / 2^(k+26)
+             which dominates the 2nd term if q+v > B*l*2^25.
+        - 2nd term (../2^n):
+          \sigma*(2B + cn + 2)/2^n = \sigma*(B + 97)/2^127
+          Assuming that B >> 100, the dominant term is \sigma*B/2^127
+        - 3rd term (../2^2n):  <= 2^-160, negligible.
+        - 4th term (../2^(k+n)):  roughly <= (\sigma^2 + 2o(q+v)) / 2^256
+          <= 2^-100, negligible.
+        - 5th term (2^(-7R)):  = 2^-224, negligible.
+-->
+
+Protocols with random, partially implicit nonces have the following limit,
+which is similar to that for nonce randomization provided that p is not less
+than 2<sup>-48</sup>:
 
 ~~~
+AEA <= (((q+v)*o + (q+v)^2) / 2^(k+26)) + ((q+v)*l*B / 2^127)
+~~~
+
+The first term is negligible if k = 256; this implies the following simplified
+limits:
+
+~~~
+AEA <= (q+v)*l*B / 2^127
 q + v <= p * 2^127 / (l * B)
 ~~~
 
-Without nonce randomization, B should be increased by an additional 0.5.
+For k = 128, assuming o <= q+v (i.e., that the attacker does not spend more work than all legitimate protocol users together), the limits are:
+
+<!--
+    Simplifying
+      p >= (((q+v)*o + (q+v)^2) / 2^(k+26)) + ((q+v)*l*B / 2^127)
+    
+    to
+    
+      p/2 >= (((q+v)*o + (q+v)^2) / 2^(k+26))
+      AND
+      p/2 >= ((q+v)*l*B / 2^127)
+
+    and assuming o <= q+v
+    yields
+
+      q+v <= sqrt(p) * 2^76
+      AND
+      q+v <= p * 2^126 / (l * B)
+-->
+
+~~~
+AEA <= (((q+v)*o + (q+v)^2) / 2^154) + ((q+v)*l*B / 2^127)
+q + v <= min( sqrt(p) * 2^76,  p * 2^126 / (l * B) )
+~~~
 
 
 ### Confidentiality Limit
@@ -578,10 +640,22 @@ This implies the following limit:
 q <= (p * 2^127 - 2^79) / (l * B)
 ~~~
 
-As before, the limit without nonce randomization is:
+
+<!--
+    From {{GCM-MU2}} Theorem 5.3,
+    subtracting terms for Pr[Bad_7] and Pr[Bad_8],
+    and applying simplifications as above (note there are no verification queries),
+    we obtain:
+
+    Adv^{mu-ae w/o INT}_CGCM <=
+        q * (o + q) / 2^(k+26)   +   \sigma*B/2^127
+-->
+
+Similarly, the limits for protocols with random, partially implicit nonces are:
 
 ~~~
-q <= (p * 2^127) / (l * B)
+CA <= ((q*o + q^2) / 2^(k+26)) + (q*l*B / 2^127)
+q <= min( sqrt(p) * 2^76,  p * 2^126 / (l * B) )
 ~~~
 
 
