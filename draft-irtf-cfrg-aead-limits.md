@@ -591,9 +591,9 @@ For k = 128, assuming o <= q+v (i.e., that the attacker does not spend more work
 <!--
     Simplifying
       p >= (((q+v)*o + (q+v)^2) / 2^(k+26)) + ((q+v)*l*B / 2^127)
-    
+
     to
-    
+
       p/2 >= (((q+v)*o + (q+v)^2) / 2^(k+26))
       AND
       p/2 >= ((q+v)*l*B / 2^127)
