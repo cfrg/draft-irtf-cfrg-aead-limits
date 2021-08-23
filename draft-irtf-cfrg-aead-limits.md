@@ -586,7 +586,7 @@ AEA <= (q+v)*l*B / 2^127
 q + v <= p * 2^127 / (l * B)
 ~~~
 
-For k = 128, assuming o <= q+v, the limits are:
+For k = 128, assuming o <= q+v (i.e., that the attacker does not spend more work than all legitimate protocol users together), the limits are:
 
 <!--
     Simplifying
