@@ -308,6 +308,12 @@ This section summarizes the confidentiality and integrity bounds and limits for 
 used in IETF protocols, including: AEAD_AES_128_GCM {{!RFC5116}}, AEAD_AES_256_GCM {{!RFC5116}},
 AEAD_AES_128_CCM {{!RFC5116}}, AEAD_CHACHA20_POLY1305 {{!RFC8439}}, AEAD_AES_128_CCM_8 {{!RFC6655}}.
 
+These algorithms, as cited, all define a nonce length (r) of 96 bits.  Some
+definitions of these AEAD algorithms allow for other nonce lengths, but the
+analyses used in this document all the same nonce length.  Using other nonce
+lengths might result in different bounds; for example, {{GCMProofs}} shows that
+using a variable-length nonce for AES-GCM results in worse security bounds.
+
 The CL and IL values bound the total number of encryption and forgery queries (q and v).
 Alongside each value, we also specify these bounds.
 
