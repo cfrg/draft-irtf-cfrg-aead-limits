@@ -310,7 +310,7 @@ AEAD_AES_128_CCM {{!RFC5116}}, AEAD_CHACHA20_POLY1305 {{!RFC8439}}, AEAD_AES_128
 
 These algorithms, as cited, all define a nonce length (r) of 96 bits.  Some
 definitions of these AEAD algorithms allow for other nonce lengths, but the
-analyses used in this document all the same nonce length.  Using other nonce
+analyses in this document all fix the nonce length to r = 96.  Using other nonce
 lengths might result in different bounds; for example, {{GCMProofs}} shows that
 using a variable-length nonce for AES-GCM results in worse security bounds.
 
