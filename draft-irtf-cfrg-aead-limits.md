@@ -377,7 +377,7 @@ v <= (p * 2^103) / l
 ## AEAD_AES_128_CCM
 
 The CL and IL values for AEAD_AES_128_CCM are derived from {{!CCM-ANALYSIS=DOI.10.1007/3-540-36492-7_7}}
-and specified in the QUIC-TLS mapping specification {{?I-D.ietf-quic-tls}}. This analysis uses the total
+and specified in the QUIC-TLS mapping specification {{?RFC9001}}. This analysis uses the total
 number of underlying block cipher operations to derive its bound. For CCM, this number is the sum of:
 the length of the associated data in blocks, the length of the ciphertext in blocks, the length of
 the plaintext in blocks, plus 1.
