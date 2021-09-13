@@ -60,13 +60,13 @@ normative:
       - ins: M. Bellare
       - ins: C. Namprempre
     date: 2007-07
-    target: http://cseweb.ucsd.edu/~mihir/papers/oem.pdf
+    target: https://eprint.iacr.org/2000/025.pdf
   AEAD:
     title: "Authenticated-Encryption with Associated-Data"
     author:
       - ins: P. Rogaway
     date: 2002-09
-    target: https://cseweb.ucsd.edu/~mihir/papers/musu.pdf
+    target: https://web.cs.ucdavis.edu/~rogaway/papers/ad.pdf
   MUSecurity:
     title: "Public-Key Encryption in a Multi-user Setting: Security Proofs and Improvements"
     author:
