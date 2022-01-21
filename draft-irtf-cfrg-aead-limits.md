@@ -439,7 +439,7 @@ In a setting where `v` or `q` is sufficiently large, `v` is negligible compared 
 `(2l * (v + q))^2`, so this this can be simplified to:
 
 ~~~
-v + q <= p^(1/2) * 2^63 / l
+v + q <= sqrt(p) * 2^63 / l
 ~~~
 
 ## AEAD_AES_128_CCM_8
@@ -464,7 +464,7 @@ v * 2^64 + (2l * (v + q))^2 <= p * 2^128
 An example protocol might choose to aim for a single-key CA and IA that is at
 most 2<sup>-50</sup>.  If the messages exchanged in the protocol are at most a
 common Internet MTU of around 1500 bytes, then a value for l might be set to
-2<sup>7</sup>.  The values in {{ex-table}} show values of q and v that might be
+2<sup>7</sup>.  {{ex-table-su}} shows limits for q and v that might be
 chosen under these conditions.
 
 | AEAD                   | Maximum q        | Maximum v      |
@@ -474,7 +474,7 @@ chosen under these conditions.
 | AEAD_CHACHA20_POLY1305 | n/a              | 2<sup>46</sup> |
 | AEAD_AES_128_CCM       | 2<sup>30</sup>   | 2<sup>30</sup> |
 | AEAD_AES_128_CCM_8     | 2<sup>30.9</sup> | 2<sup>13</sup> |
-{: #ex-table title="Example limits"}
+{: #ex-table-su title="Example single-key limits"}
 
 AEAD_CHACHA20_POLY1305 provides no limit to q based on the provided single-user
 analyses.
@@ -482,7 +482,7 @@ analyses.
 The limit for q on AEAD_AES_128_CCM and AEAD_AES_128_CCM_8 is reduced due to a
 need to reduce the value of q to ensure that IA does not exceed the target.
 This assumes equal proportions for q and v for AEAD_AES_128_CCM.
-AEAD_AES_128_CCM_8 in permits a much smaller value of v due to the shorter tag,
+AEAD_AES_128_CCM_8 permits a much smaller value of v due to the shorter tag,
 which permits a higher limit for q.
 
 Some protocols naturally limit v to 1, such as TCP-based variants of TLS, which
@@ -857,7 +857,7 @@ integrity limits is replaced with `p / u`.
 The multi-key integrity limit for AEAD_AES_128_CCM is as follows.
 
 ~~~
-v + q <= (p / u)^(1/2) * 2^63 / l
+v + q <= sqrt(p / u) * 2^63 / l
 ~~~
 
 Likewise, the multi-key integrity limit for AEAD_AES_128_CCM_8 is as follows.
@@ -865,6 +865,41 @@ Likewise, the multi-key integrity limit for AEAD_AES_128_CCM_8 is as follows.
 ~~~
 v * 2^64 + (2l * (v + q))^2 <= (p / u) * 2^128
 ~~~
+
+
+## Multi-Key Examples
+
+An example protocol might choose to aim for a multi-key AEA, CA, and IA that is at
+most 2<sup>-50</sup>.  If the messages exchanged in the protocol are at most a
+common Internet MTU of around 1500 bytes, then a value for l might be set to
+2<sup>7</sup>.  {{ex-table-mu}} shows limits for q and v across all keys that
+might be chosen under these conditions.
+
+| AEAD                   | Maximum q                | Maximum v              |
+|:-----------------------|-------------------------:|-----------------------:|
+| AEAD_AES_128_GCM       | 2<sup>69</sup>/B         | 2<sup>69</sup>/B       |
+| AEAD_AES_256_GCM       | 2<sup>69</sup>/B         | 2<sup>69</sup>/B       |
+| AEAD_CHACHA20_POLY1305 | 2<sup>100</sup>          | 2<sup>46</sup>         |
+| AEAD_AES_128_CCM       | 2<sup>30</sup>/sqrt(u)   | 2<sup>30</sup>/sqrt(u) |
+| AEAD_AES_128_CCM_8     | 2<sup>30.9</sup>/sqrt(u) | 2<sup>13</sup>/u |
+{: #ex-table-mu title="Example multi-key limits"}
+
+The limits for AEAD_AES_128_GCM, AEAD_AES_256_GCM, AEAD_AES_128_CCM, and
+AEAD_AES_128_CCM_8 assume equal proportions for q and v. The limits for
+AEAD_AES_128_GCM, AEAD_AES_256_GCM and AEAD_CHACHA20_POLY1305 assume nonce
+randomization being deployed, like in TLS 1.3 {{TLS}} and QUIC {{?RFC9001}}.
+
+The limits for AEAD_AES_128_GCM and AEAD_AES_256_GCM further depend on the
+maximum number B of 128-bit blocks encrypted by any single key. For example,
+limiting each key to encrypt at most 2^20 (about a million) messages (of size
+around 1500 bytes as above), this results in B = 2^27 and hence limits for
+q and v of 2^42 messages that can be protected resp. forgery attempts that can
+be tolerated.
+
+Only the limits for AEAD_AES_128_CCM and AEAD_AES_128_CCM_8 depend on the number
+of used keys u, which further reduces them considerably. If v is limited to 1,
+q can be increased to 2<sup>31</sup>/sqrt(u) for both CCM AEADs.
+
 
 # Security Considerations {#sec-considerations}
 
