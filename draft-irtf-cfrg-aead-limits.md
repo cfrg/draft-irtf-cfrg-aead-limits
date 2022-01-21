@@ -655,23 +655,23 @@ q + v <= min( sqrt(p) * 2^76,  p * 2^126 / (l * B) )
     we obtain:
 
     Adv^{mu-ae w/o INT}_RCAU <=
-        2^8 * (o + q) / 2^k   +  \sigma*B/2^127  +  2^48
+        2^8 * (o + q) / 2^k   +  \sigma*B/2^127
 
     For o <= 2^70 and any B, the 1st term is dominated by the 2nd term;
     we assume that and hence again omit the 1st term.
 -->
 
-The confidentiality advantage is essentially dominated by the same terms as
+The confidentiality advantage is essentially dominated by the same term as
 the AE advantage for protocols with nonce randomization:
 
 ~~~
-CA <= (q*l*B / 2^127) + (1 / 2^48)
+CA <= q*l*B / 2^127
 ~~~
 
 This implies the following limit:
 
 ~~~
-q <= (p * 2^127 - 2^79) / (l * B)
+q <= p * 2^127 / (l * B)
 ~~~
 
 
