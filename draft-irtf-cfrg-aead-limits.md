@@ -511,7 +511,8 @@ Alongside each value, we also specify these bounds.
 Concrete multi-key bounds for AEAD_AES_128_GCM and AEAD_AES_256_GCM exist due to
 Theorem 4.3 in {{GCM-MU2}}, which covers protocols with nonce randomization,
 like TLS 1.3 {{TLS}} and QUIC {{?RFC9001}}. Here, the full nonce is XORed with
-a secret, random offset.
+a secret, random offset. The bound for nonce randomization was further improved
+in {{ChaCha20Poly1305-MU}}.
 
 Results for AES-GCM with random, partially implicit nonces {{?RFC5288}} are
 captured by Theorem 5.3 in {{GCM-MU2}}, which apply to protocols such as
@@ -551,18 +552,25 @@ For this AEAD, n = 128, t = 128, and r = 96; the key length is k = 128 or k =
         - 3rd term (../2^2n):  <= 2^-160, negligible.
         - 4th term (../2^(k+n)):  roughly <= (\sigma^2 + 2o(q+v)) / 2^256
           <= 2^-64, negligible.
-        - 5th term (2^(-r/2)):  = 2^48
+        - 5th term (2^(-r/2)):  = 2^-48
+    
+    The 5th term, ensuring that the adversary is d-repeating ({{GCM-MU2}},
+    Theorem 4.2), was improved in {{ChaCha20Poly1305-MU}} Theorem 7.7 to
+      2^-(\delta * r)
+    for which \delta can be chosen as \delta = 2 for d < 2^9.
+    As d < 2^9 does not affect the above simplifications, this only makes the
+    5th term negligible (2^-192), and allows to omit it.
 -->
 Protocols with nonce randomization have a limit of:
 
 ~~~
-AEA <= ((q+v)*l*B / 2^127) + (1 / 2^48)
+AEA <= (q+v)*l*B / 2^127
 ~~~
 
 This implies the following limit:
 
 ~~~
-q + v <= (p * 2^127 - 2^79) / (l * B)
+q + v <= p * 2^127 / (l * B)
 ~~~
 
 This assumes that B is much larger than 100; that is, each user enciphers
@@ -598,8 +606,7 @@ AEAD_AES_128_GCM and by 97 for AEAD_AES_256_GCM.
 -->
 
 Protocols with random, partially implicit nonces have the following limit,
-which is similar to that for nonce randomization provided that p is not less
-than 2<sup>-48</sup>:
+which is similar to that for nonce randomization:
 
 ~~~
 AEA <= (((q+v)*o + (q+v)^2) / 2^(k+26)) + ((q+v)*l*B / 2^127)
