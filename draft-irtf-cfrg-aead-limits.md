@@ -41,7 +41,7 @@ normative:
       - ins: T. Iwata
       - ins: K. Ohashi
       - ins: K. Minematsu
-  ChaCha20Poly1305Bounds:
+  ChaCha20Poly1305-SU:
     title: "A Security Analysis of the Composition of ChaCha20 and Poly1305"
     author:
       - ins: G. Procter
@@ -90,6 +90,15 @@ normative:
       - ins: V. T. Hoang
       - ins: S. Tessaro
       - ins: A. Thiruvengadam
+  ChaCha20Poly1305-MU:
+    title: "The Security of ChaCha20-Poly1305 in the Multi-User Setting"
+    target: https://doi.org/10.1145/3460120.3484814
+    date: 2021-11
+    author: 
+      - ins: J. P. Degabriele
+      - ins: J. Govinden
+      - ins: F. Günther
+      - ins: K. Paterson
 
 
 informative:
@@ -321,7 +330,7 @@ Alongside each value, we also specify these bounds.
 
 The CL and IL values for AES-GCM are derived in {{AEBounds}} and summarized below.
 For this AEAD, n = 128 and t = 128 {{GCM}}. In this example, the length s is the sum
-of AAD and plaintext, as described in {{GCMProofs}}.
+of AAD and plaintext (in blocks of 128 bits), as described in {{GCMProofs}}.
 
 ### Confidentiality Limit
 
@@ -336,7 +345,7 @@ q + s <= p^(1/2) * 2^(129/2) - 1
 ~~~
 
 Which, for a message-based protocol with `s <= q * l`, if we assume that every
-packet is size `l`, produces the limit:
+packet is size `l` (in blocks of 128 bits), produces the limit:
 
 ~~~
 q <= (p^(1/2) * 2^(129/2) - 1) / (l + 1)
@@ -356,22 +365,33 @@ v <= (p * 2^127) / (l + 1)
 
 ## AEAD_CHACHA20_POLY1305
 
-The only known analysis for AEAD_CHACHA20_POLY1305 {{ChaCha20Poly1305Bounds}}
-combines the confidentiality and integrity limits into a single expression,
-covered below:
+The known single-user analyses for AEAD_CHACHA20_POLY1305 {{ChaCha20Poly1305-SU}},
+{{ChaCha20Poly1305-MU}} combine the confidentiality and integrity limits into a
+single expression, covered below. For this AEAD, n = 512, k = 256, and t = 128;
+the length l is the sum of AAD and plaintext (in blocks of 128 bits),
+see {{ChaCha20Poly1305-MU}}.
 
 <!-- I've got to say that this is a pretty unsatisfactory situation. -->
 
+<!--
+    In {{ChaCha20Poly1305-SU}}, L is |AAD| + |plaintext| + 1; the + 1 is one
+    block length encoding.
+    
+    From {{ChaCha20Poly1305-MU}} Theorem 4.1 / 3.4:
+      AE <= v * 2^25 * (l+1) / 2^t
+    where t = 128.
+    (NB: The bound component "c * l" (for c = 3*2^24) is upper-bounding
+    2^25 * (l+1) for the worst case l = |AAD|+|m| = 2; cf. Theorem 3.4.)
+-->
 ~~~
-CA <= v * ((8 * l) / 2^106)
-IA <= v * ((8 * l) / 2^106)
+AEA <= (v * (l + 1)) / 2^103
 ~~~
 
 This advantage is a tight reduction based on the underlying Poly1305 PRF {{!Poly1305=DOI.10.1007/11502760_3}}.
 It implies the following limit:
 
 ~~~
-v <= (p * 2^103) / l
+v <= (p * 2^103) / (l + 1)
 ~~~
 
 ## AEAD_AES_128_CCM
@@ -456,7 +476,8 @@ chosen under these conditions.
 | AEAD_AES_128_CCM_8     | 2<sup>30.9</sup> | 2<sup>13</sup> |
 {: #ex-table title="Example limits"}
 
-AEAD_CHACHA20_POLY1305 provides no limit to q based on the provided analysis.
+AEAD_CHACHA20_POLY1305 provides no limit to q based on the provided single-user
+analyses.
 
 The limit for q on AEAD_AES_128_CCM and AEAD_AES_128_CCM_8 is reduced due to a
 need to reduce the value of q to ensure that IA does not exceed the target.
