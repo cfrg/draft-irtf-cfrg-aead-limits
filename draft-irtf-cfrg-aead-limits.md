@@ -621,9 +621,9 @@ For k = 128, assuming o <= q+v (i.e., that the attacker does not spend more work
 
     to
 
-      p/2 >= (((q+v)*o + (q+v)^2) / 2^(k+26))
+      p/2 >= ((q+v)*o + (q+v)^2) / 2^(k+26)
       AND
-      p/2 >= ((q+v)*l*B / 2^127)
+      p/2 >= (q+v)*l*B / 2^127
 
     and assuming o <= q+v
     yields
@@ -716,8 +716,9 @@ of AAD and plaintext (in blocks of 128 bits).
     Let:
         - d: the max. number of times any nonce is repeated across users
         - \delta: the nonce-randomizer result's parameter
-        - d < 2^8, \delta = 2 be fixed, satisfying Theorem 7.8
+        - d = r * (\delta + 1) - 1 < 2^9, \delta = 2 be fixed, satisfying Theorem 7.8
         - this limits the number of encryption queries to q <= r * 2^(r-1) <= 2^101
+        - o, B <= 2^261 as required for Theorem 7.8
     
     We can simplify the Theorem 7.8 advantage bound as follows:
         - 1st term:  v([constant]* l + 3)/2^t
@@ -726,7 +727,7 @@ of AAD and plaintext (in blocks of 128 bits).
             (v * (l + 1)) / 2^103
         
         - 2nd term:  d(o + q)/2^k
-          For d < 2^8 (as above) and o + q <= 2^144, this is dominated by the 1st term;
+          For d < 2^9 (as above) and o + q <= 2^145, this is dominated by the 1st term;
             we assume that and hence omit the 2nd term.
         
         - 3rd term:  2o * (n - k)/2^k
@@ -775,14 +776,14 @@ is calculated across all used keys.
     the remaining relevant terms are:
     
         - 2nd term:  d(o + q)/2^k
-          As d < 2^8, this yield   (o+q)/2^120
+          As d < 2^9, this is upper bounded by   (o+q)/2^247
         
         - 3rd term:  2o * (n - k)/2^k
-          This is dominated by the 2nd term; we hence omit it.
+          This is  o/2^247 , dominated by the 2nd term; we hence omit it.
         
         - 5th term:  (B + q)^2/2^(n+1)
-          This is dominated by the 2nd term as long as B + q < 2^196;
-          i.e., negligible and we hence omit it.
+          This is dominated by the 2nd term as long as B + q < sqrt(o+q) * 2^133;
+          i.e., likely negligible in comparison, but we include it as both are small.
         
         - 8th term:  1/(\delta * r)
           This is 2^-192 for the chosen \delta = 2, hence negligible and we omit it.
@@ -790,17 +791,40 @@ is calculated across all used keys.
 
 While the AE advantage is dominated by the number of forgery attempts `v`,
 those are irrelevant for the confidentiality advantage. The relevant
-limit for protocols with nonce randomization becomes dominated by the adversary's
-offline work `o` and number of protected messages across all used keys `q`:
+limit for protocols with nonce randomization becomes dominated, at a very low
+level, by the adversary's offline work `o`, number of protected messages `q`
+and maximum blocks encrypted `B`, across all used keys:
 
 ~~~
-CA <= (o + q) / 2^120
+CA <= ((o + q) / 2^247) + ((B + q)^2 / 2^513)
 ~~~
 
-It implies the following limit:
+<!--
+    Simplifying
+      p >= ((o + q) / 2^247) + ((B + q)^2 / 2^513)
+
+    to
+
+      p/2 >= (o + q) / 2^247
+      AND
+      p/2 >= (B + q)^2 / 2^513
+
+    yields
+
+      q <= (p * 2^246) - o
+      AND
+      q <= sqrt(p) * 2^256 - B
+    
+    In addition, the restrictions on q from {{ChaCha20Poly1305-MU}} Theorem 7.8
+    applies: q <= r * 2^(r-1) <= 2^101.
+    We round this to 2^100; this value can be slightly increased trading off d.
+-->
+
+It implies the following simplified limit, which for most reasonable values
+of `p` is dominated by a technical limitation around `q = 2^100`:
 
 ~~~
-q <= (p * 2^120) - o
+q <= min( p * 2^246 - o,  sqrt(p) * 2^256 - B, 2^100 )
 ~~~
 
 
