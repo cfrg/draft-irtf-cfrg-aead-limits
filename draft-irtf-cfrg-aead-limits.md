@@ -90,15 +90,7 @@ normative:
       - ins: V. T. Hoang
       - ins: S. Tessaro
       - ins: A. Thiruvengadam
-  ChaCha20Poly1305-MU:
-    title: "The Security of ChaCha20-Poly1305 in the Multi-User Setting"
-    target: https://doi.org/10.1145/3460120.3484814
-    date: 2021-11
-    author: 
-      - ins: J. P. Degabriele
-      - ins: J. Govinden
-      - ins: F. Günther
-      - ins: K. Paterson
+  ChaCha20Poly1305-MU: DOI.10.1145/3460120.3484814
 
 
 informative:
@@ -371,7 +363,6 @@ single expression, covered below. For this AEAD, n = 512, k = 256, and t = 128;
 the length l is the sum of AAD and plaintext (in blocks of 128 bits),
 see {{ChaCha20Poly1305-MU}}.
 
-<!-- I've got to say that this is a pretty unsatisfactory situation. -->
 
 <!--
     In {{ChaCha20Poly1305-SU}}, L is |AAD| + |plaintext| + 1; the + 1 is one
@@ -747,7 +738,7 @@ of AAD and plaintext (in blocks of 128 bits).
           This is dominated by the 1st term as long as B + q < 2^205;
           i.e., negligible and we hence omit it.
         
-        - 6th term:  1/2^(2t-2) = 2^-126
+        - 6th term:  1/2^(2t-2) = 2^-254
           This is negligible, we hence omit it.
         
         - 7th term:  1/2^(n - k - 2) = 2^-254
@@ -778,7 +769,7 @@ is calculated across all used keys.
 
 <!--
     From {{ChaCha20Poly1305-MU}} Theorem 7.8
-    substracting terms for Pr[Bad_5] and Pr[Bad_6],
+    subtracting terms for Pr[Bad_5] and Pr[Bad_6],
     and applying simplifications as above (note there are no verification queries),
     the remaining relevant terms are:
     
@@ -886,8 +877,8 @@ might be chosen under these conditions.
 
 The limits for AEAD_AES_128_GCM, AEAD_AES_256_GCM, AEAD_AES_128_CCM, and
 AEAD_AES_128_CCM_8 assume equal proportions for q and v. The limits for
-AEAD_AES_128_GCM, AEAD_AES_256_GCM and AEAD_CHACHA20_POLY1305 assume nonce
-randomization being deployed, like in TLS 1.3 {{TLS}} and QUIC {{?RFC9001}}.
+AEAD_AES_128_GCM, AEAD_AES_256_GCM and AEAD_CHACHA20_POLY1305 assume the use
+of nonce randomization, like in TLS 1.3 {{TLS}} and QUIC {{?RFC9001}}.
 
 The limits for AEAD_AES_128_GCM and AEAD_AES_256_GCM further depend on the
 maximum number B of 128-bit blocks encrypted by any single key. For example,
