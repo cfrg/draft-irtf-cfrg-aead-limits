@@ -882,10 +882,8 @@ of nonce randomization, like in TLS 1.3 {{TLS}} and QUIC {{?RFC9001}}.
 
 The limits for AEAD_AES_128_GCM and AEAD_AES_256_GCM further depend on the
 maximum number B of 128-bit blocks encrypted by any single key. For example,
-limiting each key to encrypt at most 2^20 (about a million) messages (of size
-around 1500 bytes as above), this results in B = 2^27 and hence limits for
-q and v of 2^42 messages that can be protected resp. forgery attempts that can
-be tolerated.
+limiting the number of messages (of size <= 2^7 blocks) to at most 2^20 (about a
+million) per key results in B = 2^27, which limits both q and v to 2^42 messages.
 
 Only the limits for AEAD_AES_128_CCM and AEAD_AES_128_CCM_8 depend on the number
 of used keys u, which further reduces them considerably. If v is limited to 1,
