@@ -895,11 +895,11 @@ q can be increased to 2<sup>31</sup>/sqrt(u) for both CCM AEADs.
 # Security Considerations {#sec-considerations}
 
 The different analyses of AEAD functions that this work is based upon generally
-assume that the underlying primitives are ideal.  For example, that the
-pseudorandom function (PRF) or pseudorandom permutation (PRP) the AEAD builds
-upon is indistinguishable from a truly random function, resp. permutation.
-Thus, the advantage estimates assume that the attacker is not able to exploit
-a weakness in an underlying primitive.
+assume that the underlying primitives are ideal.  For example, that a
+pseudorandom function (PRF) used by the AEAD is indistinguishable from a truly
+random function or that a pseudorandom permutation (PRP) is indistinguishable
+from a truly random permutation. Thus, the advantage estimates assume that the
+attacker is not able to exploit a weakness in an underlying primitive.
 
 Many of the formulae in this document depend on simplifying assumptions,
 from differing models, which means that results are not universally applicable. When using this
