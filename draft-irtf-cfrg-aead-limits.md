@@ -726,6 +726,10 @@ of AAD and plaintext (in blocks of 128 bits).
         
         - 2nd term:  d(o + q)/2^k
           For d < 2^9 (as above) and o + q <= 2^145, this is dominated by the 1st term;
+          [[ 1st term <= 2nd term as long as v * (l + 1)/2^103 <= d(o + q)/2^256;
+          i.e., o + q <= v * (l + 1) * 2^153 / d.
+          Even for minimal values v = 1 and l = 1 in 1st term, with d < 2^9,
+          this holds as long as o + q <= 2^145. ]]
             we assume that and hence omit the 2nd term.
         
         - 3rd term:  2o * (n - k)/2^k
