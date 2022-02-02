@@ -172,7 +172,7 @@ RFC9001}}.
 Exceeding the determined usage limit can be avoided using rekeying.  Rekeying
 uses a lightweight transform to produce new keys.  Rekeying effectively resets
 progress toward single-key limits, allowing a session to be extended without
-degrading security.  Rekeying can also provide a measure of forward and/or
+degrading security.  Rekeying can also provide a measure of forward and
 backward (post-compromise) security.  {{?RFC8645}} contains a thorough survey
 of rekeying and the consequences of different design choices.
 
