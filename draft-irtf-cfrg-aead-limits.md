@@ -172,9 +172,9 @@ RFC9001}}.
 Exceeding the determined usage limit can be avoided using rekeying.  Rekeying
 uses a lightweight transform to produce new keys.  Rekeying effectively resets
 progress toward single-key limits, allowing a session to be extended without
-degrading security.  Rekeying can also provide a measure of post-compromise
-security.  {{?RFC8645}} contains a thorough survey of rekeying and the
-consequences of different design choices.
+degrading security.  Rekeying can also provide a measure of forward and
+backward (post-compromise) security.  {{?RFC8645}} contains a thorough survey
+of rekeying and the consequences of different design choices.
 
 Currently, AEAD limits and usage requirements are scattered among peer-reviewed
 papers, standards documents, and other RFCs. Determining the correct limits for
@@ -193,7 +193,8 @@ it.
 
 # Notation
 
-This document defines limitations in part using the quantities below.
+This document defines limitations in part using the quantities in
+{{notation-table}} below.
 
 | Symbol  | Description |
 |-:-|:-|
@@ -209,6 +210,7 @@ This document defines limitations in part using the quantities below.
 | o | Offline adversary work (in number of encryption and decryption queries; multi-key setting only) |
 | u | Number of keys (multi-key setting only) |
 | B | Maximum number of blocks encrypted by any key (multi-key setting only) |
+{: #notation-table title="Notation"}
 
 For each AEAD algorithm, we define the (passive) confidentiality and (active)
 integrity advantage roughly as the advantage an attacker has in breaking the
@@ -224,12 +226,12 @@ In this document, the definition of confidentiality advantage roughly is the
 probability that an attacker successfully distinguishes the ciphertext outputs
 of the AEAD scheme from the outputs of a random function.
 
-- Integrity advantage (IA): The probability of a active attacker succeeding
+- Integrity advantage (IA): The probability of an active attacker succeeding
 in breaking the integrity properties (INT-CTXT) of the AEAD scheme. In this document,
 the definition of integrity advantage roughly is the probability that an attacker
 is able to forge a ciphertext that will be accepted as valid.
 
-- Authenticated Encryption advantage (AEA): The probability of a active
+- Authenticated Encryption advantage (AEA): The probability of an active
 attacker succeeding in breaking the authenticated-encryption properties of the
 AEAD scheme. In this document, the definition of authenticated encryption
 advantage roughly is the probability that an attacker successfully distinguishes
@@ -307,6 +309,9 @@ often as a result.
 This section summarizes the confidentiality and integrity bounds and limits for modern AEAD algorithms
 used in IETF protocols, including: AEAD_AES_128_GCM {{!RFC5116}}, AEAD_AES_256_GCM {{!RFC5116}},
 AEAD_AES_128_CCM {{!RFC5116}}, AEAD_CHACHA20_POLY1305 {{!RFC8439}}, AEAD_AES_128_CCM_8 {{!RFC6655}}.
+The limits in this section apply to using these schemes with a single key;
+for settings where multiple keys are deployed (for example, when rekeying within
+a connection), see {{mu-limits}}.
 
 These algorithms, as cited, all define a nonce length (r) of 96 bits.  Some
 definitions of these AEAD algorithms allow for other nonce lengths, but the
@@ -315,7 +320,7 @@ lengths might result in different bounds; for example, {{GCMProofs}} shows that
 using a variable-length nonce for AES-GCM results in worse security bounds.
 
 The CL and IL values bound the total number of encryption and forgery queries (q and v).
-Alongside each value, we also specify these bounds.
+Alongside each advantage value, we also specify these bounds.
 
 ## AEAD_AES_128_GCM and AEAD_AES_256_GCM
 
