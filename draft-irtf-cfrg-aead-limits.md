@@ -789,49 +789,43 @@ is calculated across all used keys.
           This is  o/2^247 , dominated by the 2nd term; we hence omit it.
 
         - 5th term:  (B + q)^2/2^(n+1)
-          This is dominated by the 2nd term as long as B + q < sqrt(o+q) * 2^133;
-          i.e., likely negligible in comparison, but we include it as both are small.
+
+          This is dominated by the 2nd term as long as B + q < sqrt(o+q) * 2^133.
+
+          We omit this term on the basis that B <= q * l and there is no value
+          of q less than 2^100 (see below) for which B > sqrt(q) * 2^133 given
+          that constraint.
+
+          Even with a single user and a single key such that B = q * l, and no
+          offline work from the adversary (o = 0) the term is only relevant when
+          q * l = sqrt(q) * 2^133.  With q capped at 2^100, the smallest value
+          of l that can result from this is 2^83, which is impractically large.
 
         - 8th term:  1/(\delta * r)
           This is 2^-192 for the chosen \delta = 2, hence negligible and we omit it.
 -->
 
-While the AE advantage is dominated by the number of forgery attempts `v`,
-those are irrelevant for the confidentiality advantage. The relevant
-limit for protocols with nonce randomization becomes dominated, at a very low
-level, by the adversary's offline work `o`, number of protected messages `q`
-and maximum blocks encrypted `B`, across all used keys:
+While the AE advantage is dominated by the number of forgery attempts `v`, those
+are irrelevant for the confidentiality advantage. The relevant limit for
+protocols with nonce randomization becomes dominated, at a very low level, by
+the adversary's offline work `o`, and the number of protected messages `q`
+across all used keys:
 
 ~~~
-CA <= ((o + q) / 2^247) + ((B + q)^2 / 2^513)
+CA <= (o + q) / 2^247)
 ~~~
 
 <!--
-    Simplifying
-      p >= ((o + q) / 2^247) + ((B + q)^2 / 2^513)
-
-    to
-
-      p/2 >= (o + q) / 2^247
-      AND
-      p/2 >= (B + q)^2 / 2^513
-
-    yields
-
-      q <= (p * 2^246) - o
-      AND
-      q <= sqrt(p) * 2^256 - B
-
     In addition, the restrictions on q from {{ChaCha20Poly1305-MU}} Theorem 7.8
     applies: q <= r * 2^(r-1) <= 2^101.
     We round this to 2^100; this value can be slightly increased trading off d.
 -->
 
-It implies the following simplified limit, which for most reasonable values
-of `p` is dominated by a technical limitation around `q = 2^100`:
+This implies the following simplified limit, which for most reasonable values of
+`p` is dominated by a technical limitation of approximately `q = 2^100`:
 
 ~~~
-q <= min( p * 2^246 - o,  sqrt(p) * 2^256 - B, 2^100 )
+q <= min( p * 2^247 - o, 2^100 )
 ~~~
 
 
