@@ -799,7 +799,8 @@ is calculated across all used keys.
           Even with a single user and a single key such that B = q * l, and no
           offline work from the adversary (o = 0) the term is only relevant when
           q * l = sqrt(q) * 2^133.  With q capped at 2^100, the smallest value
-          of l that can result from this is 2^83, which is impractically large.
+          of l that can result from this is 2^83, which far exceeds the maximum
+          size of a single message at 2^32.
 
         - 8th term:  1/(\delta * r)
           This is 2^-192 for the chosen \delta = 2, hence negligible and we omit it.
