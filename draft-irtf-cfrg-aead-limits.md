@@ -372,7 +372,7 @@ see {{ChaCha20Poly1305-MU}}.
 <!--
     In {{ChaCha20Poly1305-SU}}, L is |AAD| + |plaintext| + 1; the + 1 is one
     block length encoding.
-    
+
     From {{ChaCha20Poly1305-MU}} Theorem 4.1 / 3.4:
       AE <= v * 2^25 * (l+1) / 2^t
     where t = 128.
@@ -549,7 +549,7 @@ For this AEAD, n = 128, t = 128, and r = 96; the key length is k = 128 or k =
         - 4th term (../2^(k+n)):  roughly <= (\sigma^2 + 2o(q+v)) / 2^256
           <= 2^-64, negligible.
         - 5th term (2^(-r/2)):  = 2^-48
-    
+
     The 5th term, ensuring that the adversary is d-repeating ({{GCM-MU2}},
     Theorem 4.2), was improved in {{ChaCha20Poly1305-MU}} Theorem 7.7 to
       2^-(\delta * r)
@@ -715,20 +715,20 @@ of AAD and plaintext (in blocks of 128 bits).
 
 <!--
     From {{ChaCha20Poly1305-MU}} Theorem 7.8; for nonce randomization (XN transform).
-    
+
     Let:
         - d: the max. number of times any nonce is repeated across users
         - \delta: the nonce-randomizer result's parameter
         - d = r * (\delta + 1) - 1 < 2^9, \delta = 2 be fixed, satisfying Theorem 7.8
         - this limits the number of encryption queries to q <= r * 2^(r-1) <= 2^101
         - o, B <= 2^261 as required for Theorem 7.8
-    
+
     We can simplify the Theorem 7.8 advantage bound as follows:
         - 1st term:  v([constant]* l + 3)/2^t
           Via Theorem 3.4, the more precise term is:  v * (2^25 * (l + 1) + 3) / 2^128
           The 3v/2^t summand is dominated by the rest, so we simplify to
             (v * (l + 1)) / 2^103
-        
+
         - 2nd term:  d(o + q)/2^k
           For d < 2^9 (as above) and o + q <= 2^145, this is dominated by the 1st term;
           [[ 1st term <= 2nd term as long as v * (l + 1)/2^103 <= d(o + q)/2^256;
@@ -736,23 +736,23 @@ of AAD and plaintext (in blocks of 128 bits).
           Even for minimal values v = 1 and l = 1 in 1st term, with d < 2^9,
           this holds as long as o + q <= 2^145. ]]
             we assume that and hence omit the 2nd term.
-        
+
         - 3rd term:  2o * (n - k)/2^k
           This is dominated by the 2nd term; we hence omit it.
-        
+
         - 4th term:  2v * (n - k + 4t)/2^k
           This is dominated by the 1st term; we hence omit it.
-        
+
         - 5th term:  (B + q)^2/2^(n+1)
           This is dominated by the 1st term as long as B + q < 2^205;
           i.e., negligible and we hence omit it.
-        
+
         - 6th term:  1/2^(2t-2) = 2^-254
           This is negligible, we hence omit it.
-        
+
         - 7th term:  1/2^(n - k - 2) = 2^-254
           This is negligible, we hence omit it.
-        
+
         - 8th term:  1/(\delta * r)
           This is 2^-192 for the chosen \delta = 2, hence negligible and we omit it.
 -->
@@ -781,17 +781,17 @@ is calculated across all used keys.
     subtracting terms for Pr[Bad_5] and Pr[Bad_6],
     and applying simplifications as above (note there are no verification queries),
     the remaining relevant terms are:
-    
+
         - 2nd term:  d(o + q)/2^k
           As d < 2^9, this is upper bounded by   (o+q)/2^247
-        
+
         - 3rd term:  2o * (n - k)/2^k
           This is  o/2^247 , dominated by the 2nd term; we hence omit it.
-        
+
         - 5th term:  (B + q)^2/2^(n+1)
           This is dominated by the 2nd term as long as B + q < sqrt(o+q) * 2^133;
           i.e., likely negligible in comparison, but we include it as both are small.
-        
+
         - 8th term:  1/(\delta * r)
           This is 2^-192 for the chosen \delta = 2, hence negligible and we omit it.
 -->
@@ -821,7 +821,7 @@ CA <= ((o + q) / 2^247) + ((B + q)^2 / 2^513)
       q <= (p * 2^246) - o
       AND
       q <= sqrt(p) * 2^256 - B
-    
+
     In addition, the restrictions on q from {{ChaCha20Poly1305-MU}} Theorem 7.8
     applies: q <= r * 2^(r-1) <= 2^101.
     We round this to 2^100; this value can be slightly increased trading off d.
