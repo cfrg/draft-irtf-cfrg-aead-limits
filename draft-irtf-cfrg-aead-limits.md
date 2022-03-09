@@ -809,7 +809,7 @@ is calculated across all used keys.
 While the AE advantage is dominated by the number of forgery attempts `v`, those
 are irrelevant for the confidentiality advantage. The relevant limit for
 protocols with nonce randomization becomes dominated, at a very low level, by
-the adversary's offline work `o`, and the number of protected messages `q`
+the adversary's offline work `o` and the number of protected messages `q`
 across all used keys:
 
 ~~~
