@@ -511,11 +511,14 @@ a secret, random offset. The bound for nonce randomization was further improved
 in {{ChaCha20Poly1305-MU}}.
 
 Results for AES-GCM with random, partially implicit nonces {{?RFC5288}} are
-captured by Theorem 5.3 in {{GCM-MU2}}, which apply to protocols such as
-TLS 1.2 {{?RFC5246}}. Here, the implicit part of the nonce is a random value,
-of length at least 32 bits and fixed per key, while the explicit part of the
-nonce is a non-repeating counter. The full nonce is the concatenation of the
-two parts. This produces similar limits under most conditions.
+captured by Theorem 5.3 in {{GCM-MU2}}, which apply to protocols such as TLS 1.2
+{{?RFC5246}}. Here, the implicit part of the nonce is a random value, of length
+at least 32 bits and fixed per key, while we assume that the explicit part of
+the nonce is chosen using a non-repeating process. The full nonce is the
+concatenation of the two parts. This produces similar limits under most
+conditions.  Note that implementations that choose the explicit part at random
+have a higher chance of nonce collisions and are neither recommended nor
+considered.
 
 For this AEAD, n = 128, t = 128, and r = 96; the key length is k = 128 or k =
 256 for AEAD_AES_128_GCM and AEAD_AES_128_GCM respectively.
