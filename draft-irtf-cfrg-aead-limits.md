@@ -2,14 +2,14 @@
 title: Usage Limits on AEAD Algorithms
 abbrev: AEAD Limits
 docname: draft-irtf-cfrg-aead-limits-latest
-date:
 category: info
+stream: IRTF
 
-ipr: trust200902
-keyword: Internet-Draft
-
-stand_alone: yes
-pi: [toc, sortrefs, symrefs]
+v: 3
+keyword:
+  - safe
+  - big numbers
+  - crypto
 
 author:
  -  ins: F. Günther
