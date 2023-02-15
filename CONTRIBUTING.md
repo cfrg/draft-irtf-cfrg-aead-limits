@@ -29,3 +29,17 @@ technical issues needs to occur on the mailing list.
 
 You might also like to familiarize yourself with other
 [working group documents](https://datatracker.ietf.org/wg/cfrg/documents/).
+## Working Group Information
+
+Discussion of this work occurs on the [Crypto Forum
+Research Group mailing list](mailto:cfrg@ietf.org)
+([archive](https://mailarchive.ietf.org/arch/search/?email_list=cfrg),
+[subscribe](cfrg-request@ietf.org)).
+In addition to contributions in GitHub, you are encouraged to participate in
+discussions there.
+
+**Note**: Some working groups adopt a policy whereby substantive discussion of
+technical issues needs to occur on the mailing list.
+
+You might also like to familiarize yourself with other
+[Research Group documents](https://datatracker.ietf.org/rg/cfrg/documents/).
