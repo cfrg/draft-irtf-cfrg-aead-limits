@@ -1,2 +1,3 @@
-# Automatically generated CODEOWNERS file.
+# Automatically generated CODEOWNERS
+# Regenerate with `make update-codeowners`
 draft-irtf-cfrg-aead-limits.md mail@felixguenther.info mt@lowentropy.net caw@heapingbits.net
