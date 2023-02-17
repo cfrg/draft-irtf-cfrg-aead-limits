@@ -90,7 +90,15 @@ normative:
       - ins: V. T. Hoang
       - ins: S. Tessaro
       - ins: A. Thiruvengadam
-  ChaCha20Poly1305-MU: DOI.10.1145/3460120.3484814
+  ChaCha20Poly1305-MU:
+    title: "The Security of ChaCha20-Poly1305 in the Multi-user Setting"
+    target: https://eprint.iacr.org/2023/085.pdf
+    date: 2023-01-24
+    author:
+      - ins: J. P. Degabriele
+      - ins: J. Govinden
+      - ins: F. Günther
+      - ins: K. G. Paterson
 
 
 informative:
