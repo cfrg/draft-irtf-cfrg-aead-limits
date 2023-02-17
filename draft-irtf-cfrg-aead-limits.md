@@ -211,7 +211,7 @@ This document defines limitations in part using the quantities in
 | k | AEAD key length (in bits) |
 | r | AEAD nonce length (in bits) |
 | t | Size of the authentication tag (in bits) |
-| l | Maximum length of each message (in blocks) |
+| L | Maximum length of each message (in blocks) |
 | s | Total plaintext length in all messages (in blocks) |
 | q | Number of protected messages (AEAD encryption invocations) |
 | v | Number of attacker forgery attempts (failed AEAD decryption invocations) |
@@ -285,34 +285,34 @@ authenticated additional data (AAD).  Limits can instead be expressed in terms
 of the number of bytes, or blocks, of plaintext and maybe AAD in total.
 
 To aid in translating between message-based and byte/block-based limits,
-a formulation of limits that includes a maximum message size (l) and the AEAD
-schemes' block length in bits (n) is provided.
+a formulation of limits that includes a maximum message size (`L`) and the AEAD
+schemes' block length in bits (`n`) is provided.
 
 All limits are based on the total number of messages, either the number of
-protected messages (q) or the number of forgery attempts (v); which correspond
+protected messages (`q`) or the number of forgery attempts (`v`); which correspond
 to CL and IL respectively.
 
 Limits are then derived from those bounds using a target attacker probability.
-For example, given an integrity advantage of `IA = v * (8l / 2^106)` and a
+For example, given an integrity advantage of `IA = v * (8L / 2^106)` and a
 targeted maximum attacker success probability of `IA = p`, the algorithm remains
 secure, i.e., the adversary's advantage does not exceed the targeted probability
-of success, provided that `v <= (p * 2^106) / 8l`. In turn, this implies that
-`v <= (p * 2^103) / l` is the corresponding limit.
+of success, provided that `v <= (p * 2^106) / 8L`. In turn, this implies that
+`v <= (p * 2^103) / L` is the corresponding limit.
 
 To apply these limits, implementations can count the number of messages that are
-protected or rejected against the determined limits (q and v respectively).
-This requires that messages cannot exceed the maximum message size (l) that is
+protected or rejected against the determined limits (`q` and `v` respectively).
+This requires that messages cannot exceed the maximum message size (`L`) that is
 chosen.
 
 ## Approximations
 
 This analysis assumes a message-based approach to setting limits.
 Implementations that use byte counting rather than message counting could use a
-maximum message size (l) of one to determine a limit for q that can be applied
-with byte counting.  This results in attributing per-message overheads to every
-byte, so the resulting limit could be significantly lower than necessary.
-Actions, like rekeying, that are taken to avoid the limit might occur more
-often as a result.
+maximum message size (`L`) of one to determine a limit for the number of
+protected messages (`q`) that can be applied with byte counting.  This results
+in attributing per-message overheads to every byte, so the resulting limit could
+be significantly lower than necessary.  Actions, like rekeying, that are taken
+to avoid the limit might occur more often as a result.
 
 To simplify formulae, estimates in this document elide terms that contribute
 negligible advantage to an attacker relative to other terms.
@@ -343,19 +343,19 @@ The limits in this section apply to using these schemes with a single key;
 for settings where multiple keys are deployed (for example, when rekeying within
 a connection), see {{mu-limits}}.
 
-These algorithms, as cited, all define a nonce length (r) of 96 bits.  Some
+These algorithms, as cited, all define a nonce length (`r`) of 96 bits.  Some
 definitions of these AEAD algorithms allow for other nonce lengths, but the
-analyses in this document all fix the nonce length to r = 96.  Using other nonce
+analyses in this document all fix the nonce length to `r = 96`.  Using other nonce
 lengths might result in different bounds; for example, {{GCMProofs}} shows that
 using a variable-length nonce for AES-GCM results in worse security bounds.
 
-The CL and IL values bound the total number of encryption and forgery queries (q and v).
+The CL and IL values bound the total number of encryption and forgery queries (`q` and `v`).
 Alongside each advantage value, we also specify these bounds.
 
 ## AEAD_AES_128_GCM and AEAD_AES_256_GCM
 
 The CL and IL values for AES-GCM are derived in {{AEBounds}} and summarized below.
-For this AEAD, n = 128 and t = 128 {{GCM}}. In this example, the length s is the sum
+For this AEAD, `n = 128` and `t = 128` {{GCM}}. In this example, the length `s` is the sum
 of AAD and plaintext (in blocks of 128 bits), as described in {{GCMProofs}}.
 
 ### Confidentiality Limit
@@ -370,32 +370,32 @@ This implies the following usage limit:
 q + s <= p^(1/2) * 2^(129/2) - 1
 ~~~
 
-Which, for a message-based protocol with `s <= q * l`, if we assume that every
-packet is size `l` (in blocks of 128 bits), produces the limit:
+Which, for a message-based protocol with `s <= q * L`, if we assume that every
+packet is size `L` (in blocks of 128 bits), produces the limit:
 
 ~~~
-q <= (p^(1/2) * 2^(129/2) - 1) / (l + 1)
+q <= (p^(1/2) * 2^(129/2) - 1) / (L + 1)
 ~~~
 
 ### Integrity Limit
 
 ~~~
-IA <= 2 * (v * (l + 1)) / 2^128
+IA <= 2 * (v * (L + 1)) / 2^128
 ~~~
 
 This implies the following limit:
 
 ~~~
-v <= (p * 2^127) / (l + 1)
+v <= (p * 2^127) / (L + 1)
 ~~~
 
 ## AEAD_CHACHA20_POLY1305
 
-The known single-user analyses for AEAD_CHACHA20_POLY1305 {{ChaCha20Poly1305-SU}},
-{{ChaCha20Poly1305-MU}} combine the confidentiality and integrity limits into a
-single expression, covered below. For this AEAD, n = 512, k = 256, and t = 128;
-the length l is the sum of AAD and plaintext (in blocks of 128 bits),
-see {{ChaCha20Poly1305-MU}}.
+The known single-user analyses for AEAD_CHACHA20_POLY1305
+{{ChaCha20Poly1305-SU}}, {{ChaCha20Poly1305-MU}} combine the confidentiality and
+integrity limits into a single expression, covered below. For this AEAD, `n =
+512`, `k = 256`, and `t = 128`; the length `L` is the sum of AAD and plaintext
+(in blocks of 128 bits), see {{ChaCha20Poly1305-MU}}.
 
 
 <!--
@@ -403,20 +403,20 @@ see {{ChaCha20Poly1305-MU}}.
     block length encoding.
 
     From {{ChaCha20Poly1305-MU}} Theorem 4.1 / 3.4:
-      AE <= v * 2^25 * (l+1) / 2^t
+      AE <= v * 2^25 * (L+1) / 2^t
     where t = 128.
-    (NB: The bound component "c * l" (for c = 3*2^24) is upper-bounding
-    2^25 * (l+1) for the worst case l = |AAD|+|m| = 2; cf. Theorem 3.4.)
+    (NB: The bound component "c * L" (for c = 3*2^24) is upper-bounding
+    2^25 * (L+1) for the worst case L = |AAD|+|m| = 2; cf. Theorem 3.4.)
 -->
 ~~~
-AEA <= (v * (l + 1)) / 2^103
+AEA <= (v * (L + 1)) / 2^103
 ~~~
 
 This advantage is a tight reduction based on the underlying Poly1305 PRF {{!Poly1305=DOI.10.1007/11502760_3}}.
 It implies the following limit:
 
 ~~~
-v <= (p * 2^103) / (l + 1)
+v <= (p * 2^103) / (L + 1)
 ~~~
 
 ## AEAD_AES_128_CCM
@@ -428,43 +428,43 @@ the length of the associated data in blocks, the length of the ciphertext in blo
 the plaintext in blocks, plus 1.
 
 In the following limits, this is simplified to a value of twice the length of the packet in blocks,
-i.e., 2l represents the effective length, in number of block cipher operations, of a message with
-l blocks. This simplification is based on the observation that common applications of this AEAD carry
+i.e., `2L` represents the effective length, in number of block cipher operations, of a message with
+L blocks. This simplification is based on the observation that common applications of this AEAD carry
 only a small amount of associated data compared to ciphertext. For example, QUIC has 1 to 3 blocks of AAD.
 
-For this AEAD, n = 128 and t = 128.
+For this AEAD, `n = 128` and `t = 128`.
 
 ### Confidentiality Limit
 
 ~~~
-CA <= (2l * q)^2 / 2^n
-   <= (2l * q)^2 / 2^128
+CA <= (2L * q)^2 / 2^n
+   <= (2L * q)^2 / 2^128
 ~~~
 
 This implies the following limit:
 
 ~~~
-q <= sqrt((p * 2^126) / l^2)
+q <= sqrt((p * 2^126) / L^2)
 ~~~
 
 ### Integrity Limit
 
 ~~~
-IA <= v / 2^t + (2l * (v + q))^2 / 2^n
-   <= v / 2^128 + (2l * (v + q))^2 / 2^128
+IA <= v / 2^t + (2L * (v + q))^2 / 2^n
+   <= v / 2^128 + (2L * (v + q))^2 / 2^128
 ~~~
 
 This implies the following limit:
 
 ~~~
-v + (2l * (v + q))^2 <= p * 2^128
+v + (2L * (v + q))^2 <= p * 2^128
 ~~~
 
 In a setting where `v` or `q` is sufficiently large, `v` is negligible compared to
-`(2l * (v + q))^2`, so this this can be simplified to:
+`(2L * (v + q))^2`, so this this can be simplified to:
 
 ~~~
-v + q <= sqrt(p) * 2^63 / l
+v + q <= sqrt(p) * 2^63 / L
 ~~~
 
 ## AEAD_AES_128_CCM_8
@@ -473,14 +473,14 @@ The analysis in {{!CCM-ANALYSIS}} also applies to this AEAD, but the reduced tag
 length of 64 bits changes the integrity limit calculation considerably.
 
 ~~~
-IA <= v / 2^t + (2l * (v + q))^2 / 2^n
-   <= v / 2^64 + (2l * (v + q))^2 / 2^128
+IA <= v / 2^t + (2L * (v + q))^2 / 2^n
+   <= v / 2^64 + (2L * (v + q))^2 / 2^128
 ~~~
 
-This results in reducing the limit on `v` by a factor of 2^64.
+This results in reducing the limit on `v` by a factor of 2<sup>64</sup>.
 
 ~~~
-v * 2^64 + (2l * (v + q))^2 <= p * 2^128
+v * 2^64 + (2L * (v + q))^2 <= p * 2^128
 ~~~
 
 
@@ -488,8 +488,8 @@ v * 2^64 + (2l * (v + q))^2 <= p * 2^128
 
 An example protocol might choose to aim for a single-key CA and IA that is at
 most 2<sup>-50</sup>.  If the messages exchanged in the protocol are at most a
-common Internet MTU of around 1500 bytes, then a value for l might be set to
-2<sup>7</sup>.  {{ex-table-su}} shows limits for q and v that might be
+common Internet MTU of around 1500 bytes, then a value for `L` might be set to
+2<sup>7</sup>.  {{ex-table-su}} shows limits for `q` and `v` that might be
 chosen under these conditions.
 
 | AEAD                   | Maximum q        | Maximum v      |
@@ -501,17 +501,17 @@ chosen under these conditions.
 | AEAD_AES_128_CCM_8     | 2<sup>30.9</sup> | 2<sup>13</sup> |
 {: #ex-table-su title="Example single-key limits"}
 
-AEAD_CHACHA20_POLY1305 provides no limit to q based on the provided single-user
+AEAD_CHACHA20_POLY1305 provides no limit to `q` based on the provided single-user
 analyses.
 
-The limit for q on AEAD_AES_128_CCM and AEAD_AES_128_CCM_8 is reduced due to a
-need to reduce the value of q to ensure that IA does not exceed the target.
-This assumes equal proportions for q and v for AEAD_AES_128_CCM.
-AEAD_AES_128_CCM_8 permits a much smaller value of v due to the shorter tag,
-which permits a higher limit for q.
+The limit for `q` on AEAD_AES_128_CCM and AEAD_AES_128_CCM_8 is reduced due to a
+need to reduce the value of `q` to ensure that IA does not exceed the target.
+This assumes equal proportions for `q` and `v` for AEAD_AES_128_CCM.
+AEAD_AES_128_CCM_8 permits a much smaller value of `v` due to the shorter tag,
+which permits a higher limit for `q`.
 
-Some protocols naturally limit v to 1, such as TCP-based variants of TLS, which
-terminate sessions on decryption failure.  If v is limited to 1, q can be
+Some protocols naturally limit `v` to 1, such as TCP-based variants of TLS, which
+terminate sessions on decryption failure.  If `v` is limited to 1, `q` can be
 increased to 2<sup>31</sup> for both CCM AEADs.
 
 
@@ -549,8 +549,8 @@ conditions.  Note that implementations that choose the explicit part at random
 have a higher chance of nonce collisions and are not considered for the
 limits in this section.
 
-For this AEAD, n = 128, t = 128, and r = 96; the key length is k = 128 or k =
-256 for AEAD_AES_128_GCM and AEAD_AES_128_GCM respectively.
+For this AEAD, `n = 128`, `t = 128`, and `r = 96`; the key length is `k = 128`
+or `k = 256` for AEAD_AES_128_GCM and AEAD_AES_128_GCM respectively.
 
 
 ### Authenticated Encryption Security Limit {#mu-gcm-ae}
@@ -559,7 +559,7 @@ For this AEAD, n = 128, t = 128, and r = 96; the key length is k = 128 or k =
     From {{GCM-MU2}} Theorem 4.3; for nonce randomization (XN transform).
 
     Let:
-        - #blocks encrypted/verified overall:   \sigma = (q + v) * l
+        - #blocks encrypted/verified overall:   \sigma = (q + v) * L
         - worst-case  o (offline work), q+v, \sigma <= 2^95
           (Theorem 4.3 requires q <= 2^(1-e)r ; this yields e >= 0.0104, hence
           d = 1,5/e -1 <= 143 <= 2^8.)
@@ -567,9 +567,9 @@ For this AEAD, n = 128, t = 128, and r = 96; the key length is k = 128 or k =
     We can simplify the Theorem 4.3 advantage bound as follows:
         - Note: Last term is 2^-48; hence any other term <= 2^-50 is negligible.
         - 1st term (../2^k):  roughly <= 2^8 * (o + q+v + \sigma) / 2^k
-           roughly <= (o + (q+v)*l) / 2^(k-8)
+           roughly <= (o + (q+v)*L) / 2^(k-8)
           This is negligible for k = 256.
-          For k = 128, it is negligible if o, (q+v)*l <= 2^70.
+          For k = 128, it is negligible if o, (q+v)*L <= 2^70.
           For o <= 2^70 and B >= 2^8, it is dominated by the 2nd term;
             we assume that and hence omit the 1st term.
           If B is small and k = 128, then \sigma might be relevant and
@@ -592,17 +592,17 @@ For this AEAD, n = 128, t = 128, and r = 96; the key length is k = 128 or k =
 Protocols with nonce randomization have a limit of:
 
 ~~~
-AEA <= (q+v)*l*B / 2^127
+AEA <= (q+v)*L*B / 2^127
 ~~~
 
 This implies the following limit:
 
 ~~~
-q + v <= p * 2^127 / (l * B)
+q + v <= p * 2^127 / (L * B)
 ~~~
 
-This assumes that B is much larger than 100; that is, each user enciphers
-significantly more than 1600 bytes of data.  Otherwise, B should be increased by 161 for
+This assumes that `B` is much larger than 100; that is, each user enciphers
+significantly more than 1600 bytes of data.  Otherwise, `B` should be increased by 161 for
 AEAD_AES_128_GCM and by 97 for AEAD_AES_256_GCM.
 
 
@@ -610,7 +610,7 @@ AEAD_AES_128_GCM and by 97 for AEAD_AES_256_GCM.
     From {{GCM-MU2}} Theorem 5.3; for partial random nonces (CN transform).
 
     Let:
-        - #blocks encrypted/verified overall:   \sigma = (q + v) * l
+        - #blocks encrypted/verified overall:   \sigma = (q + v) * L
         - length R of random implicit nonce part: R = 32 (bits), as in TLS 1.2/RFC5288
         - worst-case  o (offline work), q+v, \sigma <= 2^77  (as per 1st term)
           (Theorem 5.3 requires R >= 32 [satisfied], o <= 2^(n-2);
@@ -623,7 +623,7 @@ AEAD_AES_128_GCM and by 97 for AEAD_AES_256_GCM.
           The second part ("(q+v)*l / 2^(k-7)") is negligible compared to the
              first part (and the 2nd term).
           For k = 128, what remains is:  ((q+v)*o + (q+v)^2) / 2^(k+26)
-             which dominates the 2nd term if q+v > B*l*2^25.
+             which dominates the 2nd term if q+v > B*L*2^25.
         - 2nd term (../2^n):
           \sigma*(2B + cn + 2)/2^n = \sigma*(B + 97)/2^127
           Assuming that B >> 100, the dominant term is \sigma*B/2^127
@@ -637,40 +637,41 @@ Protocols with random, partially implicit nonces have the following limit,
 which is similar to that for nonce randomization:
 
 ~~~
-AEA <= (((q+v)*o + (q+v)^2) / 2^(k+26)) + ((q+v)*l*B / 2^127)
+AEA <= (((q+v)*o + (q+v)^2) / 2^(k+26)) + ((q+v)*L*B / 2^127)
 ~~~
 
-The first term is negligible if k = 256; this implies the following simplified
+The first term is negligible if `k = 256`; this implies the following simplified
 limits:
 
 ~~~
-AEA <= (q+v)*l*B / 2^127
-q + v <= p * 2^127 / (l * B)
+AEA <= (q+v)*L*B / 2^127
+q + v <= p * 2^127 / (L * B)
 ~~~
 
-For k = 128, assuming o <= q+v (i.e., that the attacker does not spend more work than all legitimate protocol users together), the limits are:
+For `k = 128`, assuming `o <= q + v` (i.e., that the attacker does not spend
+more work than all legitimate protocol users together), the limits are:
 
 <!--
     Simplifying
-      p >= (((q+v)*o + (q+v)^2) / 2^(k+26)) + ((q+v)*l*B / 2^127)
+      p >= (((q+v)*o + (q+v)^2) / 2^(k+26)) + ((q+v)*L*B / 2^127)
 
     to
 
       p/2 >= ((q+v)*o + (q+v)^2) / 2^(k+26)
       AND
-      p/2 >= (q+v)*l*B / 2^127
+      p/2 >= (q+v)*L*B / 2^127
 
     and assuming o <= q+v
     yields
 
       q+v <= sqrt(p) * 2^76
       AND
-      q+v <= p * 2^126 / (l * B)
+      q+v <= p * 2^126 / (L * B)
 -->
 
 ~~~
-AEA <= (((q+v)*o + (q+v)^2) / 2^154) + ((q+v)*l*B / 2^127)
-q + v <= min( sqrt(p) * 2^76,  p * 2^126 / (l * B) )
+AEA <= (((q+v)*o + (q+v)^2) / 2^154) + ((q+v)*L*B / 2^127)
+q + v <= min( sqrt(p) * 2^76,  p * 2^126 / (L * B) )
 ~~~
 
 
@@ -693,13 +694,13 @@ The confidentiality advantage is essentially dominated by the same term as
 the AE advantage for protocols with nonce randomization:
 
 ~~~
-CA <= q*l*B / 2^127
+CA <= q*L*B / 2^127
 ~~~
 
 This implies the following limit:
 
 ~~~
-q <= p * 2^127 / (l * B)
+q <= p * 2^127 / (L * B)
 ~~~
 
 
@@ -716,8 +717,8 @@ q <= p * 2^127 / (l * B)
 Similarly, the limits for protocols with random, partially implicit nonces are:
 
 ~~~
-CA <= ((q*o + q^2) / 2^(k+26)) + (q*l*B / 2^127)
-q <= min( sqrt(p) * 2^76,  p * 2^126 / (l * B) )
+CA <= ((q*o + q^2) / 2^(k+26)) + (q*L*B / 2^127)
+q <= min( sqrt(p) * 2^76,  p * 2^126 / (L * B) )
 ~~~
 
 
@@ -740,7 +741,7 @@ Concrete multi-key bounds for AEAD_CHACHA20_POLY1305 are given in Theorem 7.8
 in {{ChaCha20Poly1305-MU}}, covering protocols with nonce randomization like
 TLS 1.3 {{TLS}} and QUIC {{?RFC9001}}.
 
-For this AEAD, n = 512, k = 256, t = 128, and r = 96; the length l is the sum
+For this AEAD, `n = 512`, `k = 256`, `t = 128`, and `r = 96`; the length (`L`) is the sum
 of AAD and plaintext (in blocks of 128 bits).
 
 ### Authenticated Encryption Security Limit {#mu-ccp-ae}
@@ -756,15 +757,15 @@ of AAD and plaintext (in blocks of 128 bits).
         - o, B <= 2^261 as required for Theorem 7.8
 
     We can simplify the Theorem 7.8 advantage bound as follows:
-        - 1st term:  v([constant]* l + 3)/2^t
-          Via Theorem 3.4, the more precise term is:  v * (2^25 * (l + 1) + 3) / 2^128
+        - 1st term:  v([constant]* L + 3)/2^t
+          Via Theorem 3.4, the more precise term is:  v * (2^25 * (L + 1) + 3) / 2^128
           The 3v/2^t summand is dominated by the rest, so we simplify to
-            (v * (l + 1)) / 2^103
+            (v * (L + 1)) / 2^103
 
         - 2nd term:  d(o + q)/2^k
           For d < 2^9 (as above) and o + q <= 2^145, this is dominated by the 1st term;
-          [[ 1st term <= 2nd term as long as v * (l + 1)/2^103 <= d(o + q)/2^256;
-          i.e., o + q <= v * (l + 1) * 2^153 / d.
+          [[ 1st term <= 2nd term as long as v * (L + 1)/2^103 <= d(o + q)/2^256;
+          i.e., o + q <= v * (L + 1) * 2^153 / d.
           Even for minimal values v = 1 and l = 1 in 1st term, with d < 2^9,
           this holds as long as o + q <= 2^145. ]]
             we assume that and hence omit the 2nd term.
@@ -792,17 +793,17 @@ of AAD and plaintext (in blocks of 128 bits).
 Protocols with nonce randomization have a limit of:
 
 ~~~
-AEA <= (v * (l + 1)) / 2^103
+AEA <= (v * (L + 1)) / 2^103
 ~~~
 
 It implies the following limit:
 
 ~~~
-v <= (p * 2^103) / (l + 1)
+v <= (p * 2^103) / (L + 1)
 ~~~
 
 Note that this is the same limit as in the single-user case except that the
-total number of forgery attempts `v` and maximum message length in blocks `l`
+total number of forgery attempts (`v`) and maximum message length in blocks (`L`)
 is calculated across all used keys.
 
 
@@ -824,13 +825,13 @@ is calculated across all used keys.
 
           This is dominated by the 2nd term as long as B + q < sqrt(o+q) * 2^133.
 
-          We omit this term on the basis that B <= q * l and there is no value
+          We omit this term on the basis that B <= qL and there is no value
           of q less than 2^100 (see below) for which B > sqrt(q) * 2^133 given
           that constraint.
 
-          Even with a single user and a single key such that B = q * l, and no
+          Even with a single user and a single key such that B = qL, and no
           offline work from the adversary (o = 0) the term is only relevant when
-          q * l = sqrt(q) * 2^133.  With q capped at 2^100, the smallest value
+          qL = sqrt(q) * 2^133.  With q capped at 2^100, the smallest value
           of l that can result from this is 2^83, which far exceeds the maximum
           size of a single message at 2^32.
 
@@ -884,13 +885,13 @@ integrity limits is replaced with `p / u`.
 The multi-key integrity limit for AEAD_AES_128_CCM is as follows.
 
 ~~~
-v + q <= sqrt(p / u) * 2^63 / l
+v + q <= sqrt(p / u) * 2^63 / L
 ~~~
 
 Likewise, the multi-key integrity limit for AEAD_AES_128_CCM_8 is as follows.
 
 ~~~
-v * 2^64 + (2l * (v + q))^2 <= (p / u) * 2^128
+v * 2^64 + (2L * (v + q))^2 <= (p / u) * 2^128
 ~~~
 
 
@@ -898,8 +899,8 @@ v * 2^64 + (2l * (v + q))^2 <= (p / u) * 2^128
 
 An example protocol might choose to aim for a multi-key AEA, CA, and IA that is at
 most 2<sup>-50</sup>.  If the messages exchanged in the protocol are at most a
-common Internet MTU of around 1500 bytes, then a value for l might be set to
-2<sup>7</sup>.  {{ex-table-mu}} shows limits for q and v across all keys that
+common Internet MTU of around 1500 bytes, then a value for `L` might be set to
+2<sup>7</sup>.  {{ex-table-mu}} shows limits for `q` and `v` across all keys that
 might be chosen under these conditions.
 
 | AEAD                   | Maximum q                | Maximum v              |
@@ -912,19 +913,19 @@ might be chosen under these conditions.
 {: #ex-table-mu title="Example multi-key limits"}
 
 The limits for AEAD_AES_128_GCM, AEAD_AES_256_GCM, AEAD_AES_128_CCM, and
-AEAD_AES_128_CCM_8 assume equal proportions for q and v. The limits for
+AEAD_AES_128_CCM_8 assume equal proportions for `q` and `v`. The limits for
 AEAD_AES_128_GCM, AEAD_AES_256_GCM and AEAD_CHACHA20_POLY1305 assume the use
 of nonce randomization, like in TLS 1.3 {{TLS}} and QUIC {{?RFC9001}}.
 
 The limits for AEAD_AES_128_GCM and AEAD_AES_256_GCM further depend on the
-maximum number B of 128-bit blocks encrypted by any single key. For example,
+maximum number (`B`) of 128-bit blocks encrypted by any single key. For example,
 limiting the number of messages (of size <= 2<sup>7</sup> blocks) to at most
-2<sup>20</sup> (about a million) per key results in B = 2<sup>27</sup>, which
-limits both q and v to 2<sup>42</sup> messages.
+2<sup>20</sup> (about a million) per key results in `B` of 2<sup>27</sup>, which
+limits both `q` and `v` to 2<sup>42</sup> messages.
 
 Only the limits for AEAD_AES_128_CCM and AEAD_AES_128_CCM_8 depend on the number
-of used keys u, which further reduces them considerably. If v is limited to 1,
-q can be increased to 2<sup>31</sup>/sqrt(u) for both CCM AEADs.
+of used keys (`u`), which further reduces them considerably. If `v` is limited to 1,
+`q` can be increased to 2<sup>31</sup>/sqrt(u) for both CCM AEADs.
 
 
 # Security Considerations {#sec-considerations}
@@ -942,8 +943,8 @@ document to set limits, it is necessary to validate all these assumptions
 for the setting in which the limits might apply. In most cases, the goal is
 to use assumptions that result in setting a more conservative limit, but this
 is not always the case. As an example of one such simplification, this document
-defines v as the total number of failed decryption queries (that is, failed forgery
-attempts), whereas models usually count in v all forgery attempts.
+defines `v` as the total number of failed decryption queries (that is, failed forgery
+attempts), whereas models usually include all forgery attempts when determining `v`.
 
 The CA, IA, and AEA values defined in this document are upper bounds based on existing
 cryptographic research. Future analysis may introduce tighter bounds. Applications
