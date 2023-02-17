@@ -296,6 +296,8 @@ protected or rejected against the determined limits (q and v respectively).
 This requires that messages cannot exceed the maximum message size (l) that is
 chosen.
 
+## Approximations
+
 This analysis assumes a message-based approach to setting limits.
 Implementations that use byte counting rather than message counting could use a
 maximum message size (l) of one to determine a limit for q that can be applied
@@ -303,6 +305,25 @@ with byte counting.  This results in attributing per-message overheads to every
 byte, so the resulting limit could be significantly lower than necessary.
 Actions, like rekeying, that are taken to avoid the limit might occur more
 often as a result.
+
+To simplify formulae, estimates in this document elide terms that contribute
+negligible advantage to an attacker relative to other terms.
+
+In other respects, this document seeks to make conservative choices that err on
+the side of overestimating attacker advantage.  Some of these assumptions are
+present in the papers that this work is based on.  For instance, analyses are
+simplified by using a single message size that covers both AAD and plaintext.
+AAD can contribute less toward attacker advantage for confidentiality limits, so
+applications where AAD comprises a significant proportion of messages might find
+the estimates provided to be slightly more conservative than necessary to meet a
+given goal.
+
+This document assumes the use of non-repeating nonces.  The modes covered here
+are not robust if the same nonce and key are used to protect different messages,
+so deterministic generation of nonces from a counter or similar techniques is
+strongly encouraged.  If an application cannot guarantee that nonces will not
+repeat, a nonce-misuse resistant AEAD like AES-GCM-SIV {{?SIV=RFC8452}} is
+likely to be a better choice.
 
 
 # Single-Key AEAD Limits {#su-limits}
