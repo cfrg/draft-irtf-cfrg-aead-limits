@@ -314,19 +314,19 @@ The limits in this section apply to using these schemes with a single key;
 for settings where multiple keys are deployed (for example, when rekeying within
 a connection), see {{mu-limits}}.
 
-These algorithms, as cited, all define a nonce length (r) of 96 bits.  Some
+These algorithms, as cited, all define a nonce length (`r`) of 96 bits.  Some
 definitions of these AEAD algorithms allow for other nonce lengths, but the
-analyses in this document all fix the nonce length to r = 96.  Using other nonce
+analyses in this document all fix the nonce length to `r = 96`.  Using other nonce
 lengths might result in different bounds; for example, {{GCMProofs}} shows that
 using a variable-length nonce for AES-GCM results in worse security bounds.
 
-The CL and IL values bound the total number of encryption and forgery queries (q and v).
+The CL and IL values bound the total number of encryption and forgery queries (`q` and `v`).
 Alongside each advantage value, we also specify these bounds.
 
 ## AEAD_AES_128_GCM and AEAD_AES_256_GCM
 
 The CL and IL values for AES-GCM are derived in {{AEBounds}} and summarized below.
-For this AEAD, `n = 128` and `t = 128` {{GCM}}. In this example, the length s is the sum
+For this AEAD, `n = 128` and `t = 128` {{GCM}}. In this example, the length `s` is the sum
 of AAD and plaintext (in blocks of 128 bits), as described in {{GCMProofs}}.
 
 ### Confidentiality Limit
@@ -448,7 +448,7 @@ IA <= v / 2^t + (2L * (v + q))^2 / 2^n
    <= v / 2^64 + (2L * (v + q))^2 / 2^128
 ~~~
 
-This results in reducing the limit on `v` by a factor of 2^64.
+This results in reducing the limit on `v` by a factor of 2<sup>64</sup>.
 
 ~~~
 v * 2^64 + (2L * (v + q))^2 <= p * 2^128
@@ -459,8 +459,8 @@ v * 2^64 + (2L * (v + q))^2 <= p * 2^128
 
 An example protocol might choose to aim for a single-key CA and IA that is at
 most 2<sup>-50</sup>.  If the messages exchanged in the protocol are at most a
-common Internet MTU of around 1500 bytes, then a value for l might be set to
-2<sup>7</sup>.  {{ex-table-su}} shows limits for q and v that might be
+common Internet MTU of around 1500 bytes, then a value for `L` might be set to
+2<sup>7</sup>.  {{ex-table-su}} shows limits for `q` and `v` that might be
 chosen under these conditions.
 
 | AEAD                   | Maximum q        | Maximum v      |
@@ -472,17 +472,17 @@ chosen under these conditions.
 | AEAD_AES_128_CCM_8     | 2<sup>30.9</sup> | 2<sup>13</sup> |
 {: #ex-table-su title="Example single-key limits"}
 
-AEAD_CHACHA20_POLY1305 provides no limit to q based on the provided single-user
+AEAD_CHACHA20_POLY1305 provides no limit to `q` based on the provided single-user
 analyses.
 
-The limit for q on AEAD_AES_128_CCM and AEAD_AES_128_CCM_8 is reduced due to a
-need to reduce the value of q to ensure that IA does not exceed the target.
-This assumes equal proportions for q and v for AEAD_AES_128_CCM.
-AEAD_AES_128_CCM_8 permits a much smaller value of v due to the shorter tag,
-which permits a higher limit for q.
+The limit for `q` on AEAD_AES_128_CCM and AEAD_AES_128_CCM_8 is reduced due to a
+need to reduce the value of `q` to ensure that IA does not exceed the target.
+This assumes equal proportions for `q` and `v` for AEAD_AES_128_CCM.
+AEAD_AES_128_CCM_8 permits a much smaller value of `v` due to the shorter tag,
+which permits a higher limit for `q`.
 
-Some protocols naturally limit v to 1, such as TCP-based variants of TLS, which
-terminate sessions on decryption failure.  If v is limited to 1, q can be
+Some protocols naturally limit `v` to 1, such as TCP-based variants of TLS, which
+terminate sessions on decryption failure.  If `v` is limited to 1, `q` can be
 increased to 2<sup>31</sup> for both CCM AEADs.
 
 
@@ -572,8 +572,8 @@ This implies the following limit:
 q + v <= p * 2^127 / (L * B)
 ~~~
 
-This assumes that B is much larger than 100; that is, each user enciphers
-significantly more than 1600 bytes of data.  Otherwise, B should be increased by 161 for
+This assumes that `B` is much larger than 100; that is, each user enciphers
+significantly more than 1600 bytes of data.  Otherwise, `B` should be increased by 161 for
 AEAD_AES_128_GCM and by 97 for AEAD_AES_256_GCM.
 
 
