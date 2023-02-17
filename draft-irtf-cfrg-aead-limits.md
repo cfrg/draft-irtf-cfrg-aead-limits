@@ -870,7 +870,7 @@ v * 2^64 + (2L * (v + q))^2 <= (p / u) * 2^128
 
 An example protocol might choose to aim for a multi-key AEA, CA, and IA that is at
 most 2<sup>-50</sup>.  If the messages exchanged in the protocol are at most a
-common Internet MTU of around 1500 bytes, then a value for `l` might be set to
+common Internet MTU of around 1500 bytes, then a value for `L` might be set to
 2<sup>7</sup>.  {{ex-table-mu}} shows limits for `q` and `v` across all keys that
 might be chosen under these conditions.
 
