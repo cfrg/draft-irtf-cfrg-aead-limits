@@ -432,6 +432,17 @@ i.e., `2L` represents the effective length, in number of block cipher operations
 L blocks. This simplification is based on the observation that common applications of this AEAD carry
 only a small amount of associated data compared to ciphertext. For example, QUIC has 1 to 3 blocks of AAD.
 
+<!--
+    In {{!CCM-ANALYSIS=DOI.10.1007/3-540-36492-7_7}}, Theorem 1+2, the terms
+    l_E / l_F are the sum of block cipher applications over all encryption /
+    forgery calls, which count the number of message blocks twice: once as
+    |m| (resp. |c|), and once in the enconding function \beta.
+    
+    We simplify this by doubling the the packet length, using `2L` instead of
+    `L`, while ignoring the usually small additional overhead of associated data.
+    Hence `l_E = 2L * q` and `l_F = 2L * v`.
+-->
+
 For this AEAD, `n = 128` and `t = 128`.
 
 ### Confidentiality Limit
