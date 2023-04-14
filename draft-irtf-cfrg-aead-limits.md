@@ -379,6 +379,14 @@ q <= (p^(1/2) * 2^(129/2) - 1) / (L + 1)
 
 ### Integrity Limit
 
+<!--
+    We follow {{GCMProofs}} and use the improved integrity bound from
+    {{AEBounds}}, Equation (22), which gives the term (v * (L+1)) * \delta(...).
+    Assuming s + q + v < 2^64, one can bound \delta(...) <= 1.7 <= 2.
+-->
+
+Assuming `s + q + v < 2^64` implies this bound:
+
 ~~~
 IA <= 2 * (v * (L + 1)) / 2^128
 ~~~
@@ -437,7 +445,7 @@ only a small amount of associated data compared to ciphertext. For example, QUIC
     l_E / l_F are the sum of block cipher applications over all encryption /
     forgery calls, which count the number of message blocks twice: once as
     |m| (resp. |c|), and once in the enconding function \beta.
-    
+
     We simplify this by doubling the the packet length, using `2L` instead of
     `L`, while ignoring the usually small additional overhead of associated data.
     Hence `l_E = 2L * q` and `l_F = 2L * v`.
