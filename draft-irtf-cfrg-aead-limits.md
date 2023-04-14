@@ -380,8 +380,8 @@ q <= (p^(1/2) * 2^(129/2) - 1) / (L + 1)
 ### Integrity Limit
 
 <!--
-    We follow {{GCMProofs}} and use the improved integrity bound from
-    {{AEBounds}}, Equation (22), which gives the term (v * (L+1)) * \delta(...).
+    We follow {{AEBounds}} and use the improved integrity bound from
+    {{GCMProofs}}, Equation (22), which gives the term (v * (L+1)) * \delta(...).
     Assuming s + q + v < 2^64, one can bound \delta(...) <= 1.7 <= 2.
 -->
 
