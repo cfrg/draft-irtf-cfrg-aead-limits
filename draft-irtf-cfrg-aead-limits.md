@@ -395,9 +395,8 @@ v <= (p * 2^127) / (L + 1)
 
 ## AEAD_CHACHA20_POLY1305
 
-The known single-user analyses for AEAD_CHACHA20_POLY1305
-{{ChaCha20Poly1305-SU}}, {{ChaCha20Poly1305-MU}} combine the confidentiality and
-integrity limits into a single expression, covered below. For this AEAD, `n =
+The known single-user analyses for AEAD_CHACHA20_POLY1305 are
+{{ChaCha20Poly1305-SU}} and {{ChaCha20Poly1305-MU}}. For this AEAD, `n =
 512`, `k = 256`, and `t = 128`; the length `L` is the sum of AAD and plaintext
 (in blocks of 128 bits), see {{ChaCha20Poly1305-MU}}.
 
@@ -413,10 +412,11 @@ integrity limits into a single expression, covered below. For this AEAD, `n =
     2^25 * (L+1) for the worst case L = |AAD|+|m| = 2; cf. Theorem 3.4.)
 -->
 ~~~
-AEA <= (v * (L + 1)) / 2^103
+CA <= 1 / 2^256
+IA <= (v * (L + 1)) / 2^103
 ~~~
 
-This advantage is a tight reduction based on the underlying Poly1305 PRF {{!Poly1305=DOI.10.1007/11502760_3}}.
+The IA advantage is a tight reduction based on the underlying Poly1305 PRF {{!Poly1305=DOI.10.1007/11502760_3}}.
 It implies the following limit:
 
 ~~~
