@@ -412,7 +412,7 @@ The known single-user analyses for AEAD_CHACHA20_POLY1305 are
     2^25 * (L+1) for the worst case L = |AAD|+|m| = 2; cf. Theorem 3.4.)
 -->
 ~~~
-CA <= 1 / 2^256
+CA <= 0
 IA <= (v * (L + 1)) / 2^103
 ~~~
 
