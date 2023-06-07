@@ -395,33 +395,44 @@ v <= (p * 2^127) / (L + 1)
 
 ## AEAD_CHACHA20_POLY1305
 
-The known single-user analyses for AEAD_CHACHA20_POLY1305 are
-{{ChaCha20Poly1305-SU}} and {{ChaCha20Poly1305-MU}}. For this AEAD, `n =
-512`, `k = 256`, and `t = 128`; the length `L` is the sum of AAD and plaintext
-(in blocks of 128 bits), see {{ChaCha20Poly1305-MU}}.
-
+The known single-user analyses for AEAD_CHACHA20_POLY1305
+{{ChaCha20Poly1305-SU}}, {{ChaCha20Poly1305-MU}} give a combined AE limit,
+which we separate into confidentiality and integrity limits below. For this
+AEAD, `n = 512`, `k = 256`, and `t = 128`; the length `L` is the sum of AAD
+and plaintext (in blocks of 128 bits), see {{ChaCha20Poly1305-MU}}.
 
 <!--
     In {{ChaCha20Poly1305-SU}}, L is |AAD| + |plaintext| + 1; the + 1 is one
     block length encoding.
 
-    From {{ChaCha20Poly1305-MU}} Theorem 4.1 / 3.4:
-      AE <= v * 2^25 * (L+1) / 2^t
-    where t = 128.
-    (NB: The bound component "c * L" (for c = 3*2^24) is upper-bounding
-    2^25 * (L+1) for the worst case L = |AAD|+|m| = 2; cf. Theorem 3.4.)
+    From {{ChaCha20Poly1305-MU}} Theorem 4.1:
+      AEA <= PRF-advantage  +  v * 2^25 * (L+1) / 2^t
+    where t = 128. The CA part of this is only the PRF advantage, as in the
+    proof of Theorem 4.1, the hops bounding G_3 only apply to the decryption
+    oracle. So CA beyond the PRF advantage is 0.
 -->
+
+### Confidentiality Limit
+
 ~~~
 CA <= 0
+~~~
+
+This implies the is no limit beyond the PRF security of the underlying ChaCha20
+block function.
+
+### Integrity Limit
+
+~~~
 IA <= (v * (L + 1)) / 2^103
 ~~~
 
-The IA advantage is a tight reduction based on the underlying Poly1305 PRF {{!Poly1305=DOI.10.1007/11502760_3}}.
-It implies the following limit:
+This implies the following limit:
 
 ~~~
 v <= (p * 2^103) / (L + 1)
 ~~~
+
 
 ## AEAD_AES_128_CCM
 
