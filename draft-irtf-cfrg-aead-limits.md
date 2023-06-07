@@ -418,7 +418,7 @@ and plaintext (in blocks of 128 bits), see {{ChaCha20Poly1305-MU}}.
 CA <= 0
 ~~~
 
-This implies the is no limit beyond the PRF security of the underlying ChaCha20
+This implies there is no limit beyond the PRF security of the underlying ChaCha20
 block function.
 
 ### Integrity Limit
