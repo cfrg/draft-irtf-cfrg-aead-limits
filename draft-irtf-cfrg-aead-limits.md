@@ -214,7 +214,7 @@ This document defines limitations in part using the quantities in
 | L | Maximum length of each message (in blocks) |
 | s | Total plaintext length in all messages (in blocks) |
 | q | Number of protected messages (AEAD encryption invocations) |
-| v | Number of attacker forgery attempts (failed AEAD decryption invocations) |
+| v | Number of attacker forgery attempts (failed AEAD decryption invocations + 1) |
 | p | Upper bound on adversary attack probability |
 | o | Offline adversary work (in number of encryption and decryption queries; multi-key setting only) |
 | u | Number of keys (multi-key setting only) |
