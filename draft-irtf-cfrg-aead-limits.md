@@ -991,6 +991,9 @@ This document does not make any request of IANA.
 
 --- back
 
+# Acknowledgments
+{: numbered="false"}
+
 In addition to the authors of papers performing analysis of ciphers, thanks are
 owed to
 {{{Scott Flurer}}},
