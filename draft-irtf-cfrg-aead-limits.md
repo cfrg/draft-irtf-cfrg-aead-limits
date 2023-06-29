@@ -211,7 +211,7 @@ This document defines limitations in part using the quantities in
 | k | AEAD key length (in bits) |
 | r | AEAD nonce length (in bits) |
 | t | Size of the authentication tag (in bits) |
-| L | Maximum length of each message (in blocks) |
+| L | Maximum length of each message, including both plaintext and AAD (in blocks) |
 | s | Total plaintext length in all messages (in blocks) |
 | q | Number of protected messages (AEAD encryption invocations) |
 | v | Number of attacker forgery attempts (failed AEAD decryption invocations + 1) |
@@ -271,9 +271,9 @@ defines a process for determining three overall operational limits:
 - Confidentiality limit (CL): The number of messages an application can encrypt
   before giving the adversary a confidentiality advantage higher than CA.
 
-- Integrity limit (IL): The number ciphertexts an application can decrypt,
-  either successfully or not, before giving the adversary an integrity advantage
-  higher than IA.
+- Integrity limit (IL): The number ciphertexts an application can decrypt
+  unsuccessfully before giving the adversary an integrity advantage higher than
+  IA.
 
 - Authenticated encryption limit (AEL): The combined number of messages and
   number of ciphertexts an application can encrypt or decrypt before giving the
@@ -387,11 +387,24 @@ greater than 2, the following bound applies:
 IA <= 2 * (v * (L + 1)) / 2^128
 ~~~
 
-This implies the following limit:
+For the assumption of `s + q + v < 2^64`, observe that this applies when `p > L / 2^63`.
+`s + q <= q * (L + 1)` is always small relative to `2^64` if the same advantage is
+applied to the confidentiality limit on `q`.
+
+This produces the following limit:
 
 ~~~
-v <= (p * 2^127) / (L + 1)
+v <= min(2^64, (p * 2^127) / (L + 1))
 ~~~
+
+<!--
+Note that values of p that cause v to exceed 2^64 are where `p > L / 2^63`
+The same p value produces q = 2^33 * L^(-1/2)
+L is at most 2^32 by construction (that's the block counter),
+so s + q <= q * (L+1) would be at most 2^49 which can be ignored
+(ignoring the +1 as also being insignificant)
+-->
+
 
 ## AEAD_CHACHA20_POLY1305
 
@@ -470,7 +483,7 @@ CA <= (2L * q)^2 / 2^n
 This implies the following limit:
 
 ~~~
-q <= sqrt((p * 2^126) / L^2)
+q <= sqrt(p) * 2^63 / L
 ~~~
 
 ### Integrity Limit
@@ -509,6 +522,17 @@ This results in reducing the limit on `v` by a factor of 2<sup>64</sup>.
 v * 2^64 + (2L * (v + q))^2 <= p * 2^128
 ~~~
 
+Note that, to apply this result, two inequalities can be produced, with the
+first applied to determine `v`, then applying the second to find `q`:
+
+~~~
+v * 2^64 <= p * 2^127
+(2L * (v + q))^2 <= p * 2^127
+~~~
+
+This approach produces much smaller values for `v` than `q`.  Alternative
+allocations tend to greatly reduce `q` without significantly increasing to `v`.
+
 
 ## Single-Key Examples
 
@@ -520,11 +544,11 @@ chosen under these conditions.
 
 | AEAD                   | Maximum q        | Maximum v      |
 |:-----------------------|-----------------:|---------------:|
-| AEAD_AES_128_GCM       | 2<sup>32.5</sup> | 2<sup>71</sup> |
-| AEAD_AES_256_GCM       | 2<sup>32.5</sup> | 2<sup>71</sup> |
+| AEAD_AES_128_GCM       | 2<sup>32.5</sup> | 2<sup>64</sup> |
+| AEAD_AES_256_GCM       | 2<sup>32.5</sup> | 2<sup>64</sup> |
 | AEAD_CHACHA20_POLY1305 | n/a              | 2<sup>46</sup> |
 | AEAD_AES_128_CCM       | 2<sup>30</sup>   | 2<sup>30</sup> |
-| AEAD_AES_128_CCM_8     | 2<sup>30.9</sup> | 2<sup>13</sup> |
+| AEAD_AES_128_CCM_8     | 2<sup>30.4</sup> | 2<sup>13</sup> |
 {: #ex-table-su title="Example single-key limits"}
 
 AEAD_CHACHA20_POLY1305 provides no limit to `q` based on the provided single-user
@@ -609,7 +633,7 @@ or `k = 256` for AEAD_AES_128_GCM and AEAD_AES_128_GCM respectively.
         - 5th term (2^(-r/2)):  = 2^-48
 
     The 5th term, ensuring that the adversary is d-repeating ({{GCM-MU2}},
-    Theorem 4.2), was improved in {{ChaCha20Poly1305-MU}} Theorem 7.7 to
+    Theorem 4.2), was improved in {{ChaCha20Poly1305-MU}} Theorem 7.1 to
       2^-(\delta * r)
     for which \delta can be chosen as \delta = 2 for d < 2^9.
     As d < 2^9 does not affect the above simplifications, this only makes the
@@ -763,7 +787,7 @@ IA <= AEA
 
 ## AEAD_CHACHA20_POLY1305
 
-Concrete multi-key bounds for AEAD_CHACHA20_POLY1305 are given in Theorem 7.8
+Concrete multi-key bounds for AEAD_CHACHA20_POLY1305 are given in Theorem 7.2
 in {{ChaCha20Poly1305-MU}}, covering protocols with nonce randomization like
 TLS 1.3 {{TLS}} and QUIC {{?RFC9001}}.
 
@@ -773,16 +797,16 @@ of AAD and plaintext (in blocks of 128 bits).
 ### Authenticated Encryption Security Limit {#mu-ccp-ae}
 
 <!--
-    From {{ChaCha20Poly1305-MU}} Theorem 7.8; for nonce randomization (XN transform).
+    From {{ChaCha20Poly1305-MU}} Theorem 7.2; for nonce randomization (XN transform).
 
     Let:
         - d: the max. number of times any nonce is repeated across users
         - \delta: the nonce-randomizer result's parameter
-        - d = r * (\delta + 1) - 1 < 2^9, \delta = 2 be fixed, satisfying Theorem 7.8
+        - d = r * (\delta + 1) - 1 < 2^9, \delta = 2 be fixed, satisfying Theorem 7.2
         - this limits the number of encryption queries to q <= r * 2^(r-1) <= 2^101
-        - o, B <= 2^261 as required for Theorem 7.8
+        - o, B <= 2^261 as required for Theorem 7.2
 
-    We can simplify the Theorem 7.8 advantage bound as follows:
+    We can simplify the Theorem 7.2 advantage bound as follows:
         - 1st term:  v([constant]* L + 3)/2^t
           Via Theorem 3.4, the more precise term is:  v * (2^25 * (L + 1) + 3) / 2^128
           The 3v/2^t summand is dominated by the rest, so we simplify to
@@ -836,7 +860,7 @@ is calculated across all used keys.
 ### Confidentiality Limit
 
 <!--
-    From {{ChaCha20Poly1305-MU}} Theorem 7.8
+    From {{ChaCha20Poly1305-MU}} Theorem 7.2
     subtracting terms for Pr[Bad_5] and Pr[Bad_6],
     and applying simplifications as above (note there are no verification queries),
     the remaining relevant terms are:
@@ -876,7 +900,7 @@ CA <= (o + q) / 2^247)
 ~~~
 
 <!--
-    In addition, the restrictions on q from {{ChaCha20Poly1305-MU}} Theorem 7.8
+    In addition, the restrictions on q from {{ChaCha20Poly1305-MU}} Theorem 7.2
     applies: q <= r * 2^(r-1) <= 2^101.
     We round this to 2^100; this value can be slightly increased trading off d.
 -->
@@ -963,14 +987,15 @@ random function or that a pseudorandom permutation (PRP) is indistinguishable
 from a truly random permutation. Thus, the advantage estimates assume that the
 attacker is not able to exploit a weakness in an underlying primitive.
 
-Many of the formulae in this document depend on simplifying assumptions,
-from differing models, which means that results are not universally applicable. When using this
-document to set limits, it is necessary to validate all these assumptions
-for the setting in which the limits might apply. In most cases, the goal is
-to use assumptions that result in setting a more conservative limit, but this
-is not always the case. As an example of one such simplification, this document
-defines `v` as the total number of failed decryption queries (that is, failed forgery
-attempts), whereas models usually include all forgery attempts when determining `v`.
+Many of the formulae in this document depend on simplifying assumptions, from
+differing models, which means that results are not universally applicable. When
+using this document to set limits, it is necessary to validate all these
+assumptions for the setting in which the limits might apply. In most cases, the
+goal is to use assumptions that result in setting a more conservative limit, but
+this is not always the case. As an example of one such simplification, this
+document defines `v` as the total number of decryption queries leading to a
+successful forgery (that is, the number of failed forgery attempts plus one),
+whereas models usually include all forgery attempts when determining `v`.
 
 The CA, IA, and AEA values defined in this document are upper bounds based on existing
 cryptographic research. Future analysis may introduce tighter bounds. Applications
