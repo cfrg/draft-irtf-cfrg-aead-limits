@@ -531,7 +531,7 @@ v * 2^64 <= p * 2^127
 ~~~
 
 This approach produces much smaller values for `v` than `q`.  Alternative
-allocations tend to greatly reduce `q` without significantly increasing to `v`.
+allocations tend to greatly reduce `q` without significantly increasing `v`.
 
 
 ## Single-Key Examples
