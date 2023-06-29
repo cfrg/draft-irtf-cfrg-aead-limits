@@ -271,7 +271,7 @@ defines a process for determining three overall operational limits:
 - Confidentiality limit (CL): The number of messages an application can encrypt
   before giving the adversary a confidentiality advantage higher than CA.
 
-- Integrity limit (IL): The number ciphertexts an application can decrypt
+- Integrity limit (IL): The number of ciphertexts an application can decrypt
   unsuccessfully before giving the adversary an integrity advantage higher than
   IA.
 
