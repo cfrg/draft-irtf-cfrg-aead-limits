@@ -1015,3 +1015,15 @@ such multiple forgery attacks in the context of AES-GCM in more detail.
 This document does not make any request of IANA.
 
 --- back
+
+# Acknowledgments
+{: numbered="false"}
+
+In addition to the authors of papers performing analysis of ciphers, thanks are
+owed to
+{{{Scott Flurer}}},
+{{{Thomas Fossati}}},
+{{{John Mattsson}}},
+{{{David McGrew}}},
+{{{Yoav Nir}}}, and
+{{{Alexander Tereschenko}}} for helping making this document better.
