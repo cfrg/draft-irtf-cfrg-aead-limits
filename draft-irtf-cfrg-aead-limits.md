@@ -999,5 +999,6 @@ owed to
 {{{Scott Flurer}}},
 {{{Thomas Fossati}}},
 {{{John Mattsson}}},
-{{{David McGrew}}}, and
+{{{David McGrew}}},
+{{{Yoav Nir}}}, and
 {{{Alexander Tereschenko}}} for helping making this document better.
