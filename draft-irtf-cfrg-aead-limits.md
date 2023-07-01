@@ -530,7 +530,7 @@ v * 2^64 <= p * 2^127
 (2L * (v + q))^2 <= p * 2^127
 ~~~
 
-This approach produces much smaller values for `v` than `q`.  Alternative
+This approach produces much smaller values for `v` than for `q`.  Alternative
 allocations tend to greatly reduce `q` without significantly increasing `v`.
 
 
