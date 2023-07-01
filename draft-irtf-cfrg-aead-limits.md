@@ -398,11 +398,11 @@ v <= min(2^64, (p * 2^127) / (L + 1))
 ~~~
 
 <!--
-Note that values of p that cause v to exceed 2^64 are where `p > L / 2^63`
-The same p value produces q = 2^33 * L^(-1/2)
+Note that values of p that cause v to exceed 2^64 are where `p > L / 2^63`.
+The same p value produces q = 2^33 * L^(-1/2) in the CA limit.
 L is at most 2^32 by construction (that's the block counter),
 so s + q <= q * (L+1) would be at most 2^49 which can be ignored
-(ignoring the +1 as also being insignificant)
+(ignoring the +1 as also being insignificant).
 -->
 
 
