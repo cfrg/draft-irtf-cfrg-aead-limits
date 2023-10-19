@@ -14,7 +14,7 @@ keyword:
 author:
  -  ins: F. Günther
     name: Felix Günther
-    org: ETH Zurich
+    org: IBM Research Europe - Zurich
     email: mail@felixguenther.info
  -  ins: M. Thomson
     name: Martin Thomson
