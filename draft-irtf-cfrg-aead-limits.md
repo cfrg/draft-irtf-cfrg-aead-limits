@@ -154,13 +154,15 @@ a given key. In the traditional setting, there is one key shared between two
 parties. Any limits on the maximum length of inputs or encryption operations
 apply to that single key. The attacker's goal is to break security
 (confidentiality or integrity) of that specific key. However, in practice, there
-are often many users with independent keys. This multi-key security setting,
-often referred to as the multi-user setting in the academic literature,
-considers an attacker's advantage in breaking security of any of these many
-keys, further assuming the attacker may have done some offline work to help break
-security. As a result, AEAD algorithm limits may depend on offline work and the
-number of keys. However, given that a multi-key attacker does not target any specific
-key, acceptable advantages may differ from that of the single-key setting.
+are often many parties with independent keys, multiple sessions between two
+parties, and even many keys used within a single session due to rekeying. This 
+multi-key security setting, often referred to as the multi-user setting in the 
+academic literature, considers an attacker's advantage in breaking security of 
+any of these many keys, further assuming the attacker may have done some offline 
+work (measuring time, but not memory) to help break security. As a result, AEAD 
+algorithm limits may depend on offline work and the number of keys. However, 
+given that a multi-key attacker does not target any specific key, acceptable 
+advantages may differ from that of the single-key setting.
 
 The number of times a single pair of key and nonce can be used might also be
 relevant to security.  For some algorithms, such as AEAD_AES_128_GCM or
@@ -171,19 +173,20 @@ AEAD_AES_128_GCM_SIV can tolerate a limited amount of nonce reuse.
 
 It is good practice to have limits on how many times the same key (or pair of
 key and nonce) are used.  Setting a limit based on some measurable property of
-the usage, such as number of protected messages or amount of data transferred,
-ensures that it is easy to apply limits.  This might require the application of
-simplifying assumptions.  For example, TLS 1.3 and QUIC both specify limits on
-the number of records that can be protected, using the simplifying assumption
-that records are the same size; see {{Section 5.5 of TLS}} and {{Section 6.6 of
-RFC9001}}.
+the usage, such as number of protected messages, amount of data transferred, or
+time passed ensures that it is easy to apply limits.  This might require the 
+application of simplifying assumptions.  For example, TLS 1.3 and QUIC both 
+specify limits on the number of records that can be protected, using the 
+simplifying assumption that records are the same size; see {{Section 5.5 of 
+TLS}} and {{Section 6.6 of RFC9001}}.
 
 Exceeding the determined usage limit can be avoided using rekeying.  Rekeying
 uses a lightweight transform to produce new keys.  Rekeying effectively resets
 progress toward single-key limits, allowing a session to be extended without
 degrading security.  Rekeying can also provide a measure of forward and
 backward (post-compromise) security.  {{?RFC8645}} contains a thorough survey
-of rekeying and the consequences of different design choices.
+of rekeying and the consequences of different design choices.  When considering
+rekeying, the multi-user limits should be applied.
 
 Currently, AEAD limits and usage requirements are scattered among peer-reviewed
 papers, standards documents, and other RFCs. Determining the correct limits for
@@ -216,7 +219,7 @@ This document defines limitations in part using the quantities in
 | q | Number of protected messages (AEAD encryption invocations) |
 | v | Number of attacker forgery attempts (failed AEAD decryption invocations + 1) |
 | p | Upper bound on adversary attack probability |
-| o | Offline adversary work (in number of encryption and decryption queries; multi-key setting only) |
+| o | Offline adversary work (time, measured in number of encryption and decryption queries; multi-key setting only) |
 | u | Number of keys (multi-key setting only) |
 | B | Maximum number of blocks encrypted by any key (multi-key setting only) |
 {: #notation-table title="Notation"}
