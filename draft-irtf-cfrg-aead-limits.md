@@ -159,7 +159,7 @@ parties, and even many keys used within a single session due to rekeying. This
 multi-key security setting, often referred to as the multi-user setting in the
 academic literature, considers an attacker's advantage in breaking security of
 any of these many keys, further assuming the attacker may have done some offline
-work (measuring time, but not memory) to help break security. As a result, AEAD
+work (measuring time, but not memory) to help break any key. As a result, AEAD
 algorithm limits may depend on offline work and the number of keys. However,
 given that a multi-key attacker does not target any specific key, acceptable
 advantages may differ from that of the single-key setting.
