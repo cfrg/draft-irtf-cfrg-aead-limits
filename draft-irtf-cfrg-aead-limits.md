@@ -53,7 +53,7 @@ normative:
       - ins: A. Luykx
       - ins: K. Paterson
     date: 2016-03-08
-    target: http://www.isg.rhul.ac.uk/~kp/TLS-AEbounds.pdf
+    target: https://eprint.iacr.org/2024/051.pdf
   AEComposition:
     title: "Authenticated Encryption: Relations among notions and analysis of the generic composition paradigm"
     author:
