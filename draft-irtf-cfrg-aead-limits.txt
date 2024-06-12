@@ -5,10 +5,10 @@
 Network Working Group                                         F. Günther
 Internet-Draft                              IBM Research Europe - Zurich
 Intended status: Informational                                M. Thomson
-Expires: 3 October 2024                                          Mozilla
+Expires: 14 December 2024                                        Mozilla
                                                               C. A. Wood
                                                               Cloudflare
-                                                            1 April 2024
+                                                            12 June 2024
 
 
                     Usage Limits on AEAD Algorithms
@@ -50,7 +50,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 3 October 2024.
+   This Internet-Draft will expire on 14 December 2024.
 
 Copyright Notice
 
@@ -795,7 +795,7 @@ Table of Contents
 
    [AEBounds] Luykx, A. and K. Paterson, "Limits on Authenticated
               Encryption Use in TLS", 8 March 2016,
-              <http://www.isg.rhul.ac.uk/~kp/TLS-AEbounds.pdf>.
+              <https://eprint.iacr.org/2024/051.pdf>.
 
    [AEComposition]
               Bellare, M. and C. Namprempre, "Authenticated Encryption:
