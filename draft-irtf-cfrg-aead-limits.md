@@ -1029,5 +1029,6 @@ owed to
 {{{Thomas Fossati}}},
 {{{John Mattsson}}},
 {{{David McGrew}}},
-{{{Yoav Nir}}}, and
+{{{Yoav Nir}}},
+{{{Thomas Pornin}}}, and
 {{{Alexander Tereschenko}}} for helping making this document better.
