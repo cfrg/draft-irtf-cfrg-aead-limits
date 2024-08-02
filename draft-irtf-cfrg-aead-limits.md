@@ -607,7 +607,7 @@ have a higher chance of nonce collisions and are not considered for the
 limits in this section.
 
 For this AEAD, `n = 128` (the AES block length), `t = 128`, and `r = 96`; the key length is `k = 128`
-or `k = 256` for AEAD_AES_128_GCM and AEAD_AES_128_GCM respectively.
+or `k = 256` for AEAD_AES_128_GCM and AEAD_AES_256_GCM respectively.
 
 
 ### Authenticated Encryption Security Limit {#mu-gcm-ae}
@@ -903,7 +903,7 @@ the adversary's offline work `o` and the number of protected messages `q`
 across all used keys:
 
 ~~~
-CA <= (o + q) / 2^247)
+CA <= (o + q) / 2^247
 ~~~
 
 <!--
@@ -1028,7 +1028,7 @@ This document does not make any request of IANA.
 
 In addition to the authors of papers performing analysis of ciphers, thanks are
 owed to
-{{{Scott Flurer}}},
+{{{Scott Fluhrer}}},
 {{{Thomas Fossati}}},
 {{{John Mattsson}}},
 {{{David McGrew}}},
