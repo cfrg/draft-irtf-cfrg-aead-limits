@@ -225,8 +225,8 @@ This document defines limitations in part using the quantities in
 | B | Maximum number of blocks encrypted by any key (multi-key setting only) |
 {: #notation-table title="Notation"}
 
-For each AEAD algorithm, we define the chosen-plaintext (IND-CPA) confidentiality and ciphertext
-(INT-CTXT) integrity advantage roughly as the advantage an attacker has in breaking the
+For each AEAD algorithm, we define the chosen-plaintext confidentiality (IND-CPA) and ciphertext
+integrity (INT-CTXT) advantage roughly as the advantage an attacker has in breaking the
 corresponding classical security property for the algorithm. An IND-CPA attacker
 can query ciphertexts for arbitrary plaintexts. An INT-CTXT attacker can additionally
 query plaintexts for arbitrary ciphertexts. Moreover, we define the combined
@@ -234,13 +234,13 @@ authenticated encryption advantage guaranteeing both confidentiality and integri
 against an active attacker. Specifically:
 
 - Confidentiality advantage (CA): The probability of an attacker
-succeeding in breaking the IND-CPA confidentiality properties of the AEAD scheme.
+succeeding in breaking the IND-CPA (confidentiality) properties of the AEAD scheme.
 In this document, the definition of confidentiality advantage roughly is the
 probability that an attacker successfully distinguishes the ciphertext outputs
 of the AEAD scheme from the outputs of a random function.
 
 - Integrity advantage (IA): The probability of an attacker succeeding
-in breaking the INT-CTXT integrity properties of the AEAD scheme. In this document,
+in breaking the INT-CTXT (integrity) properties of the AEAD scheme. In this document,
 the definition of integrity advantage roughly is the probability that an attacker
 is able to forge a ciphertext that will be accepted as valid.
 
@@ -255,7 +255,7 @@ Here, we consider advantages beyond distinguishing underyling primitives from th
 ideal instances (for example, a pseudorandom from a truly random function).
 
 See {{AEComposition}}, {{AEAD}} for the formal definitions of and relations
-between IND-CPA confidentiality, INT-CTXT ciphertext integrity,
+between IND-CPA (confidentiality), INT-CTXT (integrity),
 and authenticated encryption security (AE).
 The authenticated encryption advantage subsumes, and can be derived as the
 combination of, both CA and IA:
