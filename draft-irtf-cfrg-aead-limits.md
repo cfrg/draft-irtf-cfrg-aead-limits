@@ -1006,10 +1006,7 @@ whereas models usually include all forgery attempts when determining `v`.
 
 The CA, IA, and AEA values defined in this document are upper bounds based on existing
 cryptographic research. Future analysis may introduce tighter bounds. Applications
-SHOULD NOT assume these bounds are rigid, and SHOULD accommodate changes. In
-particular, in two-party communication, one participant cannot regard apparent
-overuse of a key by other participants as being in error, when it could be that
-the other participant has better information about bounds.
+SHOULD NOT assume these bounds are rigid, and SHOULD accommodate changes.
 
 Note that the limits in this document apply to the adversary's ability to
 conduct a single successful forgery. For some algorithms and in some cases,
