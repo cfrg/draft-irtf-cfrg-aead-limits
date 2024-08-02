@@ -225,22 +225,22 @@ This document defines limitations in part using the quantities in
 | B | Maximum number of blocks encrypted by any key (multi-key setting only) |
 {: #notation-table title="Notation"}
 
-For each AEAD algorithm, we define the (passive) confidentiality and (active)
-integrity advantage roughly as the advantage an attacker has in breaking the
-corresponding classical security property for the algorithm. A passive attacker
-can query ciphertexts for arbitrary plaintexts. An active attacker can additionally
+For each AEAD algorithm, we define the chosen-plaintext (IND-CPA) confidentiality and ciphertext
+(INT-CTXT) integrity advantage roughly as the advantage an attacker has in breaking the
+corresponding classical security property for the algorithm. An IND-CPA attacker
+can query ciphertexts for arbitrary plaintexts. An INT-CTXT attacker can additionally
 query plaintexts for arbitrary ciphertexts. Moreover, we define the combined
 authenticated encryption advantage guaranteeing both confidentiality and integrity
 against an active attacker. Specifically:
 
-- Confidentiality advantage (CA): The probability of a passive attacker
-succeeding in breaking the confidentiality properties (IND-CPA) of the AEAD scheme.
+- Confidentiality advantage (CA): The probability of an attacker
+succeeding in breaking the IND-CPA confidentiality properties of the AEAD scheme.
 In this document, the definition of confidentiality advantage roughly is the
 probability that an attacker successfully distinguishes the ciphertext outputs
 of the AEAD scheme from the outputs of a random function.
 
-- Integrity advantage (IA): The probability of an active attacker succeeding
-in breaking the integrity properties (INT-CTXT) of the AEAD scheme. In this document,
+- Integrity advantage (IA): The probability of an attacker succeeding
+in breaking the INT-CTXT integrity properties of the AEAD scheme. In this document,
 the definition of integrity advantage roughly is the probability that an attacker
 is able to forge a ciphertext that will be accepted as valid.
 
@@ -252,7 +252,7 @@ the ciphertext outputs of the AEAD scheme from the outputs of a random function
 or is able to forge a ciphertext that will be accepted as valid.
 
 See {{AEComposition}}, {{AEAD}} for the formal definitions of and relations
-between passive confidentiality (IND-CPA), ciphertext integrity (INT-CTXT),
+between IND-CPA confidentiality, INT-CTXT ciphertext integrity,
 and authenticated encryption security (AE).
 The authenticated encryption advantage subsumes, and can be derived as the
 combination of, both CA and IA:
