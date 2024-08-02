@@ -251,6 +251,9 @@ advantage roughly is the probability that an attacker successfully distinguishes
 the ciphertext outputs of the AEAD scheme from the outputs of a random function
 or is able to forge a ciphertext that will be accepted as valid.
 
+Here, we consider advantages beyond distinguishing underyling primitives from their
+ideal instances (for example, a pseudorandom from a truly random function).
+
 See {{AEComposition}}, {{AEAD}} for the formal definitions of and relations
 between IND-CPA confidentiality, INT-CTXT ciphertext integrity,
 and authenticated encryption security (AE).
