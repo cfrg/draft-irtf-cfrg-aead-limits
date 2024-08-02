@@ -137,8 +137,8 @@ both single- and multi-key settings.
 An Authenticated Encryption with Associated Data (AEAD) algorithm
 provides confidentiality and integrity. {{!RFC5116}} specifies an AEAD
 as a function with four inputs -- secret key, nonce, plaintext, associated data
-(of which plaintext and associated data can optionally be zero-length) -- that
-produces ciphertext output and an error code
+(of which nonce, plaintext, and associated data can optionally be zero-length) --
+that produces ciphertext output and an error code
 indicating success or failure. The ciphertext is typically composed of the encrypted
 plaintext bytes and an authentication tag.
 
@@ -170,6 +170,7 @@ AEAD_AES_256_GCM, this limit is 1 and using the same pair of key and nonce has
 serious consequences for both confidentiality and integrity; see
 {{NonceDisrespecting}}.  Nonce-reuse resistant algorithms like
 AEAD_AES_128_GCM_SIV can tolerate a limited amount of nonce reuse.
+This document focuses on AEAD schemes requiring non-repeating nonces.
 
 It is good practice to have limits on how many times the same key (or pair of
 key and nonce) are used.  Setting a limit based on some measurable property of
@@ -329,11 +330,11 @@ applications where AAD comprises a significant proportion of messages might find
 the estimates provided to be slightly more conservative than necessary to meet a
 given goal.
 
-This document assumes the use of non-repeating nonces.  The modes covered here
-are not robust if the same nonce and key are used to protect different messages,
-so deterministic generation of nonces from a counter or similar techniques is
-strongly encouraged.  If an application cannot guarantee that nonces will not
-repeat, a nonce-misuse resistant AEAD like AES-GCM-SIV {{?SIV=RFC8452}} is
+This document assumes the use of non-repeating nonces (in particular, non-zero-length
+nonces).  The modes covered here are not robust if the same nonce and key are used to
+protect different messages, so deterministic generation of nonces from a counter or
+similar techniques is strongly encouraged.  If an application cannot guarantee that
+nonces will not repeat, a nonce-misuse resistant AEAD like AES-GCM-SIV {{?SIV=RFC8452}} is
 likely to be a better choice.
 
 
