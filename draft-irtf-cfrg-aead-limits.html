@@ -16,13 +16,13 @@ guidance for users of common AEAD functions about how to limit the use of keys
 in order to bound the advantage given to an attacker.  It considers limits in
 both single- and multi-key settings. 
     " name="description">
-<meta content="xml2rfc 3.21.0" name="generator">
+<meta content="xml2rfc 3.22.0" name="generator">
 <meta content="safe" name="keyword">
 <meta content="limits" name="keyword">
 <meta content="crypto" name="keyword">
 <meta content="draft-irtf-cfrg-aead-limits-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.21.0
+  xml2rfc 3.22.0
     Python 3.12.3
     ConfigArgParse 1.7
     google-i18n-address 3.1.0
@@ -32,9 +32,8 @@ both single- and multi-key settings.
     platformdirs 4.2.2
     pycountry 22.3.5
     PyYAML 6.0.1
-    requests 2.31.0
+    requests 2.32.3
     setuptools 69.5.1
-    six 1.16.0
     wcwidth 0.2.13
 -->
 <link href="draft-irtf-cfrg-aead-limits.xml" rel="alternate" type="application/rfc+xml">
@@ -1034,11 +1033,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">AEAD Limits</td>
-<td class="right">June 2024</td>
+<td class="right">August 2024</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Günther, et al.</td>
-<td class="center">Expires 14 December 2024</td>
+<td class="center">Expires 6 February 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1051,12 +1050,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-irtf-cfrg-aead-limits-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2024-06-12" class="published">12 June 2024</time>
+<time datetime="2024-08-05" class="published">5 August 2024</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2024-12-14">14 December 2024</time></dd>
+<dd class="expires"><time datetime="2025-02-06">6 February 2025</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1114,7 +1113,7 @@ both single- and multi-key settings.<a href="#section-abstract-1" class="pilcrow
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 14 December 2024.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 6 February 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1275,8 +1274,8 @@ both single- and multi-key settings.<a href="#section-abstract-1" class="pilcrow
 <p id="section-1-1">An Authenticated Encryption with Associated Data (AEAD) algorithm
 provides confidentiality and integrity. <span>[<a href="#RFC5116" class="cite xref">RFC5116</a>]</span> specifies an AEAD
 as a function with four inputs -- secret key, nonce, plaintext, associated data
-(of which plaintext and associated data can optionally be zero-length) -- that
-produces ciphertext output and an error code
+(of which nonce, plaintext, and associated data can optionally be zero-length) --
+that produces ciphertext output and an error code
 indicating success or failure. The ciphertext is typically composed of the encrypted
 plaintext bytes and an authentication tag.<a href="#section-1-1" class="pilcrow">¶</a></p>
 <p id="section-1-2">The generic AEAD interface does not describe usage limits.  Each AEAD algorithm
@@ -1304,7 +1303,8 @@ relevant to security.  For some algorithms, such as AEAD_AES_128_GCM or
 AEAD_AES_256_GCM, this limit is 1 and using the same pair of key and nonce has
 serious consequences for both confidentiality and integrity; see
 <span>[<a href="#NonceDisrespecting" class="cite xref">NonceDisrespecting</a>]</span>.  Nonce-reuse resistant algorithms like
-AEAD_AES_128_GCM_SIV can tolerate a limited amount of nonce reuse.<a href="#section-1-4" class="pilcrow">¶</a></p>
+AEAD_AES_128_GCM_SIV can tolerate a limited amount of nonce reuse.
+This document focuses on AEAD schemes requiring non-repeating nonces.<a href="#section-1-4" class="pilcrow">¶</a></p>
 <p id="section-1-5">It is good practice to have limits on how many times the same key (or pair of
 key and nonce) are used.  Setting a limit based on some measurable property of
 the usage, such as number of protected messages, amount of data transferred, or
@@ -1364,7 +1364,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
         <tbody>
           <tr>
             <td class="text-right" rowspan="1" colspan="1">n</td>
-            <td class="text-left" rowspan="1" colspan="1">AEAD block length (in bits)</td>
+            <td class="text-left" rowspan="1" colspan="1">AEAD block length (in bits), of the underlying block cipher</td>
           </tr>
           <tr>
             <td class="text-right" rowspan="1" colspan="1">k</td>
@@ -1413,24 +1413,24 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
         </tbody>
       </table>
 </div>
-<p id="section-3-3">For each AEAD algorithm, we define the (passive) confidentiality and (active)
-integrity advantage roughly as the advantage an attacker has in breaking the
-corresponding classical security property for the algorithm. A passive attacker
-can query ciphertexts for arbitrary plaintexts. An active attacker can additionally
+<p id="section-3-3">For each AEAD algorithm, we define the chosen-plaintext confidentiality (IND-CPA) and ciphertext
+integrity (INT-CTXT) advantage roughly as the advantage an attacker has in breaking the
+corresponding classical security property for the algorithm. An IND-CPA attacker
+can query ciphertexts for arbitrary plaintexts. An INT-CTXT attacker can additionally
 query plaintexts for arbitrary ciphertexts. Moreover, we define the combined
 authenticated encryption advantage guaranteeing both confidentiality and integrity
 against an active attacker. Specifically:<a href="#section-3-3" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3-4.1">
-          <p id="section-3-4.1.1">Confidentiality advantage (CA): The probability of a passive attacker
-succeeding in breaking the confidentiality properties (IND-CPA) of the AEAD scheme.
+          <p id="section-3-4.1.1">Confidentiality advantage (CA): The probability of an attacker
+succeeding in breaking the IND-CPA (confidentiality) properties of the AEAD scheme.
 In this document, the definition of confidentiality advantage roughly is the
 probability that an attacker successfully distinguishes the ciphertext outputs
 of the AEAD scheme from the outputs of a random function.<a href="#section-3-4.1.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-3-4.2">
-          <p id="section-3-4.2.1">Integrity advantage (IA): The probability of an active attacker succeeding
-in breaking the integrity properties (INT-CTXT) of the AEAD scheme. In this document,
+          <p id="section-3-4.2.1">Integrity advantage (IA): The probability of an attacker succeeding
+in breaking the INT-CTXT (integrity) properties of the AEAD scheme. In this document,
 the definition of integrity advantage roughly is the probability that an attacker
 is able to forge a ciphertext that will be accepted as valid.<a href="#section-3-4.2.1" class="pilcrow">¶</a></p>
 </li>
@@ -1443,21 +1443,23 @@ the ciphertext outputs of the AEAD scheme from the outputs of a random function
 or is able to forge a ciphertext that will be accepted as valid.<a href="#section-3-4.3.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<p id="section-3-5">See <span>[<a href="#AEComposition" class="cite xref">AEComposition</a>]</span>, <span>[<a href="#AEAD" class="cite xref">AEAD</a>]</span> for the formal definitions of and relations
-between passive confidentiality (IND-CPA), ciphertext integrity (INT-CTXT),
+<p id="section-3-5">Here, we consider advantages beyond distinguishing underyling primitives from their
+ideal instances (for example, a pseudorandom from a truly random function).<a href="#section-3-5" class="pilcrow">¶</a></p>
+<p id="section-3-6">See <span>[<a href="#AEComposition" class="cite xref">AEComposition</a>]</span>, <span>[<a href="#AEAD" class="cite xref">AEAD</a>]</span> for the formal definitions of and relations
+between IND-CPA (confidentiality), INT-CTXT (integrity),
 and authenticated encryption security (AE).
 The authenticated encryption advantage subsumes, and can be derived as the
-combination of, both CA and IA:<a href="#section-3-5" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-3-6">
+combination of, both CA and IA:<a href="#section-3-6" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3-7">
 <pre>
 CA &lt;= AEA
 IA &lt;= AEA
 AEA &lt;= CA + IA
-</pre><a href="#section-3-6" class="pilcrow">¶</a>
+</pre><a href="#section-3-7" class="pilcrow">¶</a>
 </div>
-<p id="section-3-7">Each application requires an individual determination of limits in order to keep CA
+<p id="section-3-8">Each application requires an individual determination of limits in order to keep CA
 and IA sufficiently small.  For instance, TLS aims to keep CA below 2<sup>-60</sup> and IA
-below 2<sup>-57</sup> in the single-key setting; see <span><a href="https://rfc-editor.org/rfc/rfc8446#section-5.5" class="relref">Section 5.5</a> of [<a href="#TLS" class="cite xref">TLS</a>]</span>.<a href="#section-3-7" class="pilcrow">¶</a></p>
+below 2<sup>-57</sup> in the single-key setting; see <span><a href="https://rfc-editor.org/rfc/rfc8446#section-5.5" class="relref">Section 5.5</a> of [<a href="#TLS" class="cite xref">TLS</a>]</span>.<a href="#section-3-8" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="calculating-limits">
@@ -1525,11 +1527,11 @@ AAD can contribute less toward attacker advantage for confidentiality limits, so
 applications where AAD comprises a significant proportion of messages might find
 the estimates provided to be slightly more conservative than necessary to meet a
 given goal.<a href="#section-4.1-3" class="pilcrow">¶</a></p>
-<p id="section-4.1-4">This document assumes the use of non-repeating nonces.  The modes covered here
-are not robust if the same nonce and key are used to protect different messages,
-so deterministic generation of nonces from a counter or similar techniques is
-strongly encouraged.  If an application cannot guarantee that nonces will not
-repeat, a nonce-misuse resistant AEAD like AES-GCM-SIV <span>[<a href="#SIV" class="cite xref">SIV</a>]</span> is
+<p id="section-4.1-4">This document assumes the use of non-repeating nonces (in particular, non-zero-length
+nonces).  The modes covered here are not robust if the same nonce and key are used to
+protect different messages, so deterministic generation of nonces from a counter or
+similar techniques is strongly encouraged.  If an application cannot guarantee that
+nonces will not repeat, a nonce-misuse resistant AEAD like AES-GCM-SIV <span>[<a href="#SIV" class="cite xref">SIV</a>]</span> is
 likely to be a better choice.<a href="#section-4.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -1559,8 +1561,8 @@ Alongside each advantage value, we also specify these bounds.<a href="#section-5
 <a href="#section-5.1" class="section-number selfRef">5.1. </a><a href="#name-aead_aes_128_gcm-and-aead_a" class="section-name selfRef">AEAD_AES_128_GCM and AEAD_AES_256_GCM</a>
         </h3>
 <p id="section-5.1-1">The CL and IL values for AES-GCM are derived in <span>[<a href="#AEBounds" class="cite xref">AEBounds</a>]</span> and summarized below.
-For this AEAD, <code>n = 128</code> and <code>t = 128</code> <span>[<a href="#GCM" class="cite xref">GCM</a>]</span>. In this example, the length <code>s</code> is the sum
-of AAD and plaintext (in blocks of 128 bits), as described in <span>[<a href="#GCMProofs" class="cite xref">GCMProofs</a>]</span>.<a href="#section-5.1-1" class="pilcrow">¶</a></p>
+For this AEAD, <code>n = 128</code> (the AES block length) and <code>t = 128</code> <span>[<a href="#GCM" class="cite xref">GCM</a>]</span>, <span>[<a href="#RFC5116" class="cite xref">RFC5116</a>]</span>. In this example,
+the length <code>s</code> is the sum of AAD and plaintext (in blocks of 128 bits), as described in <span>[<a href="#GCMProofs" class="cite xref">GCMProofs</a>]</span>.<a href="#section-5.1-1" class="pilcrow">¶</a></p>
 <div id="confidentiality-limit">
 <section id="section-5.1.1">
           <h4 id="name-confidentiality-limit">
@@ -1620,8 +1622,8 @@ v &lt;= min(2^64, (p * 2^127) / (L + 1))
 <p id="section-5.2-1">The known single-user analyses for AEAD_CHACHA20_POLY1305
 <span>[<a href="#ChaCha20Poly1305-SU" class="cite xref">ChaCha20Poly1305-SU</a>]</span>, <span>[<a href="#ChaCha20Poly1305-MU" class="cite xref">ChaCha20Poly1305-MU</a>]</span> give a combined AE limit,
 which we separate into confidentiality and integrity limits below. For this
-AEAD, <code>n = 512</code>, <code>k = 256</code>, and <code>t = 128</code>; the length <code>L</code> is the sum of AAD
-and plaintext (in blocks of 128 bits), see <span>[<a href="#ChaCha20Poly1305-MU" class="cite xref">ChaCha20Poly1305-MU</a>]</span>.<a href="#section-5.2-1" class="pilcrow">¶</a></p>
+AEAD, <code>n = 512</code> (the ChaCha20 block length), <code>k = 256</code>, and <code>t = 128</code>; the length <code>L'</code> is the sum of AAD
+and plaintext (in Poly1305 blocks of 128 bits), see <span>[<a href="#ChaCha20Poly1305-MU" class="cite xref">ChaCha20Poly1305-MU</a>]</span>.<a href="#section-5.2-1" class="pilcrow">¶</a></p>
 <div id="confidentiality-limit-1">
 <section id="section-5.2.1">
           <h4 id="name-confidentiality-limit-2">
@@ -1643,13 +1645,13 @@ block function.<a href="#section-5.2.1-2" class="pilcrow">¶</a></p>
           </h4>
 <div class="alignLeft art-text artwork" id="section-5.2.2-1">
 <pre>
-IA &lt;= (v * (L + 1)) / 2^103
+IA &lt;= (v * (L' + 1)) / 2^103
 </pre><a href="#section-5.2.2-1" class="pilcrow">¶</a>
 </div>
 <p id="section-5.2.2-2">This implies the following limit:<a href="#section-5.2.2-2" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-5.2.2-3">
 <pre>
-v &lt;= (p * 2^103) / (L + 1)
+v &lt;= (p * 2^103) / (L' + 1)
 </pre><a href="#section-5.2.2-3" class="pilcrow">¶</a>
 </div>
 </section>
@@ -1670,7 +1672,7 @@ the plaintext in blocks, plus 1.<a href="#section-5.3-1" class="pilcrow">¶</a><
 i.e., <code>2L</code> represents the effective length, in number of block cipher operations, of a message with
 L blocks. This simplification is based on the observation that common applications of this AEAD carry
 only a small amount of associated data compared to ciphertext. For example, QUIC has 1 to 3 blocks of AAD.<a href="#section-5.3-2" class="pilcrow">¶</a></p>
-<p id="section-5.3-3">For this AEAD, <code>n = 128</code> and <code>t = 128</code>.<a href="#section-5.3-3" class="pilcrow">¶</a></p>
+<p id="section-5.3-3">For this AEAD, <code>n = 128</code> (the AES block length) and <code>t = 128</code>.<a href="#section-5.3-3" class="pilcrow">¶</a></p>
 <div id="confidentiality-limit-2">
 <section id="section-5.3.1">
           <h4 id="name-confidentiality-limit-3">
@@ -1859,8 +1861,8 @@ concatenation of the two parts. This produces similar limits under most
 conditions.  Note that implementations that choose the explicit part at random
 have a higher chance of nonce collisions and are not considered for the
 limits in this section.<a href="#section-6.1-2" class="pilcrow">¶</a></p>
-<p id="section-6.1-3">For this AEAD, <code>n = 128</code>, <code>t = 128</code>, and <code>r = 96</code>; the key length is <code>k = 128</code>
-or <code>k = 256</code> for AEAD_AES_128_GCM and AEAD_AES_128_GCM respectively.<a href="#section-6.1-3" class="pilcrow">¶</a></p>
+<p id="section-6.1-3">For this AEAD, <code>n = 128</code> (the AES block length), <code>t = 128</code>, and <code>r = 96</code>; the key length is <code>k = 128</code>
+or <code>k = 256</code> for AEAD_AES_128_GCM and AEAD_AES_256_GCM respectively.<a href="#section-6.1-3" class="pilcrow">¶</a></p>
 <div id="mu-gcm-ae">
 <section id="section-6.1.1">
           <h4 id="name-authenticated-encryption-se">
@@ -1959,8 +1961,8 @@ IA &lt;= AEA
 <p id="section-6.2-1">Concrete multi-key bounds for AEAD_CHACHA20_POLY1305 are given in Theorem 7.2
 in <span>[<a href="#ChaCha20Poly1305-MU" class="cite xref">ChaCha20Poly1305-MU</a>]</span>, covering protocols with nonce randomization like
 TLS 1.3 <span>[<a href="#TLS" class="cite xref">TLS</a>]</span> and QUIC <span>[<a href="#RFC9001" class="cite xref">RFC9001</a>]</span>.<a href="#section-6.2-1" class="pilcrow">¶</a></p>
-<p id="section-6.2-2">For this AEAD, <code>n = 512</code>, <code>k = 256</code>, <code>t = 128</code>, and <code>r = 96</code>; the length (<code>L</code>) is the sum
-of AAD and plaintext (in blocks of 128 bits).<a href="#section-6.2-2" class="pilcrow">¶</a></p>
+<p id="section-6.2-2">For this AEAD, <code>n = 512</code> (the ChaCha20 block length), <code>k = 256</code>, <code>t = 128</code>, and <code>r = 96</code>;
+the length (<code>L'</code>) is the sum of AAD and plaintext (in Poly1305 blocks of 128 bits).<a href="#section-6.2-2" class="pilcrow">¶</a></p>
 <div id="mu-ccp-ae">
 <section id="section-6.2.1">
           <h4 id="name-authenticated-encryption-sec">
@@ -1969,17 +1971,17 @@ of AAD and plaintext (in blocks of 128 bits).<a href="#section-6.2-2" class="pil
 <p id="section-6.2.1-1">Protocols with nonce randomization have a limit of:<a href="#section-6.2.1-1" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-6.2.1-2">
 <pre>
-AEA &lt;= (v * (L + 1)) / 2^103
+AEA &lt;= (v * (L' + 1)) / 2^103
 </pre><a href="#section-6.2.1-2" class="pilcrow">¶</a>
 </div>
 <p id="section-6.2.1-3">It implies the following limit:<a href="#section-6.2.1-3" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-6.2.1-4">
 <pre>
-v &lt;= (p * 2^103) / (L + 1)
+v &lt;= (p * 2^103) / (L' + 1)
 </pre><a href="#section-6.2.1-4" class="pilcrow">¶</a>
 </div>
 <p id="section-6.2.1-5">Note that this is the same limit as in the single-user case except that the
-total number of forgery attempts (<code>v</code>) and maximum message length in blocks (<code>L</code>)
+total number of forgery attempts (<code>v</code>) and maximum message length in Poly1305 blocks (<code>L'</code>)
 is calculated across all used keys.<a href="#section-6.2.1-5" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -1995,7 +1997,7 @@ the adversary's offline work <code>o</code> and the number of protected messages
 across all used keys:<a href="#section-6.2.2-1" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-6.2.2-2">
 <pre>
-CA &lt;= (o + q) / 2^247)
+CA &lt;= (o + q) / 2^247
 </pre><a href="#section-6.2.2-2" class="pilcrow">¶</a>
 </div>
 <p id="section-6.2.2-3">This implies the following simplified limit, which for most reasonable values of
@@ -2139,10 +2141,7 @@ successful forgery (that is, the number of failed forgery attempts plus one),
 whereas models usually include all forgery attempts when determining <code>v</code>.<a href="#section-7-2" class="pilcrow">¶</a></p>
 <p id="section-7-3">The CA, IA, and AEA values defined in this document are upper bounds based on existing
 cryptographic research. Future analysis may introduce tighter bounds. Applications
-SHOULD NOT assume these bounds are rigid, and SHOULD accommodate changes. In
-particular, in two-party communication, one participant cannot regard apparent
-overuse of a key by other participants as being in error, when it could be that
-the other participant has better information about bounds.<a href="#section-7-3" class="pilcrow">¶</a></p>
+SHOULD NOT assume these bounds are rigid, and SHOULD accommodate changes.<a href="#section-7-3" class="pilcrow">¶</a></p>
 <p id="section-7-4">Note that the limits in this document apply to the adversary's ability to
 conduct a single successful forgery. For some algorithms and in some cases,
 an adversary's success probability in repeating forgeries may be noticeably
@@ -2158,6 +2157,7 @@ such multiple forgery attacks in the context of AES-GCM in more detail.<a href="
 <p id="section-8-1">This document does not make any request of IANA.<a href="#section-8-1" class="pilcrow">¶</a></p>
 </section>
 </div>
+<div id="sec-combined-references">
 <section id="section-9">
       <h2 id="name-references">
 <a href="#section-9" class="section-number selfRef">9. </a><a href="#name-references" class="section-name selfRef">References</a>
@@ -2277,6 +2277,7 @@ such multiple forgery attacks in the context of AES-GCM in more detail.<a href="
 </section>
 </div>
 </section>
+</div>
 <div id="acknowledgments">
 <section id="appendix-A">
       <h2 id="name-acknowledgments">
@@ -2284,11 +2285,12 @@ such multiple forgery attacks in the context of AES-GCM in more detail.<a href="
       </h2>
 <p id="appendix-A-1">In addition to the authors of papers performing analysis of ciphers, thanks are
 owed to
-<span class="contact-name">Scott Flurer</span>,
+<span class="contact-name">Scott Fluhrer</span>,
 <span class="contact-name">Thomas Fossati</span>,
 <span class="contact-name">John Mattsson</span>,
 <span class="contact-name">David McGrew</span>,
-<span class="contact-name">Yoav Nir</span>, and
+<span class="contact-name">Yoav Nir</span>,
+<span class="contact-name">Thomas Pornin</span>, and
 <span class="contact-name">Alexander Tereschenko</span> for helping making this document better.<a href="#appendix-A-1" class="pilcrow">¶</a></p>
 </section>
 </div>
