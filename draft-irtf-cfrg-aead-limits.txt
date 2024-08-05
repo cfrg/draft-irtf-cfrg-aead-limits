@@ -5,10 +5,10 @@
 Network Working Group                                         F. Günther
 Internet-Draft                              IBM Research Europe - Zurich
 Intended status: Informational                                M. Thomson
-Expires: 14 December 2024                                        Mozilla
+Expires: 6 February 2025                                         Mozilla
                                                               C. A. Wood
                                                               Cloudflare
-                                                            12 June 2024
+                                                           5 August 2024
 
 
                     Usage Limits on AEAD Algorithms
@@ -50,7 +50,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 14 December 2024.
+   This Internet-Draft will expire on 6 February 2025.
 
 Copyright Notice
 
@@ -106,7 +106,7 @@ Table of Contents
    An Authenticated Encryption with Associated Data (AEAD) algorithm
    provides confidentiality and integrity.  [RFC5116] specifies an AEAD
    as a function with four inputs -- secret key, nonce, plaintext,
-   associated data (of which plaintext and associated data can
+   associated data (of which nonce, plaintext, and associated data can
    optionally be zero-length) -- that produces ciphertext output and an
    error code indicating success or failure.  The ciphertext is
    typically composed of the encrypted plaintext bytes and an
@@ -142,7 +142,8 @@ Table of Contents
    same pair of key and nonce has serious consequences for both
    confidentiality and integrity; see [NonceDisrespecting].  Nonce-reuse
    resistant algorithms like AEAD_AES_128_GCM_SIV can tolerate a limited
-   amount of nonce reuse.
+   amount of nonce reuse.  This document focuses on AEAD schemes
+   requiring non-repeating nonces.
 
    It is good practice to have limits on how many times the same key (or
    pair of key and nonce) are used.  Setting a limit based on some
@@ -190,7 +191,8 @@ Table of Contents
           +========+===========================================+
           | Symbol | Description                               |
           +========+===========================================+
-          |      n | AEAD block length (in bits)               |
+          |      n | AEAD block length (in bits), of the       |
+          |        | underlying block cipher                   |
           +--------+-------------------------------------------+
           |      k | AEAD key length (in bits)                 |
           +--------+-------------------------------------------+
@@ -225,24 +227,25 @@ Table of Contents
 
                             Table 1: Notation
 
-   For each AEAD algorithm, we define the (passive) confidentiality and
-   (active) integrity advantage roughly as the advantage an attacker has
-   in breaking the corresponding classical security property for the
-   algorithm.  A passive attacker can query ciphertexts for arbitrary
-   plaintexts.  An active attacker can additionally query plaintexts for
-   arbitrary ciphertexts.  Moreover, we define the combined
-   authenticated encryption advantage guaranteeing both confidentiality
-   and integrity against an active attacker.  Specifically:
+   For each AEAD algorithm, we define the chosen-plaintext
+   confidentiality (IND-CPA) and ciphertext integrity (INT-CTXT)
+   advantage roughly as the advantage an attacker has in breaking the
+   corresponding classical security property for the algorithm.  An IND-
+   CPA attacker can query ciphertexts for arbitrary plaintexts.  An INT-
+   CTXT attacker can additionally query plaintexts for arbitrary
+   ciphertexts.  Moreover, we define the combined authenticated
+   encryption advantage guaranteeing both confidentiality and integrity
+   against an active attacker.  Specifically:
 
-   *  Confidentiality advantage (CA): The probability of a passive
-      attacker succeeding in breaking the confidentiality properties
-      (IND-CPA) of the AEAD scheme.  In this document, the definition of
+   *  Confidentiality advantage (CA): The probability of an attacker
+      succeeding in breaking the IND-CPA (confidentiality) properties of
+      the AEAD scheme.  In this document, the definition of
       confidentiality advantage roughly is the probability that an
       attacker successfully distinguishes the ciphertext outputs of the
       AEAD scheme from the outputs of a random function.
 
-   *  Integrity advantage (IA): The probability of an active attacker
-      succeeding in breaking the integrity properties (INT-CTXT) of the
+   *  Integrity advantage (IA): The probability of an attacker
+      succeeding in breaking the INT-CTXT (integrity) properties of the
       AEAD scheme.  In this document, the definition of integrity
       advantage roughly is the probability that an attacker is able to
       forge a ciphertext that will be accepted as valid.
@@ -256,11 +259,15 @@ Table of Contents
       function or is able to forge a ciphertext that will be accepted as
       valid.
 
+   Here, we consider advantages beyond distinguishing underyling
+   primitives from their ideal instances (for example, a pseudorandom
+   from a truly random function).
+
    See [AEComposition], [AEAD] for the formal definitions of and
-   relations between passive confidentiality (IND-CPA), ciphertext
-   integrity (INT-CTXT), and authenticated encryption security (AE).
-   The authenticated encryption advantage subsumes, and can be derived
-   as the combination of, both CA and IA:
+   relations between IND-CPA (confidentiality), INT-CTXT (integrity),
+   and authenticated encryption security (AE).  The authenticated
+   encryption advantage subsumes, and can be derived as the combination
+   of, both CA and IA:
 
    CA <= AEA
    IA <= AEA
@@ -341,13 +348,13 @@ Table of Contents
    the estimates provided to be slightly more conservative than
    necessary to meet a given goal.
 
-   This document assumes the use of non-repeating nonces.  The modes
-   covered here are not robust if the same nonce and key are used to
-   protect different messages, so deterministic generation of nonces
-   from a counter or similar techniques is strongly encouraged.  If an
-   application cannot guarantee that nonces will not repeat, a nonce-
-   misuse resistant AEAD like AES-GCM-SIV [SIV] is likely to be a better
-   choice.
+   This document assumes the use of non-repeating nonces (in particular,
+   non-zero-length nonces).  The modes covered here are not robust if
+   the same nonce and key are used to protect different messages, so
+   deterministic generation of nonces from a counter or similar
+   techniques is strongly encouraged.  If an application cannot
+   guarantee that nonces will not repeat, a nonce-misuse resistant AEAD
+   like AES-GCM-SIV [SIV] is likely to be a better choice.
 
 5.  Single-Key AEAD Limits
 
@@ -374,9 +381,10 @@ Table of Contents
 5.1.  AEAD_AES_128_GCM and AEAD_AES_256_GCM
 
    The CL and IL values for AES-GCM are derived in [AEBounds] and
-   summarized below.  For this AEAD, n = 128 and t = 128 [GCM].  In this
-   example, the length s is the sum of AAD and plaintext (in blocks of
-   128 bits), as described in [GCMProofs].
+   summarized below.  For this AEAD, n = 128 (the AES block length) and
+   t = 128 [GCM], [RFC5116].  In this example, the length s is the sum
+   of AAD and plaintext (in blocks of 128 bits), as described in
+   [GCMProofs].
 
 5.1.1.  Confidentiality Limit
 
@@ -414,9 +422,9 @@ Table of Contents
    The known single-user analyses for AEAD_CHACHA20_POLY1305
    [ChaCha20Poly1305-SU], [ChaCha20Poly1305-MU] give a combined AE
    limit, which we separate into confidentiality and integrity limits
-   below.  For this AEAD, n = 512, k = 256, and t = 128; the length L is
-   the sum of AAD and plaintext (in blocks of 128 bits), see
-   [ChaCha20Poly1305-MU].
+   below.  For this AEAD, n = 512 (the ChaCha20 block length), k = 256,
+   and t = 128; the length L' is the sum of AAD and plaintext (in
+   Poly1305 blocks of 128 bits), see [ChaCha20Poly1305-MU].
 
 5.2.1.  Confidentiality Limit
 
@@ -427,11 +435,11 @@ Table of Contents
 
 5.2.2.  Integrity Limit
 
-   IA <= (v * (L + 1)) / 2^103
+   IA <= (v * (L' + 1)) / 2^103
 
    This implies the following limit:
 
-   v <= (p * 2^103) / (L + 1)
+   v <= (p * 2^103) / (L' + 1)
 
 5.3.  AEAD_AES_128_CCM
 
@@ -451,7 +459,7 @@ Table of Contents
    data compared to ciphertext.  For example, QUIC has 1 to 3 blocks of
    AAD.
 
-   For this AEAD, n = 128 and t = 128.
+   For this AEAD, n = 128 (the AES block length) and t = 128.
 
 5.3.1.  Confidentiality Limit
 
@@ -574,9 +582,9 @@ Table of Contents
    higher chance of nonce collisions and are not considered for the
    limits in this section.
 
-   For this AEAD, n = 128, t = 128, and r = 96; the key length is k =
-   128 or k = 256 for AEAD_AES_128_GCM and AEAD_AES_128_GCM
-   respectively.
+   For this AEAD, n = 128 (the AES block length), t = 128, and r = 96;
+   the key length is k = 128 or k = 256 for AEAD_AES_128_GCM and
+   AEAD_AES_256_GCM respectively.
 
 6.1.1.  Authenticated Encryption Security Limit
 
@@ -644,22 +652,23 @@ Table of Contents
    Theorem 7.2 in [ChaCha20Poly1305-MU], covering protocols with nonce
    randomization like TLS 1.3 [TLS] and QUIC [RFC9001].
 
-   For this AEAD, n = 512, k = 256, t = 128, and r = 96; the length (L)
-   is the sum of AAD and plaintext (in blocks of 128 bits).
+   For this AEAD, n = 512 (the ChaCha20 block length), k = 256, t = 128,
+   and r = 96; the length (L') is the sum of AAD and plaintext (in
+   Poly1305 blocks of 128 bits).
 
 6.2.1.  Authenticated Encryption Security Limit
 
    Protocols with nonce randomization have a limit of:
 
-   AEA <= (v * (L + 1)) / 2^103
+   AEA <= (v * (L' + 1)) / 2^103
 
    It implies the following limit:
 
-   v <= (p * 2^103) / (L + 1)
+   v <= (p * 2^103) / (L' + 1)
 
    Note that this is the same limit as in the single-user case except
    that the total number of forgery attempts (v) and maximum message
-   length in blocks (L) is calculated across all used keys.
+   length in Poly1305 blocks (L') is calculated across all used keys.
 
 6.2.2.  Confidentiality Limit
 
@@ -669,7 +678,7 @@ Table of Contents
    dominated, at a very low level, by the adversary's offline work o and
    the number of protected messages q across all used keys:
 
-   CA <= (o + q) / 2^247)
+   CA <= (o + q) / 2^247
 
    This implies the following simplified limit, which for most
    reasonable values of p is dominated by a technical limitation of
@@ -768,11 +777,7 @@ Table of Contents
    The CA, IA, and AEA values defined in this document are upper bounds
    based on existing cryptographic research.  Future analysis may
    introduce tighter bounds.  Applications SHOULD NOT assume these
-   bounds are rigid, and SHOULD accommodate changes.  In particular, in
-   two-party communication, one participant cannot regard apparent
-   overuse of a key by other participants as being in error, when it
-   could be that the other participant has better information about
-   bounds.
+   bounds are rigid, and SHOULD accommodate changes.
 
    Note that the limits in this document apply to the adversary's
    ability to conduct a single successful forgery.  For some algorithms
@@ -911,9 +916,9 @@ Table of Contents
 Acknowledgments
 
    In addition to the authors of papers performing analysis of ciphers,
-   thanks are owed to Scott Flurer, Thomas Fossati, John Mattsson, David
-   McGrew, Yoav Nir, and Alexander Tereschenko for helping making this
-   document better.
+   thanks are owed to Scott Fluhrer, Thomas Fossati, John Mattsson,
+   David McGrew, Yoav Nir, Thomas Pornin, and Alexander Tereschenko for
+   helping making this document better.
 
 Authors' Addresses
 
