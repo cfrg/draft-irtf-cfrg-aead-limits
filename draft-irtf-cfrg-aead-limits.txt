@@ -5,10 +5,10 @@
 Network Working Group                                         F. Günther
 Internet-Draft                              IBM Research Europe - Zurich
 Intended status: Informational                                M. Thomson
-Expires: 6 February 2025                                         Mozilla
+Expires: 13 April 2025                                           Mozilla
                                                               C. A. Wood
                                                               Cloudflare
-                                                           5 August 2024
+                                                         10 October 2024
 
 
                     Usage Limits on AEAD Algorithms
@@ -50,7 +50,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 6 February 2025.
+   This Internet-Draft will expire on 13 April 2025.
 
 Copyright Notice
 
@@ -810,7 +810,7 @@ Table of Contents
 
    [CCM-ANALYSIS]
               Jonsson, J., "On the Security of CTR + CBC-MAC", Springer
-              Berlin Heidelberg, Selected Areas in Cryptography pp.
+              Berlin Heidelberg, Lecture Notes in Computer Science pp.
               76-93, DOI 10.1007/3-540-36492-7_7, ISBN ["9783540006220",
               "9783540364924"], 2003,
               <https://doi.org/10.1007/3-540-36492-7_7>.
