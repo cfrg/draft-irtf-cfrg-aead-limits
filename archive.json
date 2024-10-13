@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2023-07-02T00:46:29.729823+00:00",
+  "timestamp": "2024-10-13T01:54:34.822782+00:00",
   "repo": "cfrg/draft-irtf-cfrg-aead-limits",
   "labels": [
     {
@@ -616,6 +616,46 @@
       "updatedAt": "2023-07-01T00:25:10Z",
       "closedAt": "2023-07-01T00:25:10Z",
       "comments": []
+    },
+    {
+      "number": 65,
+      "id": "I_kwDOD64iO86L_nit",
+      "title": "[AEBounds] reference is a broken link",
+      "url": "https://github.com/cfrg/draft-irtf-cfrg-aead-limits/issues/65",
+      "state": "CLOSED",
+      "author": "ctz",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "https://www.isg.rhul.ac.uk/~kp/TLS-AEbounds.pdf is a broken link for me, unfortunately.",
+      "createdAt": "2024-06-12T12:56:19Z",
+      "updatedAt": "2024-06-12T14:31:15Z",
+      "closedAt": "2024-06-12T14:31:15Z",
+      "comments": []
+    },
+    {
+      "number": 67,
+      "id": "I_kwDOD64iO86RgqhR",
+      "title": "Review from Thomas Pornin",
+      "url": "https://github.com/cfrg/draft-irtf-cfrg-aead-limits/issues/67",
+      "state": "CLOSED",
+      "author": "martinthomson",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "page 3 (section 1): \"four inputs -- secret key, nonce, plaintext,\r\nassociated data (of which plaintext and associated data can optionally\r\nbe zero-length)\" -> RFC 5116 also allows the nonce to be zero-length\r\n(though it mandates, in that case, that the nonce must always be\r\nzero-length). (At the end of section 4, on page 8, it is explained that\r\nschemes with repeated nonce values, which cover the extreme case of no\r\nnonce at all, are out of scope of the document; this might be said\r\nearlier in the document)\r\n\r\npage 5 (table 1): the table talks about the AEAD \"block length\" but no\r\nnotion of what a block could be has been introduced at this point. In\r\nfact, blocks are not really defined anywhere in the document; each\r\nscheme-specific section indicates a block size without explaining where\r\nit comes from. In some cases it is even ambiguous, e.g. in the case of\r\nChaCha20+Poly1305 where ChaCha20 generates pseudorandom data in blocks\r\nof 512 bits, but Poly1305 consumes blocks of 128 bits.\r\n\r\npage 5 (section 3): \"passive attacker\" and \"active attacker\" -> the use\r\nof \"passive\" and \"active\" terms seems at bit at odds with the usual\r\nacceptions. Traditionally, a passive attacker only observes but does not\r\notherwise interact with the attacked system; the important distinction\r\nis that a number of contextual mitigations can thwart active attackers\r\n(e.g. the attacker's requests may show up in logs and traffic metrics),\r\ncontrary to passive attackers. Here, an attacker who can submit chosen\r\nplaintexts is considered \"passive\", which substantially differs from the\r\nusual terminology. The linked references ([AEComposition], [AEAD]) do\r\nnot use the terms \"active\" or \"passive\".\r\n\r\nI think the source of the use of \"passive\" here is that in order to\r\nanalyze the security of a non-interacting attacker who only observes\r\nplaintext/ciphertext pairs, then we have to make some assumptions on the\r\nformat of the plaintexts, which depends on the usage context. To ease\r\nanalysis, we then assume that the honest user is encrypting exactly the\r\nplaintexts that would most favour the attacker: we make a worst case\r\nassumption of the defender doing (unwittingly) the attacker's job and\r\nthus turning the passive (non-interacting) model into a chosen-plaintext\r\nattack model. I.e. we look at the non-interacting situation by stating\r\nthat it cannot be worse than an interacting chosen-plaintext situation,\r\nand it is the latter which we really study.\r\n\r\nSince the words \"active\" and \"passive\" appear only in section 3 but not\r\nin the rest of the document, I suggest rewording the text to remove them\r\naltogether; the more common and accurate terminology is\r\n\"chosen-plaintext attacks\" and \"chosen-ciphertext attacks\".\r\n\r\n\r\npage 9 (section 5.1): \"t = 128 [GCM]\" -> the [GCM] document (NIST SP\r\n800-38D) actually specifies tags of 128, 120, 112, 104, 96, 64 or 32\r\nbits (with some extra usage conditions for the 32-bit and 64-bit tags).\r\nIt is RFC 5116 which further constrains the tag size to be exactly 128\r\nbits, and no other size.\r\n\r\npage 9 (section 5.2): For ChaCha20+Poly1305, the first paragraph defines\r\nthat n = 512 (i.e. the ChaCha20 blocks), but within the same sentence\r\nproceeds to express the lengths of AAD and plaintext \"in blocks of 128\r\nbits\", which is quite confusing.\r\n\r\npage 10 (section 5.2.1): \"CA <= 0\" -> this is of course not true,\r\nstrictly speaking; the confidentiality advantage was defined (in section\r\n3) as the probability of an attacker distinguishing the ciphertext from\r\na random function output, which the attacker can always do with a very\r\nsmall but non-zero probability through guessing the key. What the\r\ndocument wants to say here is that the success probability of the\r\nattacker is negligible, or, more precisely, that \"guess the key\" is the\r\nbest attack under the assumption that ChaCha20 has PRF security, and\r\nchosen plaintext or ciphertext attacks do not improve the attacker's\r\nadvantage as long as the number of plaintext/ciphertext pairs remains\r\nbelow the birthday bound, which is ludicrously large for ChaCha20 thanks\r\nto its 512-bit blocks.\r\n\r\npage 13 (section 6.1): \"k = 128 or k = 256 for AEAD_AES_128_GCM and\r\nAEAD_AES_128_GCM respectively\" -> the second \"AEAD_AES_128_GCM\" should\r\nbe \"AEAD_AES_256_GCM\".\r\n\r\npage 15 (section 6.2.2): \"CA <= (o + q) / 2^247)\" -> there's a spurious\r\nclosing parenthesis at the end.\r\n\r\npage 17 (section 7): \"In particular, in two-party communication, one\r\nparticipant cannot regard apparent overuse of a key by other\r\nparticipants as being in error, when it could be that the other\r\nparticipant has better information about bounds.\" -> This strikes me as\r\na somewhat dangerous advice; it somehow reads as: \"you shall not use\r\nyour decryption key for more than q messages because allowing so would\r\nbe unsafe, but if you have more than q messages to decrypt, well, go for\r\nit, after all who knows, it's probably fine\". I am pretty sure some\r\nstandardization bodies (e.g. NIST) would frown upon that. If there is a\r\nlimit on decryption attempts, but implementations don't enforce it, then\r\nit's not a limit; it's just a commentary.\r\n\r\nIt is true that bounds may be revised and some usages that were\r\nconsidered potentially unsafe could turn out to be safe after all (and\r\nthe converse may also happen!). However, there is a different between\r\naccepting that implementations may have to be updated to account for new\r\nscientific results, and _dynamically_ assuming that the other party\r\nknows best even if no local update was applied.\r\n\r\npage 20 (acknowledgments): the document thanks \"Scott Flurer\", and while\r\nI cannot dismiss the possiblity that somebody called Flurer provided\r\ninput to the document, I must say that it might have been the well-known\r\ncryptographer \"Scott Fluhrer\", with an extra \"h\".",
+      "createdAt": "2024-08-01T01:51:59Z",
+      "updatedAt": "2024-10-10T01:38:01Z",
+      "closedAt": "2024-10-10T01:38:01Z",
+      "comments": [
+        {
+          "author": "martinthomson",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Addressed by #68.",
+          "createdAt": "2024-10-10T01:38:01Z",
+          "updatedAt": "2024-10-10T01:38:01Z"
+        }
+      ]
     }
   ],
   "pulls": [
@@ -4029,7 +4069,7 @@
       "comments": [
         {
           "author": "emanjon",
-          "authorAssociation": "NONE",
+          "authorAssociation": "CONTRIBUTOR",
           "body": ">Indeed the probability for the first forgery attempt should be using v = 1, so it's \"0 past attempts + 1\".\r\nThe fix seems perfect.\r\n\r\n>I'm not sure I follow the 2^116 bound, though. (Also, with the current term and v = 0, IA would be 0.)\r\nIgnore these numbers.  1 / 2^128 is wrong. I think I thought of QUIC when I wrote 1 / 2^116 (I think L is 2^12 in QUIC) but it seems like I forgot the additional factor 2.",
           "createdAt": "2023-06-07T13:50:04Z",
           "updatedAt": "2023-06-07T13:50:04Z"
@@ -4042,7 +4082,7 @@
             "abbreviatedOid": "0c0a143"
           },
           "author": "emanjon",
-          "authorAssociation": "NONE",
+          "authorAssociation": "CONTRIBUTOR",
           "state": "APPROVED",
           "body": "",
           "createdAt": "2023-06-07T13:42:18Z",
@@ -4205,6 +4245,213 @@
               "updatedAt": "2023-06-30T07:06:20Z"
             }
           ]
+        }
+      ]
+    },
+    {
+      "number": 63,
+      "id": "PR_kwDOD64iO85dPmUz",
+      "title": "Affiliation updated",
+      "url": "https://github.com/cfrg/draft-irtf-cfrg-aead-limits/pull/63",
+      "state": "MERGED",
+      "author": "fxguenther",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-10-19T09:06:31Z",
+      "updatedAt": "2023-10-19T14:37:49Z",
+      "baseRepository": "cfrg/draft-irtf-cfrg-aead-limits",
+      "baseRefName": "main",
+      "baseRefOid": "3f029b33011a356b2e0014b65d32da50240bc86d",
+      "headRepository": "fxguenther/draft-irtf-cfrg-aead-limits",
+      "headRefName": "fxguenther-affil",
+      "headRefOid": "ae71978b7ee69892766fd3edab572f5a4e476666",
+      "closedAt": "2023-10-19T14:37:49Z",
+      "mergedAt": "2023-10-19T14:37:49Z",
+      "mergedBy": "chris-wood",
+      "mergeCommit": {
+        "oid": "1b6bd0c8b6fa7e5afde07088bcbcf38a51330d30"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 64,
+      "id": "PR_kwDOD64iO85oNdbh",
+      "title": "addressing comments by John Mattsson (10 Nov 2023)",
+      "url": "https://github.com/cfrg/draft-irtf-cfrg-aead-limits/pull/64",
+      "state": "MERGED",
+      "author": "fxguenther",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Addressing comments by John Mattsson [on CFRG mailing (10 Nov 2023)](https://mailarchive.ietf.org/arch/msg/cfrg/rF_r7lWvPaeenvsSyBpY5H3oljg/) as follows:\r\n\r\n- *major:* \"I am strongly against any suggestion that the single-key confidentiality and integrity advantages should be used to calculate rekeying limits [...]\"\r\n  - emphasized that multi-key limits should be used when rekeying, noted that offline work is about time not memory\r\n- *minor:* \"I think it would be good if bounds for OCB could be included.\"\r\n  - (no change)\r\n- *minor:* \"I think this needs to be expanded to explain that there might be a huge number of keys shared between two parties.\"\r\n  - added note on multiple sessions between parties and many keys within sessions in introduction\r\n- *minor:* \"Would be good if this also mentioned key compromise.\"\r\n  - (no change; the focus here is on data limits)\r\n- *minor:* \"I think this should mention time.\"\r\n  - mentioned time as usage limit indicator",
+      "createdAt": "2024-02-28T19:21:49Z",
+      "updatedAt": "2024-04-01T16:57:33Z",
+      "baseRepository": "cfrg/draft-irtf-cfrg-aead-limits",
+      "baseRefName": "main",
+      "baseRefOid": "1b6bd0c8b6fa7e5afde07088bcbcf38a51330d30",
+      "headRepository": "fxguenther/draft-irtf-cfrg-aead-limits",
+      "headRefName": "mattsson-comments_2023-11-10",
+      "headRefOid": "da82c41557423742090e0481fa8e65ef1dd945d9",
+      "closedAt": "2024-04-01T16:57:33Z",
+      "mergedAt": "2024-04-01T16:57:33Z",
+      "mergedBy": "chris-wood",
+      "mergeCommit": {
+        "oid": "9453203182c76806479baaa76f7bcc160d9edd1e"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOD64iO85xt7oh",
+          "commit": {
+            "abbreviatedOid": "7d7ad79"
+          },
+          "author": "martinthomson",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2024-02-29T03:33:47Z",
+          "updatedAt": "2024-02-29T03:34:51Z",
+          "comments": [
+            {
+              "originalPosition": 16,
+              "body": "```suggestion\r\nwork (measuring time, but not memory) to help break any key. As a result, AEAD\r\n```",
+              "createdAt": "2024-02-29T03:33:47Z",
+              "updatedAt": "2024-02-29T03:34:51Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 66,
+      "id": "PR_kwDOD64iO85yPuFB",
+      "title": "Fix AEBounds link",
+      "url": "https://github.com/cfrg/draft-irtf-cfrg-aead-limits/pull/66",
+      "state": "MERGED",
+      "author": "fxguenther",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "[AEBounds] is on ePrint now \u2013 fixes #65 ",
+      "createdAt": "2024-06-12T14:28:10Z",
+      "updatedAt": "2024-06-12T14:42:13Z",
+      "baseRepository": "cfrg/draft-irtf-cfrg-aead-limits",
+      "baseRefName": "main",
+      "baseRefOid": "9453203182c76806479baaa76f7bcc160d9edd1e",
+      "headRepository": "fxguenther/draft-irtf-cfrg-aead-limits",
+      "headRefName": "main",
+      "headRefOid": "1c388e22f478257f365f6ad335816c16a72cfa63",
+      "closedAt": "2024-06-12T14:31:14Z",
+      "mergedAt": "2024-06-12T14:31:14Z",
+      "mergedBy": "chris-wood",
+      "mergeCommit": {
+        "oid": "f6fd5dadde6fedee152d3115e65a8d51f8c0c2aa"
+      },
+      "comments": [
+        {
+          "author": "ctz",
+          "authorAssociation": "NONE",
+          "body": "Thank you!",
+          "createdAt": "2024-06-12T14:42:11Z",
+          "updatedAt": "2024-06-12T14:42:11Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOD64iO8599Ttr",
+          "commit": {
+            "abbreviatedOid": "1c388e2"
+          },
+          "author": "chris-wood",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2024-06-12T14:31:10Z",
+          "updatedAt": "2024-06-12T14:31:10Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 68,
+      "id": "PR_kwDOD64iO853OkPS",
+      "title": "TP review",
+      "url": "https://github.com/cfrg/draft-irtf-cfrg-aead-limits/pull/68",
+      "state": "MERGED",
+      "author": "fxguenther",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "I addressed Thomas' review #67 as follows:\r\n\r\n- page 3 (section 1) \u2013 nonces: clarified focus on non-zero-length nonces\r\n- page 5 (table 1) \u2013 block length: defined block length, mentioned each underlying block cipher\r\n- page 5 (section 3) \u2013 \"passive attacker\" and \"active attacker\": changed to IND-CPA/INT-CTXT\r\n- page 9 (section 5.1) \u2013 \"t = 128 [GCM]\": cited RFC 5116 for fixed t=128\r\n- page 9 (section 5.2): clarified ChaCha20 vs Poly1305 block length\r\n- page 10 (section 5.2.1) \u2013 \"CA <= 0\": Clarified advantages are modulo ideal primitives.\r\n- page 13 (section 6.1) \u2013 \".. for AEAD_AES_128_GCM and AEAD_AES_128_GCM respectively\": fixed\r\n- page 15 (section 6.2.2) \u2013 \"CA <= (o + q) / 2^247)\": fixed\r\n- page 17 (section 7) \u2013 security considerations on other party overusing a key:  I agree with Thomas that all we should say here is \"be prepared that these numbers might change\".\r\n- page 20 (acknowledgments): fixed",
+      "createdAt": "2024-08-02T08:47:23Z",
+      "updatedAt": "2024-08-05T00:19:08Z",
+      "baseRepository": "cfrg/draft-irtf-cfrg-aead-limits",
+      "baseRefName": "main",
+      "baseRefOid": "f6fd5dadde6fedee152d3115e65a8d51f8c0c2aa",
+      "headRepository": "fxguenther/draft-irtf-cfrg-aead-limits",
+      "headRefName": "TP-review",
+      "headRefOid": "5f1a270ed5925d84847d185675e161dd34d352e1",
+      "closedAt": "2024-08-05T00:19:08Z",
+      "mergedAt": "2024-08-05T00:19:08Z",
+      "mergedBy": "martinthomson",
+      "mergeCommit": {
+        "oid": "eaa77308ceb6302926865e66b14d70f08b388575"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOD64iO86ECpTH",
+          "commit": {
+            "abbreviatedOid": "4f338dd"
+          },
+          "author": "martinthomson",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "This is wonderful.  Thanks for doing this.",
+          "createdAt": "2024-08-02T10:33:25Z",
+          "updatedAt": "2024-08-02T10:36:38Z",
+          "comments": [
+            {
+              "originalPosition": 37,
+              "body": "```suggestion\r\nFor each AEAD algorithm, we define the chosen-plaintext confidentiality (IND-CPA) and ciphertext\r\nintegrity (INT-CTXT) advantage roughly as the advantage an attacker has in breaking the\r\n```\r\n\r\nIs this better?",
+              "createdAt": "2024-08-02T10:33:26Z",
+              "updatedAt": "2024-08-02T10:36:38Z"
+            },
+            {
+              "originalPosition": 47,
+              "body": "```suggestion\r\nsucceeding in breaking the IND-CPA (confidentiality) properties of the AEAD scheme.\r\n```",
+              "createdAt": "2024-08-02T10:33:56Z",
+              "updatedAt": "2024-08-02T10:36:38Z"
+            },
+            {
+              "originalPosition": 55,
+              "body": "```suggestion\r\nin breaking the INT-CTXT (integrity) properties of the AEAD scheme. In this document,\r\n```",
+              "createdAt": "2024-08-02T10:34:03Z",
+              "updatedAt": "2024-08-02T10:36:38Z"
+            },
+            {
+              "originalPosition": 68,
+              "body": "```suggestion\r\nbetween IND-CPA (confidentiality), INT-CTXT (integrity),\r\n```",
+              "createdAt": "2024-08-02T10:35:24Z",
+              "updatedAt": "2024-08-02T10:36:38Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOD64iO86EErg6",
+          "commit": {
+            "abbreviatedOid": "5f1a270"
+          },
+          "author": "chris-wood",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2024-08-02T15:09:23Z",
+          "updatedAt": "2024-08-02T15:09:23Z",
+          "comments": []
         }
       ]
     }
