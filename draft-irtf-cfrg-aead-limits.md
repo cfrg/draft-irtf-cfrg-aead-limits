@@ -415,8 +415,8 @@ so s + q <= q * (L+1) would be at most 2^49 which can be ignored
 
 ## AEAD_CHACHA20_POLY1305
 
-The known single-user analyses for AEAD_CHACHA20_POLY1305
-{{ChaCha20Poly1305-SU}}, {{ChaCha20Poly1305-MU}} give a combined AE limit,
+The known single-user result for AEAD_CHACHA20_POLY1305 {{ChaCha20Poly1305-MU}}
+(correcting the prior one from {{ChaCha20Poly1305-SU}}) gives a combined AE limit,
 which we separate into confidentiality and integrity limits below. For this
 AEAD, `n = 512` (the ChaCha20 block length), `k = 256`, and `t = 128`; the length `L'` is the sum of AAD
 and plaintext (in Poly1305 blocks of 128 bits), see {{ChaCha20Poly1305-MU}}.
