@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-03-06T01:53:40.920663+00:00",
+  "timestamp": "2025-03-09T01:37:42.843897+00:00",
   "repo": "cfrg/draft-irtf-cfrg-aead-limits",
   "labels": [
     {
@@ -4451,6 +4451,48 @@
           "body": "",
           "createdAt": "2024-08-02T15:09:23Z",
           "updatedAt": "2024-08-02T15:09:23Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 69,
+      "id": "PR_kwDOD64iO86NpJRd",
+      "title": "ChaChaPoly SU result wording",
+      "url": "https://github.com/cfrg/draft-irtf-cfrg-aead-limits/pull/69",
+      "state": "MERGED",
+      "author": "fxguenther",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "The original result in {{ChaCha20Poly1305-SU}} was actually flawed, and corrected in our {{ChaCha20Poly1305-MU}} work (retaining the same bound).  Kenny pointed out that readers should hence not take {{ChaCha20Poly1305-SU}} as the reference.\r\n\r\nReworded to reflect this.",
+      "createdAt": "2025-03-06T13:48:12Z",
+      "updatedAt": "2025-03-06T14:16:58Z",
+      "baseRepository": "cfrg/draft-irtf-cfrg-aead-limits",
+      "baseRefName": "main",
+      "baseRefOid": "ea342385d8fcfd54b6d10761a6c58425d9603efc",
+      "headRepository": "fxguenther/draft-irtf-cfrg-aead-limits",
+      "headRefName": "main",
+      "headRefOid": "2a7ed43110dd5ce47e1933ad7ebafd1c50300717",
+      "closedAt": "2025-03-06T14:16:58Z",
+      "mergedAt": "2025-03-06T14:16:58Z",
+      "mergedBy": "martinthomson",
+      "mergeCommit": {
+        "oid": "d3104b618ef9e83262e6bfe0ea60a7f2b1d3b212"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOD64iO86e0lOS",
+          "commit": {
+            "abbreviatedOid": "2a7ed43"
+          },
+          "author": "martinthomson",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-03-06T14:16:05Z",
+          "updatedAt": "2025-03-06T14:16:05Z",
           "comments": []
         }
       ]
