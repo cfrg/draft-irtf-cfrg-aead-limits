@@ -220,7 +220,7 @@ This document defines limitations in part using the quantities in
 | q | Number of protected messages (AEAD encryption invocations) |
 | v | Number of attacker forgery attempts (failed AEAD decryption invocations + 1) |
 | p | Upper bound on adversary attack probability |
-| o | Offline adversary work (time, measured in number of encryption and decryption queries; multi-key setting only) |
+| o | Offline adversary work (measured in number of encryption and decryption queries) |
 | u | Number of keys (multi-key setting only) |
 | B | Maximum number of blocks encrypted by any key (multi-key setting only) |
 {: #notation-table title="Notation"}
@@ -339,6 +339,35 @@ protect different messages, so deterministic generation of nonces from a counter
 similar techniques is strongly encouraged.  If an application cannot guarantee that
 nonces will not repeat, a nonce-misuse resistant AEAD like AES-GCM-SIV {{?SIV=RFC8452}} is
 likely to be a better choice.
+
+
+## Offline Work
+
+Analysis of different cipher modes typically concentrates on the advantage that
+an attacker might gain through the mode itself.  As noted, the analyses tend to
+assume that the underlying cipher is an ideal PRP or PRF.  But even an ideal
+function can be attacked given sufficient resources.  The effectiveness an
+attack on an ideal PRP or PRF is determined by the internal state size (that is,
+the block size, `n`).
+
+An attacker that is able to deploy sufficient offline resources (`o`) can
+increase their success probability independent of any usage.  In even the best
+case, single key bounds are limited to:
+
+~~~
+AEA <= o / 2^n
+~~~
+
+This places a bound on the advantage that can be achieved for modes that use
+smaller block sizes, depending on what assumptions can be made about attacker
+resources.
+
+For example, if an attacker could be assumed to have the resources to perform in
+the order of 2^80 AES operations, an attacker gains an attack probability of
+2<sup>-48</sup>.  That might seem like it requires a lot of compute resources,
+but amount of compute could cost less than 1 million USD in 2025. That cost can
+only reduce over time, suggesting that a much greater advantage is likely
+achievable for a sufficiently motivated attacker.
 
 
 # Single-Key AEAD Limits {#su-limits}
