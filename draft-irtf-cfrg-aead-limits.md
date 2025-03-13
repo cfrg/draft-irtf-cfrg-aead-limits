@@ -971,7 +971,7 @@ factor `u`, i.e., the number of keys, each `p` term in the confidentiality and
 integrity limits is replaced with `p / u`.
 
 Note that this factor also applies to the generic exhaustive key search attack
-discussed for single-key analyses in {#offline-work}.
+discussed for single-key analyses in {{offline-work}}.
 
 The multi-key integrity limit for AEAD_AES_128_CCM is as follows.
 
