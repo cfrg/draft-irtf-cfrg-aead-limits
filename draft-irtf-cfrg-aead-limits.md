@@ -361,11 +361,19 @@ Alongside each advantage value, we also specify these bounds.
 
 ## AEAD_AES_128_GCM and AEAD_AES_256_GCM
 
-The CL and IL values for AES-GCM are derived in {{AEBounds}} and summarized below.
+The CL and IL values for AES-GCM are derived in {{AEBounds}}, following {{GCMProofs}}, and summarized below.
 For this AEAD, `n = 128` (the AES block length) and `t = 128` {{GCM}}, {{!RFC5116}}. In this example,
 the length `s` is the sum of AAD and plaintext (in blocks of 128 bits), as described in {{GCMProofs}}.
 
 ### Confidentiality Limit
+
+Applying Corollary 3 from {{GCMProofs}}, assuming AES behaves like a random permutation,
+the following bound applies:
+
+<!--
+    Corollary 3 in {{GCMProofs}} states this bound for GCM with a random permutation;
+    so there is an additional PRP advantage term in the standard model (cf. offline work discussion).
+-->
 
 ~~~
 CA <= ((s + q + 1)^2) / 2^129
@@ -389,6 +397,11 @@ q <= (p^(1/2) * 2^(129/2) - 1) / (L + 1)
 Applying Equation (22) from {{GCMProofs}}, in which the assumption of
 `s + q + v < 2^64` ensures that the delta function cannot produce a value
 greater than 2, the following bound applies:
+
+<!--
+    Equation (22) in {{GCMProofs}} includes an additional PRP advantage term,
+    which we omit here (cf. offline work discussion).
+-->
 
 ~~~
 IA <= 2 * (v * (L + 1)) / 2^128
