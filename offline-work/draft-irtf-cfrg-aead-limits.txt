@@ -734,7 +734,7 @@ Table of Contents
    integrity limits is replaced with p / u.
 
    Note that this factor also applies to the generic exhaustive key
-   search attack discussed for single-key analyses in {#offline-work}.
+   search attack discussed for single-key analyses in Section 5.1.
 
    The multi-key integrity limit for AEAD_AES_128_CCM is as follows.
 
