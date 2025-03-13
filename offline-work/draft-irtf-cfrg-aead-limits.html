@@ -1935,7 +1935,8 @@ q + v &lt;= p * 2^127 / (L * B)
 </div>
 <p id="section-6.1.1-5">This assumes that <code>B</code> is much larger than 100; that is, each user enciphers
 significantly more than 1600 bytes of data.  Otherwise, <code>B</code> should be increased by 161 for
-AEAD_AES_128_GCM and by 97 for AEAD_AES_256_GCM.<a href="#section-6.1.1-5" class="pilcrow">¶</a></p>
+AEAD_AES_128_GCM and by 97 for AEAD_AES_256_GCM.  For AEAD_AES_128_GCM, it further assumes
+<code>o &lt;= 2^70</code>, otherwise a term in the order of <code>o / 2^120</code> starts dominating.<a href="#section-6.1.1-5" class="pilcrow">¶</a></p>
 <p id="section-6.1.1-6">Protocols with random, partially implicit nonces have the following limit,
 which is similar to that for nonce randomization:<a href="#section-6.1.1-6" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-6.1.1-7">
