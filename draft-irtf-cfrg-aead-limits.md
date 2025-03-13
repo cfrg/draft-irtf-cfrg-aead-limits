@@ -440,9 +440,10 @@ and plaintext (in Poly1305 blocks of 128 bits), see {{ChaCha20Poly1305-MU}}.
 
     From {{ChaCha20Poly1305-MU}} Theorem 4.1:
       AEA <= PRF-advantage  +  v * 2^25 * (L'+1) / 2^t
-    where t = 128. The CA part of this is only the PRF advantage, as in the
-    proof of Theorem 4.1, the hops bounding G_3 only apply to the decryption
-    oracle. So CA beyond the PRF advantage is 0. (L' is in Poly1305 t bit blocks.)
+    where t = 128. The CA part of this is only the PRF advantage
+    (against the ChaCha20 block function). As in the proof of Theorem 4.1,
+    the hops bounding G_3 only apply to the decryption oracle.
+    So CA beyond the PRF advantage is 0. (L' is in Poly1305 t bit blocks.)
 -->
 
 ### Confidentiality Limit
@@ -489,6 +490,8 @@ only a small amount of associated data compared to ciphertext. For example, QUIC
     We simplify this by doubling the the packet length, using `2L` instead of
     `L`, while ignoring the usually small additional overhead of associated data.
     Hence `l_E = 2L * q` and `l_F = 2L * v`.
+
+    The bounds stated are those beyond the PRP security of the AES blockcipher.
 -->
 
 For this AEAD, `n = 128` (the AES block length) and `t = 128`.
