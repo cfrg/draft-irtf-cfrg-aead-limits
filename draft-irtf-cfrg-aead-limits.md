@@ -371,15 +371,14 @@ key search (in the key length, `k`) given sufficient resources.
 
 An attacker that is able to deploy sufficient offline resources (`o`) can
 increase their success probability independent of any usage.  In even the best
-case, single key bounds are always additionally limited to:
+case, single key bounds are always limited to the maximum of the stated bound and
 
 ~~~
 AEA <= o / 2^k
 ~~~
 
-This places a bound on the advantage that can be achieved for modes that use
-smaller key sizes, depending on what assumptions can be made about attacker
-resources.
+This constrains the security that can be achieved for modes that use smaller key
+sizes, depending on what assumptions can be made about attacker resources.
 
 For example, if an attacker could be assumed to have the resources to perform in
 the order of 2^80 AES operations, an attacker gains an attack probability of
