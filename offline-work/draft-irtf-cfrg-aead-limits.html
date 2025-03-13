@@ -1591,15 +1591,14 @@ assumptions here.  But even an ideal PRP or PRF can be attacked through exchaust
 key search (in the key length, <code>k</code>) given sufficient resources.<a href="#section-5.1-1" class="pilcrow">¶</a></p>
 <p id="section-5.1-2">An attacker that is able to deploy sufficient offline resources (<code>o</code>) can
 increase their success probability independent of any usage.  In even the best
-case, single key bounds are always additionally limited to:<a href="#section-5.1-2" class="pilcrow">¶</a></p>
+case, single key bounds are always limited to the maximum of the stated bound and<a href="#section-5.1-2" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-5.1-3">
 <pre>
 AEA &lt;= o / 2^k
 </pre><a href="#section-5.1-3" class="pilcrow">¶</a>
 </div>
-<p id="section-5.1-4">This places a bound on the advantage that can be achieved for modes that use
-smaller key sizes, depending on what assumptions can be made about attacker
-resources.<a href="#section-5.1-4" class="pilcrow">¶</a></p>
+<p id="section-5.1-4">This constrains the security that can be achieved for modes that use smaller key
+sizes, depending on what assumptions can be made about attacker resources.<a href="#section-5.1-4" class="pilcrow">¶</a></p>
 <p id="section-5.1-5">For example, if an attacker could be assumed to have the resources to perform in
 the order of 2^80 AES operations, an attacker gains an attack probability of
 2<sup>-48</sup>.  That might seem like it requires a lot of compute resources,
