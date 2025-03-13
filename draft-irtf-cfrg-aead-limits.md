@@ -573,7 +573,8 @@ allocations tend to greatly reduce `q` without significantly increasing `v`.
 ## Single-Key Examples
 
 An example protocol might choose to aim for a single-key CA and IA that is at
-most 2<sup>-50</sup>.  If the messages exchanged in the protocol are at most a
+most 2<sup>-50</sup>.  (This in particular limits offline work to `o <= 2^(k-50)`,
+see {{offline-work}}.)  If the messages exchanged in the protocol are at most a
 common Internet MTU of around 1500 bytes, then a value for `L` might be set to
 2<sup>7</sup>.  {{ex-table-su}} shows limits for `q` and `v` that might be
 chosen under these conditions.
@@ -585,7 +586,7 @@ chosen under these conditions.
 | AEAD_CHACHA20_POLY1305 | n/a              | 2<sup>46</sup> |
 | AEAD_AES_128_CCM       | 2<sup>30</sup>   | 2<sup>30</sup> |
 | AEAD_AES_128_CCM_8     | 2<sup>30.4</sup> | 2<sup>13</sup> |
-{: #ex-table-su title="Example single-key limits"}
+{: #ex-table-su title="Example single-key limits; see text for parameter details"}
 
 AEAD_CHACHA20_POLY1305 provides no limit to `q` based on the provided single-user
 analyses.
@@ -1000,12 +1001,13 @@ might be chosen under these conditions.
 | AEAD_CHACHA20_POLY1305 | 2<sup>100</sup>          | 2<sup>46</sup>         |
 | AEAD_AES_128_CCM       | 2<sup>30</sup>/sqrt(u)   | 2<sup>30</sup>/sqrt(u) |
 | AEAD_AES_128_CCM_8     | 2<sup>30.9</sup>/sqrt(u) | 2<sup>13</sup>/u |
-{: #ex-table-mu title="Example multi-key limits"}
+{: #ex-table-mu title="Example multi-key limits; see text for parameter details"}
 
 The limits for AEAD_AES_128_GCM, AEAD_AES_256_GCM, AEAD_AES_128_CCM, and
 AEAD_AES_128_CCM_8 assume equal proportions for `q` and `v`. The limits for
 AEAD_AES_128_GCM, AEAD_AES_256_GCM and AEAD_CHACHA20_POLY1305 assume the use
-of nonce randomization, like in TLS 1.3 {{TLS}} and QUIC {{?RFC9001}}.
+of nonce randomization, like in TLS 1.3 {{TLS}} and QUIC {{?RFC9001}}, and
+offline work limited to `o <= 2^70`.
 
 The limits for AEAD_AES_128_GCM and AEAD_AES_256_GCM further depend on the
 maximum number (`B`) of 128-bit blocks encrypted by any single key. For example,
@@ -1015,7 +1017,8 @@ limits both `q` and `v` to 2<sup>42</sup> messages.
 
 Only the limits for AEAD_AES_128_CCM and AEAD_AES_128_CCM_8 depend on the number
 of used keys (`u`), which further reduces them considerably. If `v` is limited to 1,
-`q` can be increased to 2<sup>31</sup>/sqrt(u) for both CCM AEADs.
+`q` can be increased to 2<sup>31</sup>/sqrt(u) for both CCM AEADs. (In particular
+offline work is assumed limited to `o <= 2^(k-50) / u = 2^78 / u`, see {{offline-work}}.)
 
 
 # Security Considerations {#sec-considerations}
