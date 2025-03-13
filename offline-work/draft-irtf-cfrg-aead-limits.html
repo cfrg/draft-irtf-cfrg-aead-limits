@@ -1809,15 +1809,16 @@ allocations tend to greatly reduce <code>q</code> without significantly increasi
 <a href="#section-5.6" class="section-number selfRef">5.6. </a><a href="#name-single-key-examples" class="section-name selfRef">Single-Key Examples</a>
         </h3>
 <p id="section-5.6-1">An example protocol might choose to aim for a single-key CA and IA that is at
-most 2<sup>-50</sup>.  If the messages exchanged in the protocol are at most a
+most 2<sup>-50</sup>.  (This in particular limits offline work to <code>o &lt;= 2^(k-50)</code>,
+see <a href="#offline-work" class="auto internal xref">Section 5.1</a>.)  If the messages exchanged in the protocol are at most a
 common Internet MTU of around 1500 bytes, then a value for <code>L</code> might be set to
 2<sup>7</sup>.  <a href="#ex-table-su" class="auto internal xref">Table 2</a> shows limits for <code>q</code> and <code>v</code> that might be
 chosen under these conditions.<a href="#section-5.6-1" class="pilcrow">¶</a></p>
-<span id="name-example-single-key-limits"></span><div id="ex-table-su">
+<span id="name-example-single-key-limits-s"></span><div id="ex-table-su">
 <table class="center" id="table-2">
           <caption>
 <a href="#table-2" class="selfRef">Table 2</a>:
-<a href="#name-example-single-key-limits" class="selfRef">Example single-key limits</a>
+<a href="#name-example-single-key-limits-s" class="selfRef">Example single-key limits; see text for parameter details</a>
           </caption>
 <thead>
             <tr>
@@ -2114,11 +2115,11 @@ most 2<sup>-50</sup>.  If the messages exchanged in the protocol are at most a
 common Internet MTU of around 1500 bytes, then a value for <code>L</code> might be set to
 2<sup>7</sup>.  <a href="#ex-table-mu" class="auto internal xref">Table 3</a> shows limits for <code>q</code> and <code>v</code> across all keys that
 might be chosen under these conditions.<a href="#section-6.4-1" class="pilcrow">¶</a></p>
-<span id="name-example-multi-key-limits"></span><div id="ex-table-mu">
+<span id="name-example-multi-key-limits-se"></span><div id="ex-table-mu">
 <table class="center" id="table-3">
           <caption>
 <a href="#table-3" class="selfRef">Table 3</a>:
-<a href="#name-example-multi-key-limits" class="selfRef">Example multi-key limits</a>
+<a href="#name-example-multi-key-limits-se" class="selfRef">Example multi-key limits; see text for parameter details</a>
           </caption>
 <thead>
             <tr>
@@ -2161,7 +2162,8 @@ might be chosen under these conditions.<a href="#section-6.4-1" class="pilcrow">
 <p id="section-6.4-3">The limits for AEAD_AES_128_GCM, AEAD_AES_256_GCM, AEAD_AES_128_CCM, and
 AEAD_AES_128_CCM_8 assume equal proportions for <code>q</code> and <code>v</code>. The limits for
 AEAD_AES_128_GCM, AEAD_AES_256_GCM and AEAD_CHACHA20_POLY1305 assume the use
-of nonce randomization, like in TLS 1.3 <span>[<a href="#TLS" class="cite xref">TLS</a>]</span> and QUIC <span>[<a href="#RFC9001" class="cite xref">RFC9001</a>]</span>.<a href="#section-6.4-3" class="pilcrow">¶</a></p>
+of nonce randomization, like in TLS 1.3 <span>[<a href="#TLS" class="cite xref">TLS</a>]</span> and QUIC <span>[<a href="#RFC9001" class="cite xref">RFC9001</a>]</span>, and
+offline work limited to <code>o &lt;= 2^70</code>.<a href="#section-6.4-3" class="pilcrow">¶</a></p>
 <p id="section-6.4-4">The limits for AEAD_AES_128_GCM and AEAD_AES_256_GCM further depend on the
 maximum number (<code>B</code>) of 128-bit blocks encrypted by any single key. For example,
 limiting the number of messages (of size &lt;= 2<sup>7</sup> blocks) to at most
@@ -2169,7 +2171,8 @@ limiting the number of messages (of size &lt;= 2<sup>7</sup> blocks) to at most
 limits both <code>q</code> and <code>v</code> to 2<sup>42</sup> messages.<a href="#section-6.4-4" class="pilcrow">¶</a></p>
 <p id="section-6.4-5">Only the limits for AEAD_AES_128_CCM and AEAD_AES_128_CCM_8 depend on the number
 of used keys (<code>u</code>), which further reduces them considerably. If <code>v</code> is limited to 1,
-<code>q</code> can be increased to 2<sup>31</sup>/sqrt(u) for both CCM AEADs.<a href="#section-6.4-5" class="pilcrow">¶</a></p>
+<code>q</code> can be increased to 2<sup>31</sup>/sqrt(u) for both CCM AEADs. (In particular
+offline work is assumed limited to <code>o &lt;= 2^(k-50) / u = 2^78 / u</code>, see <a href="#offline-work" class="auto internal xref">Section 5.1</a>.)<a href="#section-6.4-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>

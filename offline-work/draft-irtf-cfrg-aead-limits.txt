@@ -541,10 +541,11 @@ Table of Contents
 5.6.  Single-Key Examples
 
    An example protocol might choose to aim for a single-key CA and IA
-   that is at most 2^-50.  If the messages exchanged in the protocol are
-   at most a common Internet MTU of around 1500 bytes, then a value for
-   L might be set to 2^7.  Table 2 shows limits for q and v that might
-   be chosen under these conditions.
+   that is at most 2^-50.  (This in particular limits offline work to o
+   <= 2^(k-50), see Section 5.1.)  If the messages exchanged in the
+   protocol are at most a common Internet MTU of around 1500 bytes, then
+   a value for L might be set to 2^7.  Table 2 shows limits for q and v
+   that might be chosen under these conditions.
 
             +========================+===========+===========+
             | AEAD                   | Maximum q | Maximum v |
@@ -560,7 +561,8 @@ Table of Contents
             | AEAD_AES_128_CCM_8     |    2^30.4 |      2^13 |
             +------------------------+-----------+-----------+
 
-                    Table 2: Example single-key limits
+               Table 2: Example single-key limits; see text
+                          for parameter details
 
    AEAD_CHACHA20_POLY1305 provides no limit to q based on the provided
    single-user analyses.
@@ -767,13 +769,15 @@ Table of Contents
         | AEAD_AES_128_CCM_8     | 2^30.9/sqrt(u) |       2^13/u |
         +------------------------+----------------+--------------+
 
-                    Table 3: Example multi-key limits
+             Table 3: Example multi-key limits; see text for
+                            parameter details
 
    The limits for AEAD_AES_128_GCM, AEAD_AES_256_GCM, AEAD_AES_128_CCM,
    and AEAD_AES_128_CCM_8 assume equal proportions for q and v.  The
    limits for AEAD_AES_128_GCM, AEAD_AES_256_GCM and
    AEAD_CHACHA20_POLY1305 assume the use of nonce randomization, like in
-   TLS 1.3 [TLS] and QUIC [RFC9001].
+   TLS 1.3 [TLS] and QUIC [RFC9001], and offline work limited to o <=
+   2^70.
 
    The limits for AEAD_AES_128_GCM and AEAD_AES_256_GCM further depend
    on the maximum number (B) of 128-bit blocks encrypted by any single
@@ -784,7 +788,8 @@ Table of Contents
    Only the limits for AEAD_AES_128_CCM and AEAD_AES_128_CCM_8 depend on
    the number of used keys (u), which further reduces them considerably.
    If v is limited to 1, q can be increased to 2^31/sqrt(u) for both CCM
-   AEADs.
+   AEADs.  (In particular offline work is assumed limited to o <=
+   2^(k-50) / u = 2^78 / u, see Section 5.1.)
 
 7.  Security Considerations
 
