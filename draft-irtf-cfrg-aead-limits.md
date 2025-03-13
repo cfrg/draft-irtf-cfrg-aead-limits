@@ -342,34 +342,6 @@ nonces will not repeat, a nonce-misuse resistant AEAD like AES-GCM-SIV {{?SIV=RF
 likely to be a better choice.
 
 
-## Offline Work
-
-Analyses of different cipher modes typically concentrate on the advantage that
-an attacker might gain through the mode itself.  As noted, some analyses
-assume that the underlying cipher is an ideal PRP or PRF, and we make the same
-assumptions here.  But even an ideal PRP or PRF can be attacked through exchaustive
-key search (in the key length, `k`) given sufficient resources.
-
-An attacker that is able to deploy sufficient offline resources (`o`) can
-increase their success probability independent of any usage.  In even the best
-case, single key bounds are limited to:
-
-~~~
-AEA <= o / 2^k
-~~~
-
-This places a bound on the advantage that can be achieved for modes that use
-smaller key sizes, depending on what assumptions can be made about attacker
-resources.
-
-For example, if an attacker could be assumed to have the resources to perform in
-the order of 2^80 AES operations, an attacker gains an attack probability of
-2<sup>-48</sup>.  That might seem like it requires a lot of compute resources,
-but amount of compute could cost less than 1 million USD in 2025. That cost can
-only reduce over time, suggesting that a much greater advantage is likely
-achievable for a sufficiently motivated attacker.
-
-
 # Single-Key AEAD Limits {#su-limits}
 
 This section summarizes the confidentiality and integrity bounds and limits for modern AEAD algorithms
@@ -387,6 +359,35 @@ using a variable-length nonce for AES-GCM results in worse security bounds.
 
 The CL and IL values bound the total number of encryption and forgery queries (`q` and `v`).
 Alongside each advantage value, we also specify these bounds.
+
+
+## Offline Work {#offline-work}
+
+Single-key analyses of different cipher modes typically concentrate on the advantage
+that an attacker might gain through the mode itself.  These analyses
+assume that the underlying cipher is an ideal PRP or PRF, and we make the same
+assumptions here.  But even an ideal PRP or PRF can be attacked through exchaustive
+key search (in the key length, `k`) given sufficient resources.
+
+An attacker that is able to deploy sufficient offline resources (`o`) can
+increase their success probability independent of any usage.  In even the best
+case, single key bounds are always additionally limited to:
+
+~~~
+AEA <= o / 2^k
+~~~
+
+This places a bound on the advantage that can be achieved for modes that use
+smaller key sizes, depending on what assumptions can be made about attacker
+resources.
+
+For example, if an attacker could be assumed to have the resources to perform in
+the order of 2^80 AES operations, an attacker gains an attack probability of
+2<sup>-48</sup>.  That might seem like it requires a lot of compute resources,
+but amount of compute could cost less than 1 million USD in 2025. That cost can
+only reduce over time, suggesting that a much greater advantage is likely
+achievable for a sufficiently motivated attacker.
+
 
 ## AEAD_AES_128_GCM and AEAD_AES_256_GCM
 
@@ -967,6 +968,9 @@ There are currently no concrete multi-key bounds for AEAD_AES_128_CCM or
 AEAD_AES_128_CCM_8. Thus, to account for the additional
 factor `u`, i.e., the number of keys, each `p` term in the confidentiality and
 integrity limits is replaced with `p / u`.
+
+Note that this factor also applies to the generic exhaustive key search attack
+discussed for single-key analyses in {#offline-work}.
 
 The multi-key integrity limit for AEAD_AES_128_CCM is as follows.
 
