@@ -70,19 +70,19 @@ Table of Contents
    3.  Notation
    4.  Calculating Limits
      4.1.  Approximations
-     4.2.  Offline Work
    5.  Single-Key AEAD Limits
-     5.1.  AEAD_AES_128_GCM and AEAD_AES_256_GCM
-       5.1.1.  Confidentiality Limit
-       5.1.2.  Integrity Limit
-     5.2.  AEAD_CHACHA20_POLY1305
+     5.1.  Offline Work
+     5.2.  AEAD_AES_128_GCM and AEAD_AES_256_GCM
        5.2.1.  Confidentiality Limit
        5.2.2.  Integrity Limit
-     5.3.  AEAD_AES_128_CCM
+     5.3.  AEAD_CHACHA20_POLY1305
        5.3.1.  Confidentiality Limit
        5.3.2.  Integrity Limit
-     5.4.  AEAD_AES_128_CCM_8
-     5.5.  Single-Key Examples
+     5.4.  AEAD_AES_128_CCM
+       5.4.1.  Confidentiality Limit
+       5.4.2.  Integrity Limit
+     5.5.  AEAD_AES_128_CCM_8
+     5.6.  Single-Key Examples
    6.  Multi-Key AEAD Limits
      6.1.  AEAD_AES_128_GCM and AEAD_AES_256_GCM
        6.1.1.  Authenticated Encryption Security Limit
@@ -357,33 +357,6 @@ Table of Contents
    guarantee that nonces will not repeat, a nonce-misuse resistant AEAD
    like AES-GCM-SIV [SIV] is likely to be a better choice.
 
-4.2.  Offline Work
-
-   Analyses of different cipher modes typically concentrate on the
-   advantage that an attacker might gain through the mode itself.  As
-   noted, some analyses assume that the underlying cipher is an ideal
-   PRP or PRF, and we make the same assumptions here.  But even an ideal
-   PRP or PRF can be attacked through exchaustive key search (in the key
-   length, k) given sufficient resources.
-
-   An attacker that is able to deploy sufficient offline resources (o)
-   can increase their success probability independent of any usage.  In
-   even the best case, single key bounds are limited to:
-
-   AEA <= o / 2^k
-
-   This places a bound on the advantage that can be achieved for modes
-   that use smaller key sizes, depending on what assumptions can be made
-   about attacker resources.
-
-   For example, if an attacker could be assumed to have the resources to
-   perform in the order of 2^80 AES operations, an attacker gains an
-   attack probability of 2^-48.  That might seem like it requires a lot
-   of compute resources, but amount of compute could cost less than 1
-   million USD in 2025.  That cost can only reduce over time, suggesting
-   that a much greater advantage is likely achievable for a sufficiently
-   motivated attacker.
-
 5.  Single-Key AEAD Limits
 
    This section summarizes the confidentiality and integrity bounds and
@@ -406,7 +379,35 @@ Table of Contents
    queries (q and v).  Alongside each advantage value, we also specify
    these bounds.
 
-5.1.  AEAD_AES_128_GCM and AEAD_AES_256_GCM
+5.1.  Offline Work
+
+   Single-key analyses of different cipher modes typically concentrate
+   on the advantage that an attacker might gain through the mode itself.
+   These analyses assume that the underlying cipher is an ideal PRP or
+   PRF, and we make the same assumptions here.  But even an ideal PRP or
+   PRF can be attacked through exchaustive key search (in the key
+   length, k) given sufficient resources.
+
+   An attacker that is able to deploy sufficient offline resources (o)
+   can increase their success probability independent of any usage.  In
+   even the best case, single key bounds are always additionally limited
+   to:
+
+   AEA <= o / 2^k
+
+   This places a bound on the advantage that can be achieved for modes
+   that use smaller key sizes, depending on what assumptions can be made
+   about attacker resources.
+
+   For example, if an attacker could be assumed to have the resources to
+   perform in the order of 2^80 AES operations, an attacker gains an
+   attack probability of 2^-48.  That might seem like it requires a lot
+   of compute resources, but amount of compute could cost less than 1
+   million USD in 2025.  That cost can only reduce over time, suggesting
+   that a much greater advantage is likely achievable for a sufficiently
+   motivated attacker.
+
+5.2.  AEAD_AES_128_GCM and AEAD_AES_256_GCM
 
    The CL and IL values for AES-GCM are derived in [AEBounds] and
    summarized below.  For this AEAD, n = 128 (the AES block length) and
@@ -414,7 +415,7 @@ Table of Contents
    of AAD and plaintext (in blocks of 128 bits), as described in
    [GCMProofs].
 
-5.1.1.  Confidentiality Limit
+5.2.1.  Confidentiality Limit
 
    CA <= ((s + q + 1)^2) / 2^129
 
@@ -428,7 +429,7 @@ Table of Contents
 
    q <= (p^(1/2) * 2^(129/2) - 1) / (L + 1)
 
-5.1.2.  Integrity Limit
+5.2.2.  Integrity Limit
 
    Applying Equation (22) from [GCMProofs], in which the assumption of s
    + q + v < 2^64 ensures that the delta function cannot produce a value
@@ -445,7 +446,7 @@ Table of Contents
 
    v <= min(2^64, (p * 2^127) / (L + 1))
 
-5.2.  AEAD_CHACHA20_POLY1305
+5.3.  AEAD_CHACHA20_POLY1305
 
    The known single-user result for AEAD_CHACHA20_POLY1305
    [ChaCha20Poly1305-MU] (correcting the prior one from
@@ -455,14 +456,14 @@ Table of Contents
    is the sum of AAD and plaintext (in Poly1305 blocks of 128 bits), see
    [ChaCha20Poly1305-MU].
 
-5.2.1.  Confidentiality Limit
+5.3.1.  Confidentiality Limit
 
    CA <= 0
 
    This implies there is no limit beyond the PRF security of the
    underlying ChaCha20 block function.
 
-5.2.2.  Integrity Limit
+5.3.2.  Integrity Limit
 
    IA <= (v * (L' + 1)) / 2^103
 
@@ -470,7 +471,7 @@ Table of Contents
 
    v <= (p * 2^103) / (L' + 1)
 
-5.3.  AEAD_AES_128_CCM
+5.4.  AEAD_AES_128_CCM
 
    The CL and IL values for AEAD_AES_128_CCM are derived from
    [CCM-ANALYSIS] and specified in the QUIC-TLS mapping specification
@@ -490,7 +491,7 @@ Table of Contents
 
    For this AEAD, n = 128 (the AES block length) and t = 128.
 
-5.3.1.  Confidentiality Limit
+5.4.1.  Confidentiality Limit
 
    CA <= (2L * q)^2 / 2^n
       <= (2L * q)^2 / 2^128
@@ -499,7 +500,7 @@ Table of Contents
 
    q <= sqrt(p) * 2^63 / L
 
-5.3.2.  Integrity Limit
+5.4.2.  Integrity Limit
 
    IA <= v / 2^t + (2L * (v + q))^2 / 2^n
       <= v / 2^128 + (2L * (v + q))^2 / 2^128
@@ -513,7 +514,7 @@ Table of Contents
 
    v + q <= sqrt(p) * 2^63 / L
 
-5.4.  AEAD_AES_128_CCM_8
+5.5.  AEAD_AES_128_CCM_8
 
    The analysis in [CCM-ANALYSIS] also applies to this AEAD, but the
    reduced tag length of 64 bits changes the integrity limit calculation
@@ -537,7 +538,7 @@ Table of Contents
    Alternative allocations tend to greatly reduce q without
    significantly increasing v.
 
-5.5.  Single-Key Examples
+5.6.  Single-Key Examples
 
    An example protocol might choose to aim for a single-key CA and IA
    that is at most 2^-50.  If the messages exchanged in the protocol are
@@ -730,6 +731,9 @@ Table of Contents
    or AEAD_AES_128_CCM_8.  Thus, to account for the additional factor u,
    i.e., the number of keys, each p term in the confidentiality and
    integrity limits is replaced with p / u.
+
+   Note that this factor also applies to the generic exhaustive key
+   search attack discussed for single-key analyses in {#offline-work}.
 
    The multi-key integrity limit for AEAD_AES_128_CCM is as follows.
 
