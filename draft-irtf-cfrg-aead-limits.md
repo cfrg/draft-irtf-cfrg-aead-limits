@@ -252,7 +252,8 @@ the ciphertext outputs of the AEAD scheme from the outputs of a random function
 or is able to forge a ciphertext that will be accepted as valid.
 
 Here, we consider advantages beyond distinguishing underyling primitives from their
-ideal instances (for example, a pseudorandom from a truly random function).
+ideal instances, for example, a blockcipher from a random permutation (PRP advantage)
+or a pseudorandom function from a truly random function (PRF advantage).
 
 See {{AEComposition}}, {{AEAD}} for the formal definitions of and relations
 between IND-CPA (confidentiality), INT-CTXT (integrity),
@@ -343,23 +344,22 @@ likely to be a better choice.
 
 ## Offline Work
 
-Analysis of different cipher modes typically concentrates on the advantage that
-an attacker might gain through the mode itself.  As noted, the analyses tend to
-assume that the underlying cipher is an ideal PRP or PRF.  But even an ideal
-function can be attacked given sufficient resources.  The effectiveness an
-attack on an ideal PRP or PRF is determined by the internal state size (that is,
-the block size, `n`).
+Analyses of different cipher modes typically concentrate on the advantage that
+an attacker might gain through the mode itself.  As noted, some analyses
+assume that the underlying cipher is an ideal PRP or PRF, and we make the same
+assumptions here.  But even an ideal PRP or PRF can be attacked through exchaustive
+key search (in the key length, `k`) given sufficient resources.
 
 An attacker that is able to deploy sufficient offline resources (`o`) can
 increase their success probability independent of any usage.  In even the best
 case, single key bounds are limited to:
 
 ~~~
-AEA <= o / 2^n
+AEA <= o / 2^k
 ~~~
 
 This places a bound on the advantage that can be achieved for modes that use
-smaller block sizes, depending on what assumptions can be made about attacker
+smaller key sizes, depending on what assumptions can be made about attacker
 resources.
 
 For example, if an attacker could be assumed to have the resources to perform in
