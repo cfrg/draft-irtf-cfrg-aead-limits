@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-03-13T01:55:04.139911+00:00",
+  "timestamp": "2025-03-16T02:01:03.750498+00:00",
   "repo": "cfrg/draft-irtf-cfrg-aead-limits",
   "labels": [
     {
@@ -4509,19 +4509,133 @@
       "labels": [],
       "body": "I spent far too much time trying to find independent ways to reproduce djb's cost estimates, but was unable to make a significant dent in that. Still, that's not the central point here, so I'm keeping them.\r\n\r\nTo give an example, c8g.metal-24xl instances have a spot price of less than USD1 per hour (https://instances.vantage.sh/aws/ec2/c8g.metal-24xl). If we assume that those are capable of performance roughly on par with my own machine, but with 6 times the parallel capacity, then they should be easily capable of 3 billion blocks per second or 2^43 blocks per hour. Spending USD1MM would therefore mean 2^63 blocks, which is a long way short of the above estimate.",
       "createdAt": "2025-03-12T07:24:52Z",
-      "updatedAt": "2025-03-12T07:24:53Z",
+      "updatedAt": "2025-03-15T03:53:13Z",
       "baseRepository": "cfrg/draft-irtf-cfrg-aead-limits",
       "baseRefName": "main",
       "baseRefOid": "d3104b618ef9e83262e6bfe0ea60a7f2b1d3b212",
       "headRepository": "cfrg/draft-irtf-cfrg-aead-limits",
       "headRefName": "offline-work",
-      "headRefOid": "ff65e8c9ef7124710493a1412167b4dd7d47d329",
+      "headRefOid": "91fa0bc8f2524246bbd4f51972176e67f0c4d1d5",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
       "comments": [],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOD64iO86f0Z4k",
+          "commit": {
+            "abbreviatedOid": "ad3ada4"
+          },
+          "author": "fxguenther",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "The generic offline attacks are wrt. key size `k` (towards an exhaustive key search), I've reworded accordingly.\r\n\r\nAlso moved the discussion into the single-user section, and added explicit discussion of offline work in multi-user bounds where they were missing. (The mu bounds include `o`, instead of merely PRP/PRF advantage.)",
+          "createdAt": "2025-03-13T10:20:09Z",
+          "updatedAt": "2025-03-13T10:20:09Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOD64iO86gLTo2",
+          "commit": {
+            "abbreviatedOid": "91fa0bc"
+          },
+          "author": "martinthomson",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "Yeah, the more comprehensive approach is better.  Having concrete numbers against the examples really helps.",
+          "createdAt": "2025-03-15T03:50:29Z",
+          "updatedAt": "2025-03-15T03:53:13Z",
+          "comments": [
+            {
+              "originalPosition": 29,
+              "body": "```suggestion\r\nassumptions here.  But even an ideal PRP or PRF can be attacked through exhaustive\r\n```",
+              "createdAt": "2025-03-15T03:50:30Z",
+              "updatedAt": "2025-03-15T03:53:13Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 71,
+      "id": "PR_kwDOD64iO86OfAUx",
+      "title": "Rekeying reworded",
+      "url": "https://github.com/cfrg/draft-irtf-cfrg-aead-limits/pull/71",
+      "state": "OPEN",
+      "author": "fxguenther",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Reworded intro paragraph on rekeying to avoid confusion and emphasize that multi-key bounds SHOULD be used when rekeying.\r\n\r\n@martinthomson : Is \"SHOULD\" the right key word here?",
+      "createdAt": "2025-03-13T10:23:04Z",
+      "updatedAt": "2025-03-15T03:47:51Z",
+      "baseRepository": "cfrg/draft-irtf-cfrg-aead-limits",
+      "baseRefName": "main",
+      "baseRefOid": "d3104b618ef9e83262e6bfe0ea60a7f2b1d3b212",
+      "headRepository": "fxguenther/draft-irtf-cfrg-aead-limits",
+      "headRefName": "rekeying",
+      "headRefOid": "9b20e1514d5d0c6d2b1e68cc22c2405bb95e3d22",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOD64iO86gLTez",
+          "commit": {
+            "abbreviatedOid": "9b20e15"
+          },
+          "author": "martinthomson",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "perfect, thanks",
+          "createdAt": "2025-03-15T03:47:51Z",
+          "updatedAt": "2025-03-15T03:47:51Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 72,
+      "id": "PR_kwDOD64iO86OfBS6",
+      "title": "Proof comments",
+      "url": "https://github.com/cfrg/draft-irtf-cfrg-aead-limits/pull/72",
+      "state": "OPEN",
+      "author": "fxguenther",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Added details on PRP advantage being used for AES and PRF advantage being used for ChaCha20, to accompany the #70 Offline Work discussion.",
+      "createdAt": "2025-03-13T10:24:31Z",
+      "updatedAt": "2025-03-15T03:46:57Z",
+      "baseRepository": "cfrg/draft-irtf-cfrg-aead-limits",
+      "baseRefName": "main",
+      "baseRefOid": "d3104b618ef9e83262e6bfe0ea60a7f2b1d3b212",
+      "headRepository": "fxguenther/draft-irtf-cfrg-aead-limits",
+      "headRefName": "proof-comments",
+      "headRefOid": "c43271314698d0a13ddf8e6ead8b892d1f3c764c",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOD64iO86gLTM1",
+          "commit": {
+            "abbreviatedOid": "c432713"
+          },
+          "author": "martinthomson",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "I had trouble with that first one before (we just stated the number without citing the Theorem/Corollary.  And picking up on PRP vs. PRF baselines is good.",
+          "createdAt": "2025-03-15T03:46:57Z",
+          "updatedAt": "2025-03-15T03:46:57Z",
+          "comments": []
+        }
+      ]
     }
   ]
 }
