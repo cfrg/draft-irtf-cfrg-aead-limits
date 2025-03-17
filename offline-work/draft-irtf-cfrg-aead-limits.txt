@@ -5,10 +5,10 @@
 Network Working Group                                         F. Günther
 Internet-Draft                              IBM Research Europe - Zurich
 Intended status: Informational                                M. Thomson
-Expires: 14 September 2025                                       Mozilla
+Expires: 18 September 2025                                       Mozilla
                                                               C. A. Wood
                                                               Cloudflare
-                                                           13 March 2025
+                                                           17 March 2025
 
 
                     Usage Limits on AEAD Algorithms
@@ -50,7 +50,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 14 September 2025.
+   This Internet-Draft will expire on 18 September 2025.
 
 Copyright Notice
 
@@ -385,8 +385,8 @@ Table of Contents
    on the advantage that an attacker might gain through the mode itself.
    These analyses assume that the underlying cipher is an ideal PRP or
    PRF, and we make the same assumptions here.  But even an ideal PRP or
-   PRF can be attacked through exchaustive key search (in the key
-   length, k) given sufficient resources.
+   PRF can be attacked through exhaustive key search (in the key length,
+   k) given sufficient resources.
 
    An attacker that is able to deploy sufficient offline resources (o)
    can increase their success probability independent of any usage.  In
