@@ -366,7 +366,7 @@ Alongside each advantage value, we also specify these bounds.
 Single-key analyses of different cipher modes typically concentrate on the advantage
 that an attacker might gain through the mode itself.  These analyses
 assume that the underlying cipher is an ideal PRP or PRF, and we make the same
-assumptions here.  But even an ideal PRP or PRF can be attacked through exchaustive
+assumptions here.  But even an ideal PRP or PRF can be attacked through exhaustive
 key search (in the key length, `k`) given sufficient resources.
 
 An attacker that is able to deploy sufficient offline resources (`o`) can
