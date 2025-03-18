@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-03-16T02:01:03.750498+00:00",
+  "timestamp": "2025-03-18T01:55:30.594283+00:00",
   "repo": "cfrg/draft-irtf-cfrg-aead-limits",
   "labels": [
     {
@@ -4509,13 +4509,13 @@
       "labels": [],
       "body": "I spent far too much time trying to find independent ways to reproduce djb's cost estimates, but was unable to make a significant dent in that. Still, that's not the central point here, so I'm keeping them.\r\n\r\nTo give an example, c8g.metal-24xl instances have a spot price of less than USD1 per hour (https://instances.vantage.sh/aws/ec2/c8g.metal-24xl). If we assume that those are capable of performance roughly on par with my own machine, but with 6 times the parallel capacity, then they should be easily capable of 3 billion blocks per second or 2^43 blocks per hour. Spending USD1MM would therefore mean 2^63 blocks, which is a long way short of the above estimate.",
       "createdAt": "2025-03-12T07:24:52Z",
-      "updatedAt": "2025-03-15T03:53:13Z",
+      "updatedAt": "2025-03-17T08:58:25Z",
       "baseRepository": "cfrg/draft-irtf-cfrg-aead-limits",
       "baseRefName": "main",
       "baseRefOid": "d3104b618ef9e83262e6bfe0ea60a7f2b1d3b212",
       "headRepository": "cfrg/draft-irtf-cfrg-aead-limits",
       "headRefName": "offline-work",
-      "headRefOid": "91fa0bc8f2524246bbd4f51972176e67f0c4d1d5",
+      "headRefOid": "6cc00b73badf3d7c4d360d4ffde24c16501bc764",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
