@@ -220,7 +220,7 @@ This document defines limitations in part using the quantities in
 | q | Number of protected messages (AEAD encryption invocations) |
 | v | Number of attacker forgery attempts (failed AEAD decryption invocations + 1) |
 | p | Upper bound on adversary attack probability |
-| o | Offline adversary work (time, measured in number of encryption and decryption queries; multi-key setting only) |
+| o | Offline adversary work (measured in number of encryption and decryption queries) |
 | u | Number of keys (multi-key setting only) |
 | B | Maximum number of blocks encrypted by any key (multi-key setting only) |
 {: #notation-table title="Notation"}
@@ -252,7 +252,8 @@ the ciphertext outputs of the AEAD scheme from the outputs of a random function
 or is able to forge a ciphertext that will be accepted as valid.
 
 Here, we consider advantages beyond distinguishing underyling primitives from their
-ideal instances (for example, a pseudorandom from a truly random function).
+ideal instances, for example, a blockcipher from a random permutation (PRP advantage)
+or a pseudorandom function from a truly random function (PRF advantage).
 
 See {{AEComposition}}, {{AEAD}} for the formal definitions of and relations
 between IND-CPA (confidentiality), INT-CTXT (integrity),
@@ -358,6 +359,34 @@ using a variable-length nonce for AES-GCM results in worse security bounds.
 
 The CL and IL values bound the total number of encryption and forgery queries (`q` and `v`).
 Alongside each advantage value, we also specify these bounds.
+
+
+## Offline Work {#offline-work}
+
+Single-key analyses of different cipher modes typically concentrate on the advantage
+that an attacker might gain through the mode itself.  These analyses
+assume that the underlying cipher is an ideal PRP or PRF, and we make the same
+assumptions here.  But even an ideal PRP or PRF can be attacked through exhaustive
+key search (in the key length, `k`) given sufficient resources.
+
+An attacker that is able to deploy sufficient offline resources (`o`) can
+increase their success probability independent of any usage.  In even the best
+case, single key bounds are always limited to the maximum of the stated bound and
+
+~~~
+AEA <= o / 2^k
+~~~
+
+This constrains the security that can be achieved for modes that use smaller key
+sizes, depending on what assumptions can be made about attacker resources.
+
+For example, if an attacker could be assumed to have the resources to perform in
+the order of 2^80 AES operations, an attacker gains an attack probability of
+2<sup>-48</sup>.  That might seem like it requires a lot of compute resources,
+but amount of compute could cost less than 1 million USD in 2025. That cost can
+only reduce over time, suggesting that a much greater advantage is likely
+achievable for a sufficiently motivated attacker.
+
 
 ## AEAD_AES_128_GCM and AEAD_AES_256_GCM
 
@@ -544,7 +573,8 @@ allocations tend to greatly reduce `q` without significantly increasing `v`.
 ## Single-Key Examples
 
 An example protocol might choose to aim for a single-key CA and IA that is at
-most 2<sup>-50</sup>.  If the messages exchanged in the protocol are at most a
+most 2<sup>-50</sup>.  (This in particular limits offline work to `o <= 2^(k-50)`,
+see {{offline-work}}.)  If the messages exchanged in the protocol are at most a
 common Internet MTU of around 1500 bytes, then a value for `L` might be set to
 2<sup>7</sup>.  {{ex-table-su}} shows limits for `q` and `v` that might be
 chosen under these conditions.
@@ -556,7 +586,7 @@ chosen under these conditions.
 | AEAD_CHACHA20_POLY1305 | n/a              | 2<sup>46</sup> |
 | AEAD_AES_128_CCM       | 2<sup>30</sup>   | 2<sup>30</sup> |
 | AEAD_AES_128_CCM_8     | 2<sup>30.4</sup> | 2<sup>13</sup> |
-{: #ex-table-su title="Example single-key limits"}
+{: #ex-table-su title="Example single-key limits; see text for parameter details"}
 
 AEAD_CHACHA20_POLY1305 provides no limit to `q` based on the provided single-user
 analyses.
@@ -660,7 +690,8 @@ q + v <= p * 2^127 / (L * B)
 
 This assumes that `B` is much larger than 100; that is, each user enciphers
 significantly more than 1600 bytes of data.  Otherwise, `B` should be increased by 161 for
-AEAD_AES_128_GCM and by 97 for AEAD_AES_256_GCM.
+AEAD_AES_128_GCM and by 97 for AEAD_AES_256_GCM.  For AEAD_AES_128_GCM, it further assumes
+`o <= 2^70`, otherwise a term in the order of `o / 2^120` starts dominating.
 
 
 <!--
@@ -939,6 +970,9 @@ AEAD_AES_128_CCM_8. Thus, to account for the additional
 factor `u`, i.e., the number of keys, each `p` term in the confidentiality and
 integrity limits is replaced with `p / u`.
 
+Note that this factor also applies to the generic exhaustive key search attack
+discussed for single-key analyses in {{offline-work}}.
+
 The multi-key integrity limit for AEAD_AES_128_CCM is as follows.
 
 ~~~
@@ -967,12 +1001,13 @@ might be chosen under these conditions.
 | AEAD_CHACHA20_POLY1305 | 2<sup>100</sup>          | 2<sup>46</sup>         |
 | AEAD_AES_128_CCM       | 2<sup>30</sup>/sqrt(u)   | 2<sup>30</sup>/sqrt(u) |
 | AEAD_AES_128_CCM_8     | 2<sup>30.9</sup>/sqrt(u) | 2<sup>13</sup>/u |
-{: #ex-table-mu title="Example multi-key limits"}
+{: #ex-table-mu title="Example multi-key limits; see text for parameter details"}
 
 The limits for AEAD_AES_128_GCM, AEAD_AES_256_GCM, AEAD_AES_128_CCM, and
 AEAD_AES_128_CCM_8 assume equal proportions for `q` and `v`. The limits for
 AEAD_AES_128_GCM, AEAD_AES_256_GCM and AEAD_CHACHA20_POLY1305 assume the use
-of nonce randomization, like in TLS 1.3 {{TLS}} and QUIC {{?RFC9001}}.
+of nonce randomization, like in TLS 1.3 {{TLS}} and QUIC {{?RFC9001}}, and
+offline work limited to `o <= 2^70`.
 
 The limits for AEAD_AES_128_GCM and AEAD_AES_256_GCM further depend on the
 maximum number (`B`) of 128-bit blocks encrypted by any single key. For example,
@@ -982,7 +1017,8 @@ limits both `q` and `v` to 2<sup>42</sup> messages.
 
 Only the limits for AEAD_AES_128_CCM and AEAD_AES_128_CCM_8 depend on the number
 of used keys (`u`), which further reduces them considerably. If `v` is limited to 1,
-`q` can be increased to 2<sup>31</sup>/sqrt(u) for both CCM AEADs.
+`q` can be increased to 2<sup>31</sup>/sqrt(u) for both CCM AEADs. (In particular
+offline work is assumed limited to `o <= 2^(k-50) / u = 2^78 / u`, see {{offline-work}}.)
 
 
 # Security Considerations {#sec-considerations}
