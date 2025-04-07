@@ -406,13 +406,16 @@ Table of Contents
 
 5.2.  AEAD_AES_128_GCM and AEAD_AES_256_GCM
 
-   The CL and IL values for AES-GCM are derived in [AEBounds] and
-   summarized below.  For this AEAD, n = 128 (the AES block length) and
-   t = 128 [GCM], [RFC5116].  In this example, the length s is the sum
-   of AAD and plaintext (in blocks of 128 bits), as described in
-   [GCMProofs].
+   The CL and IL values for AES-GCM are derived in [AEBounds], following
+   [GCMProofs], and summarized below.  For this AEAD, n = 128 (the AES
+   block length) and t = 128 [GCM], [RFC5116].  In this example, the
+   length s is the sum of AAD and plaintext (in blocks of 128 bits), as
+   described in [GCMProofs].
 
 5.2.1.  Confidentiality Limit
+
+   Applying Corollary 3 from [GCMProofs], assuming AES behaves like a
+   random permutation, the following bound applies:
 
    CA <= ((s + q + 1)^2) / 2^129
 

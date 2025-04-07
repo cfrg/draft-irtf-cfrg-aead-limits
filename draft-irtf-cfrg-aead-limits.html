@@ -1609,7 +1609,7 @@ achievable for a sufficiently motivated attacker.<a href="#section-5.1-5" class=
         <h3 id="name-aead_aes_128_gcm-and-aead_a">
 <a href="#section-5.2" class="section-number selfRef">5.2. </a><a href="#name-aead_aes_128_gcm-and-aead_a" class="section-name selfRef">AEAD_AES_128_GCM and AEAD_AES_256_GCM</a>
         </h3>
-<p id="section-5.2-1">The CL and IL values for AES-GCM are derived in <span>[<a href="#AEBounds" class="cite xref">AEBounds</a>]</span> and summarized below.
+<p id="section-5.2-1">The CL and IL values for AES-GCM are derived in <span>[<a href="#AEBounds" class="cite xref">AEBounds</a>]</span>, following <span>[<a href="#GCMProofs" class="cite xref">GCMProofs</a>]</span>, and summarized below.
 For this AEAD, <code>n = 128</code> (the AES block length) and <code>t = 128</code> <span>[<a href="#GCM" class="cite xref">GCM</a>]</span>, <span>[<a href="#RFC5116" class="cite xref">RFC5116</a>]</span>. In this example,
 the length <code>s</code> is the sum of AAD and plaintext (in blocks of 128 bits), as described in <span>[<a href="#GCMProofs" class="cite xref">GCMProofs</a>]</span>.<a href="#section-5.2-1" class="pilcrow">¶</a></p>
 <div id="confidentiality-limit">
@@ -1617,23 +1617,25 @@ the length <code>s</code> is the sum of AAD and plaintext (in blocks of 128 bits
           <h4 id="name-confidentiality-limit">
 <a href="#section-5.2.1" class="section-number selfRef">5.2.1. </a><a href="#name-confidentiality-limit" class="section-name selfRef">Confidentiality Limit</a>
           </h4>
-<div class="alignLeft art-text artwork" id="section-5.2.1-1">
+<p id="section-5.2.1-1">Applying Corollary 3 from <span>[<a href="#GCMProofs" class="cite xref">GCMProofs</a>]</span>, assuming AES behaves like a random permutation,
+the following bound applies:<a href="#section-5.2.1-1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-5.2.1-2">
 <pre>
 CA &lt;= ((s + q + 1)^2) / 2^129
-</pre><a href="#section-5.2.1-1" class="pilcrow">¶</a>
+</pre><a href="#section-5.2.1-2" class="pilcrow">¶</a>
 </div>
-<p id="section-5.2.1-2">This implies the following usage limit:<a href="#section-5.2.1-2" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-5.2.1-3">
+<p id="section-5.2.1-3">This implies the following usage limit:<a href="#section-5.2.1-3" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-5.2.1-4">
 <pre>
 q + s &lt;= p^(1/2) * 2^(129/2) - 1
-</pre><a href="#section-5.2.1-3" class="pilcrow">¶</a>
+</pre><a href="#section-5.2.1-4" class="pilcrow">¶</a>
 </div>
-<p id="section-5.2.1-4">Which, for a message-based protocol with <code>s &lt;= q * L</code>, if we assume that every
-packet is size <code>L</code> (in blocks of 128 bits), produces the limit:<a href="#section-5.2.1-4" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-5.2.1-5">
+<p id="section-5.2.1-5">Which, for a message-based protocol with <code>s &lt;= q * L</code>, if we assume that every
+packet is size <code>L</code> (in blocks of 128 bits), produces the limit:<a href="#section-5.2.1-5" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-5.2.1-6">
 <pre>
 q &lt;= (p^(1/2) * 2^(129/2) - 1) / (L + 1)
-</pre><a href="#section-5.2.1-5" class="pilcrow">¶</a>
+</pre><a href="#section-5.2.1-6" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
