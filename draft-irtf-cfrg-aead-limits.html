@@ -16,20 +16,20 @@ guidance for users of common AEAD functions about how to limit the use of keys
 in order to bound the advantage given to an attacker.  It considers limits in
 both single- and multi-key settings. 
     " name="description">
-<meta content="xml2rfc 3.28.0" name="generator">
+<meta content="xml2rfc 3.28.1" name="generator">
 <meta content="safe" name="keyword">
 <meta content="limits" name="keyword">
 <meta content="crypto" name="keyword">
 <meta content="draft-irtf-cfrg-aead-limits-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.28.0
+  xml2rfc 3.28.1
     Python 3.12.9
     ConfigArgParse 1.7
     google-i18n-address 3.1.1
     intervaltree 3.1.0
-    Jinja2 3.1.5
+    Jinja2 3.1.6
     lxml 5.3.0
-    platformdirs 4.3.6
+    platformdirs 4.3.7
     pycountry 24.6.1
     PyYAML 6.0.2
     requests 2.32.3
@@ -1053,11 +1053,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">AEAD Limits</td>
-<td class="right">March 2025</td>
+<td class="right">April 2025</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Günther, et al.</td>
-<td class="center">Expires 7 September 2025</td>
+<td class="center">Expires 9 October 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1070,12 +1070,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-irtf-cfrg-aead-limits-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-03-06" class="published">6 March 2025</time>
+<time datetime="2025-04-07" class="published">7 April 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-09-07">7 September 2025</time></dd>
+<dd class="expires"><time datetime="2025-10-09">9 October 2025</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1133,7 +1133,7 @@ both single- and multi-key settings.<a href="#section-abstract-1" class="pilcrow
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 7 September 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 9 October 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1180,43 +1180,46 @@ both single- and multi-key settings.<a href="#section-abstract-1" class="pilcrow
             <p id="section-toc.1-1.5.1"><a href="#section-5" class="auto internal xref">5</a>.  <a href="#name-single-key-aead-limits" class="internal xref">Single-Key AEAD Limits</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1">
-                <p id="section-toc.1-1.5.2.1.1"><a href="#section-5.1" class="auto internal xref">5.1</a>.  <a href="#name-aead_aes_128_gcm-and-aead_a" class="internal xref">AEAD_AES_128_GCM and AEAD_AES_256_GCM</a></p>
-<ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1.2.1">
-                    <p id="section-toc.1-1.5.2.1.2.1.1"><a href="#section-5.1.1" class="auto internal xref">5.1.1</a>.  <a href="#name-confidentiality-limit" class="internal xref">Confidentiality Limit</a></p>
-</li>
-                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1.2.2">
-                    <p id="section-toc.1-1.5.2.1.2.2.1"><a href="#section-5.1.2" class="auto internal xref">5.1.2</a>.  <a href="#name-integrity-limit" class="internal xref">Integrity Limit</a></p>
-</li>
-                </ul>
+                <p id="section-toc.1-1.5.2.1.1"><a href="#section-5.1" class="auto internal xref">5.1</a>.  <a href="#name-offline-work" class="internal xref">Offline Work</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.2">
-                <p id="section-toc.1-1.5.2.2.1"><a href="#section-5.2" class="auto internal xref">5.2</a>.  <a href="#name-aead_chacha20_poly1305" class="internal xref">AEAD_CHACHA20_POLY1305</a></p>
+                <p id="section-toc.1-1.5.2.2.1"><a href="#section-5.2" class="auto internal xref">5.2</a>.  <a href="#name-aead_aes_128_gcm-and-aead_a" class="internal xref">AEAD_AES_128_GCM and AEAD_AES_256_GCM</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.2.2.1">
-                    <p id="section-toc.1-1.5.2.2.2.1.1"><a href="#section-5.2.1" class="auto internal xref">5.2.1</a>.  <a href="#name-confidentiality-limit-2" class="internal xref">Confidentiality Limit</a></p>
+                    <p id="section-toc.1-1.5.2.2.2.1.1"><a href="#section-5.2.1" class="auto internal xref">5.2.1</a>.  <a href="#name-confidentiality-limit" class="internal xref">Confidentiality Limit</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.2.2.2">
-                    <p id="section-toc.1-1.5.2.2.2.2.1"><a href="#section-5.2.2" class="auto internal xref">5.2.2</a>.  <a href="#name-integrity-limit-2" class="internal xref">Integrity Limit</a></p>
+                    <p id="section-toc.1-1.5.2.2.2.2.1"><a href="#section-5.2.2" class="auto internal xref">5.2.2</a>.  <a href="#name-integrity-limit" class="internal xref">Integrity Limit</a></p>
 </li>
                 </ul>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.3">
-                <p id="section-toc.1-1.5.2.3.1"><a href="#section-5.3" class="auto internal xref">5.3</a>.  <a href="#name-aead_aes_128_ccm" class="internal xref">AEAD_AES_128_CCM</a></p>
+                <p id="section-toc.1-1.5.2.3.1"><a href="#section-5.3" class="auto internal xref">5.3</a>.  <a href="#name-aead_chacha20_poly1305" class="internal xref">AEAD_CHACHA20_POLY1305</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.3.2.1">
-                    <p id="section-toc.1-1.5.2.3.2.1.1"><a href="#section-5.3.1" class="auto internal xref">5.3.1</a>.  <a href="#name-confidentiality-limit-3" class="internal xref">Confidentiality Limit</a></p>
+                    <p id="section-toc.1-1.5.2.3.2.1.1"><a href="#section-5.3.1" class="auto internal xref">5.3.1</a>.  <a href="#name-confidentiality-limit-2" class="internal xref">Confidentiality Limit</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.3.2.2">
-                    <p id="section-toc.1-1.5.2.3.2.2.1"><a href="#section-5.3.2" class="auto internal xref">5.3.2</a>.  <a href="#name-integrity-limit-3" class="internal xref">Integrity Limit</a></p>
+                    <p id="section-toc.1-1.5.2.3.2.2.1"><a href="#section-5.3.2" class="auto internal xref">5.3.2</a>.  <a href="#name-integrity-limit-2" class="internal xref">Integrity Limit</a></p>
 </li>
                 </ul>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.4">
-                <p id="section-toc.1-1.5.2.4.1"><a href="#section-5.4" class="auto internal xref">5.4</a>.  <a href="#name-aead_aes_128_ccm_8" class="internal xref">AEAD_AES_128_CCM_8</a></p>
+                <p id="section-toc.1-1.5.2.4.1"><a href="#section-5.4" class="auto internal xref">5.4</a>.  <a href="#name-aead_aes_128_ccm" class="internal xref">AEAD_AES_128_CCM</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.4.2.1">
+                    <p id="section-toc.1-1.5.2.4.2.1.1"><a href="#section-5.4.1" class="auto internal xref">5.4.1</a>.  <a href="#name-confidentiality-limit-3" class="internal xref">Confidentiality Limit</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.4.2.2">
+                    <p id="section-toc.1-1.5.2.4.2.2.1"><a href="#section-5.4.2" class="auto internal xref">5.4.2</a>.  <a href="#name-integrity-limit-3" class="internal xref">Integrity Limit</a></p>
+</li>
+                </ul>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.5">
-                <p id="section-toc.1-1.5.2.5.1"><a href="#section-5.5" class="auto internal xref">5.5</a>.  <a href="#name-single-key-examples" class="internal xref">Single-Key Examples</a></p>
+                <p id="section-toc.1-1.5.2.5.1"><a href="#section-5.5" class="auto internal xref">5.5</a>.  <a href="#name-aead_aes_128_ccm_8" class="internal xref">AEAD_AES_128_CCM_8</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.6">
+                <p id="section-toc.1-1.5.2.6.1"><a href="#section-5.6" class="auto internal xref">5.6</a>.  <a href="#name-single-key-examples" class="internal xref">Single-Key Examples</a></p>
 </li>
             </ul>
 </li>
@@ -1420,7 +1423,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
           </tr>
           <tr>
             <td class="text-right" rowspan="1" colspan="1">o</td>
-            <td class="text-left" rowspan="1" colspan="1">Offline adversary work (time, measured in number of encryption and decryption queries; multi-key setting only)</td>
+            <td class="text-left" rowspan="1" colspan="1">Offline adversary work (measured in number of encryption and decryption queries)</td>
           </tr>
           <tr>
             <td class="text-right" rowspan="1" colspan="1">u</td>
@@ -1464,7 +1467,8 @@ or is able to forge a ciphertext that will be accepted as valid.<a href="#sectio
 </li>
       </ul>
 <p id="section-3-5">Here, we consider advantages beyond distinguishing underyling primitives from their
-ideal instances (for example, a pseudorandom from a truly random function).<a href="#section-3-5" class="pilcrow">¶</a></p>
+ideal instances, for example, a blockcipher from a random permutation (PRP advantage)
+or a pseudorandom function from a truly random function (PRF advantage).<a href="#section-3-5" class="pilcrow">¶</a></p>
 <p id="section-3-6">See <span>[<a href="#AEComposition" class="cite xref">AEComposition</a>]</span>, <span>[<a href="#AEAD" class="cite xref">AEAD</a>]</span> for the formal definitions of and relations
 between IND-CPA (confidentiality), INT-CTXT (integrity),
 and authenticated encryption security (AE).
@@ -1575,217 +1579,246 @@ lengths might result in different bounds; for example, <span>[<a href="#GCMProof
 using a variable-length nonce for AES-GCM results in worse security bounds.<a href="#section-5-2" class="pilcrow">¶</a></p>
 <p id="section-5-3">The CL and IL values bound the total number of encryption and forgery queries (<code>q</code> and <code>v</code>).
 Alongside each advantage value, we also specify these bounds.<a href="#section-5-3" class="pilcrow">¶</a></p>
-<div id="aeadaes128gcm-and-aeadaes256gcm">
+<div id="offline-work">
 <section id="section-5.1">
-        <h3 id="name-aead_aes_128_gcm-and-aead_a">
-<a href="#section-5.1" class="section-number selfRef">5.1. </a><a href="#name-aead_aes_128_gcm-and-aead_a" class="section-name selfRef">AEAD_AES_128_GCM and AEAD_AES_256_GCM</a>
+        <h3 id="name-offline-work">
+<a href="#section-5.1" class="section-number selfRef">5.1. </a><a href="#name-offline-work" class="section-name selfRef">Offline Work</a>
         </h3>
-<p id="section-5.1-1">The CL and IL values for AES-GCM are derived in <span>[<a href="#AEBounds" class="cite xref">AEBounds</a>]</span> and summarized below.
+<p id="section-5.1-1">Single-key analyses of different cipher modes typically concentrate on the advantage
+that an attacker might gain through the mode itself.  These analyses
+assume that the underlying cipher is an ideal PRP or PRF, and we make the same
+assumptions here.  But even an ideal PRP or PRF can be attacked through exhaustive
+key search (in the key length, <code>k</code>) given sufficient resources.<a href="#section-5.1-1" class="pilcrow">¶</a></p>
+<p id="section-5.1-2">An attacker that is able to deploy sufficient offline resources (<code>o</code>) can
+increase their success probability independent of any usage.  In even the best
+case, single key bounds are always limited to the maximum of the stated bound and<a href="#section-5.1-2" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-5.1-3">
+<pre>
+AEA &lt;= o / 2^k
+</pre><a href="#section-5.1-3" class="pilcrow">¶</a>
+</div>
+<p id="section-5.1-4">This constrains the security that can be achieved for modes that use smaller key
+sizes, depending on what assumptions can be made about attacker resources.<a href="#section-5.1-4" class="pilcrow">¶</a></p>
+<p id="section-5.1-5">For example, if an attacker could be assumed to have the resources to perform in
+the order of 2^80 AES operations, an attacker gains an attack probability of
+2<sup>-48</sup>.  That might seem like it requires a lot of compute resources,
+but amount of compute could cost less than 1 million USD in 2025. That cost can
+only reduce over time, suggesting that a much greater advantage is likely
+achievable for a sufficiently motivated attacker.<a href="#section-5.1-5" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="aeadaes128gcm-and-aeadaes256gcm">
+<section id="section-5.2">
+        <h3 id="name-aead_aes_128_gcm-and-aead_a">
+<a href="#section-5.2" class="section-number selfRef">5.2. </a><a href="#name-aead_aes_128_gcm-and-aead_a" class="section-name selfRef">AEAD_AES_128_GCM and AEAD_AES_256_GCM</a>
+        </h3>
+<p id="section-5.2-1">The CL and IL values for AES-GCM are derived in <span>[<a href="#AEBounds" class="cite xref">AEBounds</a>]</span> and summarized below.
 For this AEAD, <code>n = 128</code> (the AES block length) and <code>t = 128</code> <span>[<a href="#GCM" class="cite xref">GCM</a>]</span>, <span>[<a href="#RFC5116" class="cite xref">RFC5116</a>]</span>. In this example,
-the length <code>s</code> is the sum of AAD and plaintext (in blocks of 128 bits), as described in <span>[<a href="#GCMProofs" class="cite xref">GCMProofs</a>]</span>.<a href="#section-5.1-1" class="pilcrow">¶</a></p>
+the length <code>s</code> is the sum of AAD and plaintext (in blocks of 128 bits), as described in <span>[<a href="#GCMProofs" class="cite xref">GCMProofs</a>]</span>.<a href="#section-5.2-1" class="pilcrow">¶</a></p>
 <div id="confidentiality-limit">
-<section id="section-5.1.1">
+<section id="section-5.2.1">
           <h4 id="name-confidentiality-limit">
-<a href="#section-5.1.1" class="section-number selfRef">5.1.1. </a><a href="#name-confidentiality-limit" class="section-name selfRef">Confidentiality Limit</a>
+<a href="#section-5.2.1" class="section-number selfRef">5.2.1. </a><a href="#name-confidentiality-limit" class="section-name selfRef">Confidentiality Limit</a>
           </h4>
-<div class="alignLeft art-text artwork" id="section-5.1.1-1">
+<div class="alignLeft art-text artwork" id="section-5.2.1-1">
 <pre>
 CA &lt;= ((s + q + 1)^2) / 2^129
-</pre><a href="#section-5.1.1-1" class="pilcrow">¶</a>
+</pre><a href="#section-5.2.1-1" class="pilcrow">¶</a>
 </div>
-<p id="section-5.1.1-2">This implies the following usage limit:<a href="#section-5.1.1-2" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-5.1.1-3">
+<p id="section-5.2.1-2">This implies the following usage limit:<a href="#section-5.2.1-2" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-5.2.1-3">
 <pre>
 q + s &lt;= p^(1/2) * 2^(129/2) - 1
-</pre><a href="#section-5.1.1-3" class="pilcrow">¶</a>
+</pre><a href="#section-5.2.1-3" class="pilcrow">¶</a>
 </div>
-<p id="section-5.1.1-4">Which, for a message-based protocol with <code>s &lt;= q * L</code>, if we assume that every
-packet is size <code>L</code> (in blocks of 128 bits), produces the limit:<a href="#section-5.1.1-4" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-5.1.1-5">
+<p id="section-5.2.1-4">Which, for a message-based protocol with <code>s &lt;= q * L</code>, if we assume that every
+packet is size <code>L</code> (in blocks of 128 bits), produces the limit:<a href="#section-5.2.1-4" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-5.2.1-5">
 <pre>
 q &lt;= (p^(1/2) * 2^(129/2) - 1) / (L + 1)
-</pre><a href="#section-5.1.1-5" class="pilcrow">¶</a>
+</pre><a href="#section-5.2.1-5" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
 <div id="integrity-limit">
-<section id="section-5.1.2">
+<section id="section-5.2.2">
           <h4 id="name-integrity-limit">
-<a href="#section-5.1.2" class="section-number selfRef">5.1.2. </a><a href="#name-integrity-limit" class="section-name selfRef">Integrity Limit</a>
+<a href="#section-5.2.2" class="section-number selfRef">5.2.2. </a><a href="#name-integrity-limit" class="section-name selfRef">Integrity Limit</a>
           </h4>
-<p id="section-5.1.2-1">Applying Equation (22) from <span>[<a href="#GCMProofs" class="cite xref">GCMProofs</a>]</span>, in which the assumption of
+<p id="section-5.2.2-1">Applying Equation (22) from <span>[<a href="#GCMProofs" class="cite xref">GCMProofs</a>]</span>, in which the assumption of
 <code>s + q + v &lt; 2^64</code> ensures that the delta function cannot produce a value
-greater than 2, the following bound applies:<a href="#section-5.1.2-1" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-5.1.2-2">
+greater than 2, the following bound applies:<a href="#section-5.2.2-1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-5.2.2-2">
 <pre>
 IA &lt;= 2 * (v * (L + 1)) / 2^128
-</pre><a href="#section-5.1.2-2" class="pilcrow">¶</a>
+</pre><a href="#section-5.2.2-2" class="pilcrow">¶</a>
 </div>
-<p id="section-5.1.2-3">For the assumption of <code>s + q + v &lt; 2^64</code>, observe that this applies when <code>p &gt; L / 2^63</code>.
+<p id="section-5.2.2-3">For the assumption of <code>s + q + v &lt; 2^64</code>, observe that this applies when <code>p &gt; L / 2^63</code>.
 <code>s + q &lt;= q * (L + 1)</code> is always small relative to <code>2^64</code> if the same advantage is
-applied to the confidentiality limit on <code>q</code>.<a href="#section-5.1.2-3" class="pilcrow">¶</a></p>
-<p id="section-5.1.2-4">This produces the following limit:<a href="#section-5.1.2-4" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-5.1.2-5">
+applied to the confidentiality limit on <code>q</code>.<a href="#section-5.2.2-3" class="pilcrow">¶</a></p>
+<p id="section-5.2.2-4">This produces the following limit:<a href="#section-5.2.2-4" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-5.2.2-5">
 <pre>
 v &lt;= min(2^64, (p * 2^127) / (L + 1))
-</pre><a href="#section-5.1.2-5" class="pilcrow">¶</a>
+</pre><a href="#section-5.2.2-5" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
 </section>
 </div>
 <div id="aeadchacha20poly1305">
-<section id="section-5.2">
+<section id="section-5.3">
         <h3 id="name-aead_chacha20_poly1305">
-<a href="#section-5.2" class="section-number selfRef">5.2. </a><a href="#name-aead_chacha20_poly1305" class="section-name selfRef">AEAD_CHACHA20_POLY1305</a>
+<a href="#section-5.3" class="section-number selfRef">5.3. </a><a href="#name-aead_chacha20_poly1305" class="section-name selfRef">AEAD_CHACHA20_POLY1305</a>
         </h3>
-<p id="section-5.2-1">The known single-user result for AEAD_CHACHA20_POLY1305 <span>[<a href="#ChaCha20Poly1305-MU" class="cite xref">ChaCha20Poly1305-MU</a>]</span>
+<p id="section-5.3-1">The known single-user result for AEAD_CHACHA20_POLY1305 <span>[<a href="#ChaCha20Poly1305-MU" class="cite xref">ChaCha20Poly1305-MU</a>]</span>
 (correcting the prior one from <span>[<a href="#ChaCha20Poly1305-SU" class="cite xref">ChaCha20Poly1305-SU</a>]</span>) gives a combined AE limit,
 which we separate into confidentiality and integrity limits below. For this
 AEAD, <code>n = 512</code> (the ChaCha20 block length), <code>k = 256</code>, and <code>t = 128</code>; the length <code>L'</code> is the sum of AAD
-and plaintext (in Poly1305 blocks of 128 bits), see <span>[<a href="#ChaCha20Poly1305-MU" class="cite xref">ChaCha20Poly1305-MU</a>]</span>.<a href="#section-5.2-1" class="pilcrow">¶</a></p>
+and plaintext (in Poly1305 blocks of 128 bits), see <span>[<a href="#ChaCha20Poly1305-MU" class="cite xref">ChaCha20Poly1305-MU</a>]</span>.<a href="#section-5.3-1" class="pilcrow">¶</a></p>
 <div id="confidentiality-limit-1">
-<section id="section-5.2.1">
+<section id="section-5.3.1">
           <h4 id="name-confidentiality-limit-2">
-<a href="#section-5.2.1" class="section-number selfRef">5.2.1. </a><a href="#name-confidentiality-limit-2" class="section-name selfRef">Confidentiality Limit</a>
+<a href="#section-5.3.1" class="section-number selfRef">5.3.1. </a><a href="#name-confidentiality-limit-2" class="section-name selfRef">Confidentiality Limit</a>
           </h4>
-<div class="alignLeft art-text artwork" id="section-5.2.1-1">
+<div class="alignLeft art-text artwork" id="section-5.3.1-1">
 <pre>
 CA &lt;= 0
-</pre><a href="#section-5.2.1-1" class="pilcrow">¶</a>
+</pre><a href="#section-5.3.1-1" class="pilcrow">¶</a>
 </div>
-<p id="section-5.2.1-2">This implies there is no limit beyond the PRF security of the underlying ChaCha20
-block function.<a href="#section-5.2.1-2" class="pilcrow">¶</a></p>
+<p id="section-5.3.1-2">This implies there is no limit beyond the PRF security of the underlying ChaCha20
+block function.<a href="#section-5.3.1-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="integrity-limit-1">
-<section id="section-5.2.2">
+<section id="section-5.3.2">
           <h4 id="name-integrity-limit-2">
-<a href="#section-5.2.2" class="section-number selfRef">5.2.2. </a><a href="#name-integrity-limit-2" class="section-name selfRef">Integrity Limit</a>
+<a href="#section-5.3.2" class="section-number selfRef">5.3.2. </a><a href="#name-integrity-limit-2" class="section-name selfRef">Integrity Limit</a>
           </h4>
-<div class="alignLeft art-text artwork" id="section-5.2.2-1">
+<div class="alignLeft art-text artwork" id="section-5.3.2-1">
 <pre>
 IA &lt;= (v * (L' + 1)) / 2^103
-</pre><a href="#section-5.2.2-1" class="pilcrow">¶</a>
+</pre><a href="#section-5.3.2-1" class="pilcrow">¶</a>
 </div>
-<p id="section-5.2.2-2">This implies the following limit:<a href="#section-5.2.2-2" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-5.2.2-3">
+<p id="section-5.3.2-2">This implies the following limit:<a href="#section-5.3.2-2" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-5.3.2-3">
 <pre>
 v &lt;= (p * 2^103) / (L' + 1)
-</pre><a href="#section-5.2.2-3" class="pilcrow">¶</a>
+</pre><a href="#section-5.3.2-3" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
 </section>
 </div>
 <div id="aeadaes128ccm">
-<section id="section-5.3">
+<section id="section-5.4">
         <h3 id="name-aead_aes_128_ccm">
-<a href="#section-5.3" class="section-number selfRef">5.3. </a><a href="#name-aead_aes_128_ccm" class="section-name selfRef">AEAD_AES_128_CCM</a>
+<a href="#section-5.4" class="section-number selfRef">5.4. </a><a href="#name-aead_aes_128_ccm" class="section-name selfRef">AEAD_AES_128_CCM</a>
         </h3>
-<p id="section-5.3-1">The CL and IL values for AEAD_AES_128_CCM are derived from <span>[<a href="#CCM-ANALYSIS" class="cite xref">CCM-ANALYSIS</a>]</span>
+<p id="section-5.4-1">The CL and IL values for AEAD_AES_128_CCM are derived from <span>[<a href="#CCM-ANALYSIS" class="cite xref">CCM-ANALYSIS</a>]</span>
 and specified in the QUIC-TLS mapping specification <span>[<a href="#RFC9001" class="cite xref">RFC9001</a>]</span>. This analysis uses the total
 number of underlying block cipher operations to derive its bound. For CCM, this number is the sum of:
 the length of the associated data in blocks, the length of the ciphertext in blocks, the length of
-the plaintext in blocks, plus 1.<a href="#section-5.3-1" class="pilcrow">¶</a></p>
-<p id="section-5.3-2">In the following limits, this is simplified to a value of twice the length of the packet in blocks,
+the plaintext in blocks, plus 1.<a href="#section-5.4-1" class="pilcrow">¶</a></p>
+<p id="section-5.4-2">In the following limits, this is simplified to a value of twice the length of the packet in blocks,
 i.e., <code>2L</code> represents the effective length, in number of block cipher operations, of a message with
 L blocks. This simplification is based on the observation that common applications of this AEAD carry
-only a small amount of associated data compared to ciphertext. For example, QUIC has 1 to 3 blocks of AAD.<a href="#section-5.3-2" class="pilcrow">¶</a></p>
-<p id="section-5.3-3">For this AEAD, <code>n = 128</code> (the AES block length) and <code>t = 128</code>.<a href="#section-5.3-3" class="pilcrow">¶</a></p>
+only a small amount of associated data compared to ciphertext. For example, QUIC has 1 to 3 blocks of AAD.<a href="#section-5.4-2" class="pilcrow">¶</a></p>
+<p id="section-5.4-3">For this AEAD, <code>n = 128</code> (the AES block length) and <code>t = 128</code>.<a href="#section-5.4-3" class="pilcrow">¶</a></p>
 <div id="confidentiality-limit-2">
-<section id="section-5.3.1">
+<section id="section-5.4.1">
           <h4 id="name-confidentiality-limit-3">
-<a href="#section-5.3.1" class="section-number selfRef">5.3.1. </a><a href="#name-confidentiality-limit-3" class="section-name selfRef">Confidentiality Limit</a>
+<a href="#section-5.4.1" class="section-number selfRef">5.4.1. </a><a href="#name-confidentiality-limit-3" class="section-name selfRef">Confidentiality Limit</a>
           </h4>
-<div class="alignLeft art-text artwork" id="section-5.3.1-1">
+<div class="alignLeft art-text artwork" id="section-5.4.1-1">
 <pre>
 CA &lt;= (2L * q)^2 / 2^n
    &lt;= (2L * q)^2 / 2^128
-</pre><a href="#section-5.3.1-1" class="pilcrow">¶</a>
+</pre><a href="#section-5.4.1-1" class="pilcrow">¶</a>
 </div>
-<p id="section-5.3.1-2">This implies the following limit:<a href="#section-5.3.1-2" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-5.3.1-3">
+<p id="section-5.4.1-2">This implies the following limit:<a href="#section-5.4.1-2" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-5.4.1-3">
 <pre>
 q &lt;= sqrt(p) * 2^63 / L
-</pre><a href="#section-5.3.1-3" class="pilcrow">¶</a>
+</pre><a href="#section-5.4.1-3" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
 <div id="integrity-limit-2">
-<section id="section-5.3.2">
+<section id="section-5.4.2">
           <h4 id="name-integrity-limit-3">
-<a href="#section-5.3.2" class="section-number selfRef">5.3.2. </a><a href="#name-integrity-limit-3" class="section-name selfRef">Integrity Limit</a>
+<a href="#section-5.4.2" class="section-number selfRef">5.4.2. </a><a href="#name-integrity-limit-3" class="section-name selfRef">Integrity Limit</a>
           </h4>
-<div class="alignLeft art-text artwork" id="section-5.3.2-1">
+<div class="alignLeft art-text artwork" id="section-5.4.2-1">
 <pre>
 IA &lt;= v / 2^t + (2L * (v + q))^2 / 2^n
    &lt;= v / 2^128 + (2L * (v + q))^2 / 2^128
-</pre><a href="#section-5.3.2-1" class="pilcrow">¶</a>
+</pre><a href="#section-5.4.2-1" class="pilcrow">¶</a>
 </div>
-<p id="section-5.3.2-2">This implies the following limit:<a href="#section-5.3.2-2" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-5.3.2-3">
+<p id="section-5.4.2-2">This implies the following limit:<a href="#section-5.4.2-2" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-5.4.2-3">
 <pre>
 v + (2L * (v + q))^2 &lt;= p * 2^128
-</pre><a href="#section-5.3.2-3" class="pilcrow">¶</a>
+</pre><a href="#section-5.4.2-3" class="pilcrow">¶</a>
 </div>
-<p id="section-5.3.2-4">In a setting where <code>v</code> or <code>q</code> is sufficiently large, <code>v</code> is negligible compared to
-<code>(2L * (v + q))^2</code>, so this this can be simplified to:<a href="#section-5.3.2-4" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-5.3.2-5">
+<p id="section-5.4.2-4">In a setting where <code>v</code> or <code>q</code> is sufficiently large, <code>v</code> is negligible compared to
+<code>(2L * (v + q))^2</code>, so this this can be simplified to:<a href="#section-5.4.2-4" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-5.4.2-5">
 <pre>
 v + q &lt;= sqrt(p) * 2^63 / L
-</pre><a href="#section-5.3.2-5" class="pilcrow">¶</a>
+</pre><a href="#section-5.4.2-5" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
 </section>
 </div>
 <div id="aeadaes128ccm8">
-<section id="section-5.4">
+<section id="section-5.5">
         <h3 id="name-aead_aes_128_ccm_8">
-<a href="#section-5.4" class="section-number selfRef">5.4. </a><a href="#name-aead_aes_128_ccm_8" class="section-name selfRef">AEAD_AES_128_CCM_8</a>
+<a href="#section-5.5" class="section-number selfRef">5.5. </a><a href="#name-aead_aes_128_ccm_8" class="section-name selfRef">AEAD_AES_128_CCM_8</a>
         </h3>
-<p id="section-5.4-1">The analysis in <span>[<a href="#CCM-ANALYSIS" class="cite xref">CCM-ANALYSIS</a>]</span> also applies to this AEAD, but the reduced tag
-length of 64 bits changes the integrity limit calculation considerably.<a href="#section-5.4-1" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-5.4-2">
+<p id="section-5.5-1">The analysis in <span>[<a href="#CCM-ANALYSIS" class="cite xref">CCM-ANALYSIS</a>]</span> also applies to this AEAD, but the reduced tag
+length of 64 bits changes the integrity limit calculation considerably.<a href="#section-5.5-1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-5.5-2">
 <pre>
 IA &lt;= v / 2^t + (2L * (v + q))^2 / 2^n
    &lt;= v / 2^64 + (2L * (v + q))^2 / 2^128
-</pre><a href="#section-5.4-2" class="pilcrow">¶</a>
+</pre><a href="#section-5.5-2" class="pilcrow">¶</a>
 </div>
-<p id="section-5.4-3">This results in reducing the limit on <code>v</code> by a factor of 2<sup>64</sup>.<a href="#section-5.4-3" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-5.4-4">
+<p id="section-5.5-3">This results in reducing the limit on <code>v</code> by a factor of 2<sup>64</sup>.<a href="#section-5.5-3" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-5.5-4">
 <pre>
 v * 2^64 + (2L * (v + q))^2 &lt;= p * 2^128
-</pre><a href="#section-5.4-4" class="pilcrow">¶</a>
+</pre><a href="#section-5.5-4" class="pilcrow">¶</a>
 </div>
-<p id="section-5.4-5">Note that, to apply this result, two inequalities can be produced, with the
-first applied to determine <code>v</code>, then applying the second to find <code>q</code>:<a href="#section-5.4-5" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-5.4-6">
+<p id="section-5.5-5">Note that, to apply this result, two inequalities can be produced, with the
+first applied to determine <code>v</code>, then applying the second to find <code>q</code>:<a href="#section-5.5-5" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-5.5-6">
 <pre>
 v * 2^64 &lt;= p * 2^127
 (2L * (v + q))^2 &lt;= p * 2^127
-</pre><a href="#section-5.4-6" class="pilcrow">¶</a>
+</pre><a href="#section-5.5-6" class="pilcrow">¶</a>
 </div>
-<p id="section-5.4-7">This approach produces much smaller values for <code>v</code> than for <code>q</code>.  Alternative
-allocations tend to greatly reduce <code>q</code> without significantly increasing <code>v</code>.<a href="#section-5.4-7" class="pilcrow">¶</a></p>
+<p id="section-5.5-7">This approach produces much smaller values for <code>v</code> than for <code>q</code>.  Alternative
+allocations tend to greatly reduce <code>q</code> without significantly increasing <code>v</code>.<a href="#section-5.5-7" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="single-key-examples">
-<section id="section-5.5">
+<section id="section-5.6">
         <h3 id="name-single-key-examples">
-<a href="#section-5.5" class="section-number selfRef">5.5. </a><a href="#name-single-key-examples" class="section-name selfRef">Single-Key Examples</a>
+<a href="#section-5.6" class="section-number selfRef">5.6. </a><a href="#name-single-key-examples" class="section-name selfRef">Single-Key Examples</a>
         </h3>
-<p id="section-5.5-1">An example protocol might choose to aim for a single-key CA and IA that is at
-most 2<sup>-50</sup>.  If the messages exchanged in the protocol are at most a
+<p id="section-5.6-1">An example protocol might choose to aim for a single-key CA and IA that is at
+most 2<sup>-50</sup>.  (This in particular limits offline work to <code>o &lt;= 2^(k-50)</code>,
+see <a href="#offline-work" class="auto internal xref">Section 5.1</a>.)  If the messages exchanged in the protocol are at most a
 common Internet MTU of around 1500 bytes, then a value for <code>L</code> might be set to
 2<sup>7</sup>.  <a href="#ex-table-su" class="auto internal xref">Table 2</a> shows limits for <code>q</code> and <code>v</code> that might be
-chosen under these conditions.<a href="#section-5.5-1" class="pilcrow">¶</a></p>
-<span id="name-example-single-key-limits"></span><div id="ex-table-su">
+chosen under these conditions.<a href="#section-5.6-1" class="pilcrow">¶</a></p>
+<span id="name-example-single-key-limits-s"></span><div id="ex-table-su">
 <table class="center" id="table-2">
           <caption>
 <a href="#table-2" class="selfRef">Table 2</a>:
-<a href="#name-example-single-key-limits" class="selfRef">Example single-key limits</a>
+<a href="#name-example-single-key-limits-s" class="selfRef">Example single-key limits; see text for parameter details</a>
           </caption>
 <thead>
             <tr>
@@ -1832,16 +1865,16 @@ chosen under these conditions.<a href="#section-5.5-1" class="pilcrow">¶</a></p
           </tbody>
         </table>
 </div>
-<p id="section-5.5-3">AEAD_CHACHA20_POLY1305 provides no limit to <code>q</code> based on the provided single-user
-analyses.<a href="#section-5.5-3" class="pilcrow">¶</a></p>
-<p id="section-5.5-4">The limit for <code>q</code> on AEAD_AES_128_CCM and AEAD_AES_128_CCM_8 is reduced due to a
+<p id="section-5.6-3">AEAD_CHACHA20_POLY1305 provides no limit to <code>q</code> based on the provided single-user
+analyses.<a href="#section-5.6-3" class="pilcrow">¶</a></p>
+<p id="section-5.6-4">The limit for <code>q</code> on AEAD_AES_128_CCM and AEAD_AES_128_CCM_8 is reduced due to a
 need to reduce the value of <code>q</code> to ensure that IA does not exceed the target.
 This assumes equal proportions for <code>q</code> and <code>v</code> for AEAD_AES_128_CCM.
 AEAD_AES_128_CCM_8 permits a much smaller value of <code>v</code> due to the shorter tag,
-which permits a higher limit for <code>q</code>.<a href="#section-5.5-4" class="pilcrow">¶</a></p>
-<p id="section-5.5-5">Some protocols naturally limit <code>v</code> to 1, such as TCP-based variants of TLS, which
+which permits a higher limit for <code>q</code>.<a href="#section-5.6-4" class="pilcrow">¶</a></p>
+<p id="section-5.6-5">Some protocols naturally limit <code>v</code> to 1, such as TCP-based variants of TLS, which
 terminate sessions on decryption failure.  If <code>v</code> is limited to 1, <code>q</code> can be
-increased to 2<sup>31</sup> for both CCM AEADs.<a href="#section-5.5-5" class="pilcrow">¶</a></p>
+increased to 2<sup>31</sup> for both CCM AEADs.<a href="#section-5.6-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -1902,7 +1935,8 @@ q + v &lt;= p * 2^127 / (L * B)
 </div>
 <p id="section-6.1.1-5">This assumes that <code>B</code> is much larger than 100; that is, each user enciphers
 significantly more than 1600 bytes of data.  Otherwise, <code>B</code> should be increased by 161 for
-AEAD_AES_128_GCM and by 97 for AEAD_AES_256_GCM.<a href="#section-6.1.1-5" class="pilcrow">¶</a></p>
+AEAD_AES_128_GCM and by 97 for AEAD_AES_256_GCM.  For AEAD_AES_128_GCM, it further assumes
+<code>o &lt;= 2^70</code>, otherwise a term in the order of <code>o / 2^120</code> starts dominating.<a href="#section-6.1.1-5" class="pilcrow">¶</a></p>
 <p id="section-6.1.1-6">Protocols with random, partially implicit nonces have the following limit,
 which is similar to that for nonce randomization:<a href="#section-6.1.1-6" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-6.1.1-7">
@@ -2055,17 +2089,19 @@ IA &lt;= AEA
 AEAD_AES_128_CCM_8. Thus, to account for the additional
 factor <code>u</code>, i.e., the number of keys, each <code>p</code> term in the confidentiality and
 integrity limits is replaced with <code>p / u</code>.<a href="#section-6.3-1" class="pilcrow">¶</a></p>
-<p id="section-6.3-2">The multi-key integrity limit for AEAD_AES_128_CCM is as follows.<a href="#section-6.3-2" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-6.3-3">
+<p id="section-6.3-2">Note that this factor also applies to the generic exhaustive key search attack
+discussed for single-key analyses in <a href="#offline-work" class="auto internal xref">Section 5.1</a>.<a href="#section-6.3-2" class="pilcrow">¶</a></p>
+<p id="section-6.3-3">The multi-key integrity limit for AEAD_AES_128_CCM is as follows.<a href="#section-6.3-3" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-6.3-4">
 <pre>
 v + q &lt;= sqrt(p / u) * 2^63 / L
-</pre><a href="#section-6.3-3" class="pilcrow">¶</a>
+</pre><a href="#section-6.3-4" class="pilcrow">¶</a>
 </div>
-<p id="section-6.3-4">Likewise, the multi-key integrity limit for AEAD_AES_128_CCM_8 is as follows.<a href="#section-6.3-4" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-6.3-5">
+<p id="section-6.3-5">Likewise, the multi-key integrity limit for AEAD_AES_128_CCM_8 is as follows.<a href="#section-6.3-5" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-6.3-6">
 <pre>
 v * 2^64 + (2L * (v + q))^2 &lt;= (p / u) * 2^128
-</pre><a href="#section-6.3-5" class="pilcrow">¶</a>
+</pre><a href="#section-6.3-6" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
@@ -2079,11 +2115,11 @@ most 2<sup>-50</sup>.  If the messages exchanged in the protocol are at most a
 common Internet MTU of around 1500 bytes, then a value for <code>L</code> might be set to
 2<sup>7</sup>.  <a href="#ex-table-mu" class="auto internal xref">Table 3</a> shows limits for <code>q</code> and <code>v</code> across all keys that
 might be chosen under these conditions.<a href="#section-6.4-1" class="pilcrow">¶</a></p>
-<span id="name-example-multi-key-limits"></span><div id="ex-table-mu">
+<span id="name-example-multi-key-limits-se"></span><div id="ex-table-mu">
 <table class="center" id="table-3">
           <caption>
 <a href="#table-3" class="selfRef">Table 3</a>:
-<a href="#name-example-multi-key-limits" class="selfRef">Example multi-key limits</a>
+<a href="#name-example-multi-key-limits-se" class="selfRef">Example multi-key limits; see text for parameter details</a>
           </caption>
 <thead>
             <tr>
@@ -2126,7 +2162,8 @@ might be chosen under these conditions.<a href="#section-6.4-1" class="pilcrow">
 <p id="section-6.4-3">The limits for AEAD_AES_128_GCM, AEAD_AES_256_GCM, AEAD_AES_128_CCM, and
 AEAD_AES_128_CCM_8 assume equal proportions for <code>q</code> and <code>v</code>. The limits for
 AEAD_AES_128_GCM, AEAD_AES_256_GCM and AEAD_CHACHA20_POLY1305 assume the use
-of nonce randomization, like in TLS 1.3 <span>[<a href="#TLS" class="cite xref">TLS</a>]</span> and QUIC <span>[<a href="#RFC9001" class="cite xref">RFC9001</a>]</span>.<a href="#section-6.4-3" class="pilcrow">¶</a></p>
+of nonce randomization, like in TLS 1.3 <span>[<a href="#TLS" class="cite xref">TLS</a>]</span> and QUIC <span>[<a href="#RFC9001" class="cite xref">RFC9001</a>]</span>, and
+offline work limited to <code>o &lt;= 2^70</code>.<a href="#section-6.4-3" class="pilcrow">¶</a></p>
 <p id="section-6.4-4">The limits for AEAD_AES_128_GCM and AEAD_AES_256_GCM further depend on the
 maximum number (<code>B</code>) of 128-bit blocks encrypted by any single key. For example,
 limiting the number of messages (of size &lt;= 2<sup>7</sup> blocks) to at most
@@ -2134,7 +2171,8 @@ limiting the number of messages (of size &lt;= 2<sup>7</sup> blocks) to at most
 limits both <code>q</code> and <code>v</code> to 2<sup>42</sup> messages.<a href="#section-6.4-4" class="pilcrow">¶</a></p>
 <p id="section-6.4-5">Only the limits for AEAD_AES_128_CCM and AEAD_AES_128_CCM_8 depend on the number
 of used keys (<code>u</code>), which further reduces them considerably. If <code>v</code> is limited to 1,
-<code>q</code> can be increased to 2<sup>31</sup>/sqrt(u) for both CCM AEADs.<a href="#section-6.4-5" class="pilcrow">¶</a></p>
+<code>q</code> can be increased to 2<sup>31</sup>/sqrt(u) for both CCM AEADs. (In particular
+offline work is assumed limited to <code>o &lt;= 2^(k-50) / u = 2^78 / u</code>, see <a href="#offline-work" class="auto internal xref">Section 5.1</a>.)<a href="#section-6.4-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
