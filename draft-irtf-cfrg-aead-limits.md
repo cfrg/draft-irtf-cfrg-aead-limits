@@ -1074,10 +1074,13 @@ This document does not make any request of IANA.
 
 In addition to the authors of papers performing analysis of ciphers, thanks are
 owed to
+{{{Mihir Bellare}}},
+{{{Daniel J. Bernstein}}},
 {{{Scott Fluhrer}}},
 {{{Thomas Fossati}}},
 {{{John Mattsson}}},
 {{{David McGrew}}},
 {{{Yoav Nir}}},
 {{{Thomas Pornin}}}, and
-{{{Alexander Tereschenko}}} for helping making this document better.
+{{{Alexander Tereschenko}}}
+for helping making this document better.
