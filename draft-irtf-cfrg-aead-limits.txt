@@ -955,9 +955,9 @@ Table of Contents
 Acknowledgments
 
    In addition to the authors of papers performing analysis of ciphers,
-   thanks are owed to Scott Fluhrer, Thomas Fossati, John Mattsson,
-   David McGrew, Yoav Nir, Thomas Pornin, and Alexander Tereschenko for
-   helping making this document better.
+   thanks are owed to Mihir Bellare, Daniel J. Bernstein, Scott Fluhrer,
+   Thomas Fossati, John Mattsson, David McGrew, Yoav Nir, Thomas Pornin,
+   and Alexander Tereschenko for helping making this document better.
 
 Authors' Addresses
 
