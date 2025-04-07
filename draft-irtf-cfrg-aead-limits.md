@@ -181,13 +181,10 @@ specify limits on the number of records that can be protected, using the
 simplifying assumption that records are the same size; see {{Section 5.5 of
 TLS}} and {{Section 6.6 of RFC9001}}.
 
-Exceeding the determined usage limit can be avoided using rekeying.  Rekeying
-uses a lightweight transform to produce new keys.  Rekeying effectively resets
-progress toward single-key limits, allowing a session to be extended without
-degrading security.  Rekeying can also provide a measure of forward and
-backward (post-compromise) security.  {{?RFC8645}} contains a thorough survey
-of rekeying and the consequences of different design choices.  When considering
-rekeying, the multi-user limits should be applied.
+Exceeding the determined usage limit for a single key can be avoided using rekeying.
+Rekeying can also provide a measure of forward and backward (post-compromise) security.
+{{?RFC8645}} contains a thorough survey of rekeying and the consequences of different
+design choices.  When considering rekeying, the multi-user limits SHOULD be applied.
 
 Currently, AEAD limits and usage requirements are scattered among peer-reviewed
 papers, standards documents, and other RFCs. Determining the correct limits for
@@ -349,7 +346,7 @@ used in IETF protocols, including: AEAD_AES_128_GCM {{!RFC5116}}, AEAD_AES_256_G
 AEAD_AES_128_CCM {{!RFC5116}}, AEAD_CHACHA20_POLY1305 {{!RFC8439}}, AEAD_AES_128_CCM_8 {{!RFC6655}}.
 The limits in this section apply to using these schemes with a single key;
 for settings where multiple keys are deployed (for example, when rekeying within
-a connection), see {{mu-limits}}.
+a connection), the limits in {{mu-limits}} SHOULD be used.
 
 These algorithms, as cited, all define a nonce length (`r`) of 96 bits.  Some
 definitions of these AEAD algorithms allow for other nonce lengths, but the
