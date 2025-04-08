@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-03-30T02:04:43.428060+00:00",
+  "timestamp": "2025-04-08T01:57:57.456007+00:00",
   "repo": "cfrg/draft-irtf-cfrg-aead-limits",
   "labels": [
     {
@@ -4502,24 +4502,26 @@
       "id": "PR_kwDOD64iO86OSw6G",
       "title": "Add a note about offline work",
       "url": "https://github.com/cfrg/draft-irtf-cfrg-aead-limits/pull/70",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "martinthomson",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "I spent far too much time trying to find independent ways to reproduce djb's cost estimates, but was unable to make a significant dent in that. Still, that's not the central point here, so I'm keeping them.\r\n\r\nTo give an example, c8g.metal-24xl instances have a spot price of less than USD1 per hour (https://instances.vantage.sh/aws/ec2/c8g.metal-24xl). If we assume that those are capable of performance roughly on par with my own machine, but with 6 times the parallel capacity, then they should be easily capable of 3 billion blocks per second or 2^43 blocks per hour. Spending USD1MM would therefore mean 2^63 blocks, which is a long way short of the above estimate.",
       "createdAt": "2025-03-12T07:24:52Z",
-      "updatedAt": "2025-03-17T08:58:25Z",
+      "updatedAt": "2025-04-07T08:03:51Z",
       "baseRepository": "cfrg/draft-irtf-cfrg-aead-limits",
       "baseRefName": "main",
       "baseRefOid": "d3104b618ef9e83262e6bfe0ea60a7f2b1d3b212",
       "headRepository": "cfrg/draft-irtf-cfrg-aead-limits",
       "headRefName": "offline-work",
       "headRefOid": "6cc00b73badf3d7c4d360d4ffde24c16501bc764",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2025-04-07T08:03:50Z",
+      "mergedAt": "2025-04-07T08:03:50Z",
+      "mergedBy": "fxguenther",
+      "mergeCommit": {
+        "oid": "df22ba589c705b1bb09af7006dac3d8c76618e29"
+      },
       "comments": [],
       "reviews": [
         {
@@ -4562,24 +4564,26 @@
       "id": "PR_kwDOD64iO86OfAUx",
       "title": "Rekeying reworded",
       "url": "https://github.com/cfrg/draft-irtf-cfrg-aead-limits/pull/71",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "fxguenther",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "Reworded intro paragraph on rekeying to avoid confusion and emphasize that multi-key bounds SHOULD be used when rekeying.\r\n\r\n@martinthomson : Is \"SHOULD\" the right key word here?",
       "createdAt": "2025-03-13T10:23:04Z",
-      "updatedAt": "2025-03-15T03:47:51Z",
+      "updatedAt": "2025-04-07T08:04:15Z",
       "baseRepository": "cfrg/draft-irtf-cfrg-aead-limits",
       "baseRefName": "main",
       "baseRefOid": "d3104b618ef9e83262e6bfe0ea60a7f2b1d3b212",
       "headRepository": "fxguenther/draft-irtf-cfrg-aead-limits",
       "headRefName": "rekeying",
       "headRefOid": "9b20e1514d5d0c6d2b1e68cc22c2405bb95e3d22",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2025-04-07T08:04:15Z",
+      "mergedAt": "2025-04-07T08:04:15Z",
+      "mergedBy": "fxguenther",
+      "mergeCommit": {
+        "oid": "6d66ef11bb7094310e9099184454a2cc4550db0d"
+      },
       "comments": [],
       "reviews": [
         {
@@ -4602,24 +4606,26 @@
       "id": "PR_kwDOD64iO86OfBS6",
       "title": "Proof comments",
       "url": "https://github.com/cfrg/draft-irtf-cfrg-aead-limits/pull/72",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "fxguenther",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "Added details on PRP advantage being used for AES and PRF advantage being used for ChaCha20, to accompany the #70 Offline Work discussion.",
       "createdAt": "2025-03-13T10:24:31Z",
-      "updatedAt": "2025-03-15T03:46:57Z",
+      "updatedAt": "2025-04-07T08:04:31Z",
       "baseRepository": "cfrg/draft-irtf-cfrg-aead-limits",
       "baseRefName": "main",
       "baseRefOid": "d3104b618ef9e83262e6bfe0ea60a7f2b1d3b212",
       "headRepository": "fxguenther/draft-irtf-cfrg-aead-limits",
       "headRefName": "proof-comments",
       "headRefOid": "c43271314698d0a13ddf8e6ead8b892d1f3c764c",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2025-04-07T08:04:31Z",
+      "mergedAt": "2025-04-07T08:04:31Z",
+      "mergedBy": "fxguenther",
+      "mergeCommit": {
+        "oid": "29b23d9317fb87523fb3344155841bfa2fde957c"
+      },
       "comments": [],
       "reviews": [
         {
@@ -4636,6 +4642,34 @@
           "comments": []
         }
       ]
+    },
+    {
+      "number": 73,
+      "id": "PR_kwDOD64iO86RmQBz",
+      "title": "WGLC acks",
+      "url": "https://github.com/cfrg/draft-irtf-cfrg-aead-limits/pull/73",
+      "state": "MERGED",
+      "author": "fxguenther",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2025-04-07T09:19:22Z",
+      "updatedAt": "2025-04-07T09:43:25Z",
+      "baseRepository": "cfrg/draft-irtf-cfrg-aead-limits",
+      "baseRefName": "main",
+      "baseRefOid": "29b23d9317fb87523fb3344155841bfa2fde957c",
+      "headRepository": "fxguenther/draft-irtf-cfrg-aead-limits",
+      "headRefName": "wglc-acks",
+      "headRefOid": "31cb9600966bfda4d790fa6e89498844ff2d6625",
+      "closedAt": "2025-04-07T09:43:24Z",
+      "mergedAt": "2025-04-07T09:43:24Z",
+      "mergedBy": "fxguenther",
+      "mergeCommit": {
+        "oid": "b9a6f78d39efc90bbe550caac7e691c2cc250759"
+      },
+      "comments": [],
+      "reviews": []
     }
   ]
 }
