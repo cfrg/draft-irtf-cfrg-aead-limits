@@ -5,10 +5,10 @@
 Network Working Group                                         F. Günther
 Internet-Draft                              IBM Research Europe - Zurich
 Intended status: Informational                                M. Thomson
-Expires: 18 September 2025                                       Mozilla
+Expires: 20 December 2025                                        Mozilla
                                                               C. A. Wood
                                                               Cloudflare
-                                                           17 March 2025
+                                                            18 June 2025
 
 
                     Usage Limits on AEAD Algorithms
@@ -50,7 +50,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 18 September 2025.
+   This Internet-Draft will expire on 20 December 2025.
 
 Copyright Notice
 
@@ -68,37 +68,38 @@ Table of Contents
    1.  Introduction
    2.  Requirements Notation
    3.  Notation
-   4.  Calculating Limits
-     4.1.  Approximations
-   5.  Single-Key AEAD Limits
-     5.1.  Offline Work
-     5.2.  AEAD_AES_128_GCM and AEAD_AES_256_GCM
-       5.2.1.  Confidentiality Limit
-       5.2.2.  Integrity Limit
-     5.3.  AEAD_CHACHA20_POLY1305
-       5.3.1.  Confidentiality Limit
-       5.3.2.  Integrity Limit
-     5.4.  AEAD_AES_128_CCM
-       5.4.1.  Confidentiality Limit
-       5.4.2.  Integrity Limit
-     5.5.  AEAD_AES_128_CCM_8
-     5.6.  Single-Key Examples
-   6.  Multi-Key AEAD Limits
-     6.1.  AEAD_AES_128_GCM and AEAD_AES_256_GCM
-       6.1.1.  Authenticated Encryption Security Limit
-       6.1.2.  Confidentiality Limit
-       6.1.3.  Integrity Limit
-     6.2.  AEAD_CHACHA20_POLY1305
-       6.2.1.  Authenticated Encryption Security Limit
-       6.2.2.  Confidentiality Limit
-       6.2.3.  Integrity Limit
-     6.3.  AEAD_AES_128_CCM and AEAD_AES_128_CCM_8
-     6.4.  Multi-Key Examples
-   7.  Security Considerations
-   8.  IANA Considerations
-   9.  References
-     9.1.  Normative References
-     9.2.  Informative References
+   4.  Security Definitions
+   5.  Calculating Limits
+     5.1.  Approximations
+   6.  Single-Key AEAD Limits
+     6.1.  Offline Work
+     6.2.  AEAD_AES_128_GCM and AEAD_AES_256_GCM
+       6.2.1.  Confidentiality Limit
+       6.2.2.  Integrity Limit
+     6.3.  AEAD_CHACHA20_POLY1305
+       6.3.1.  Confidentiality Limit
+       6.3.2.  Integrity Limit
+     6.4.  AEAD_AES_128_CCM
+       6.4.1.  Confidentiality Limit
+       6.4.2.  Integrity Limit
+     6.5.  AEAD_AES_128_CCM_8
+     6.6.  Single-Key Examples
+   7.  Multi-Key AEAD Limits
+     7.1.  AEAD_AES_128_GCM and AEAD_AES_256_GCM
+       7.1.1.  Authenticated Encryption Security Limit
+       7.1.2.  Confidentiality Limit
+       7.1.3.  Integrity Limit
+     7.2.  AEAD_CHACHA20_POLY1305
+       7.2.1.  Authenticated Encryption Security Limit
+       7.2.2.  Confidentiality Limit
+       7.2.3.  Integrity Limit
+     7.3.  AEAD_AES_128_CCM and AEAD_AES_128_CCM_8
+     7.4.  Multi-Key Examples
+   8.  Security Considerations
+   9.  IANA Considerations
+   10. References
+     10.1.  Normative References
+     10.2.  Informative References
    Acknowledgments
    Authors' Addresses
 
@@ -156,14 +157,11 @@ Table of Contents
    simplifying assumption that records are the same size; see
    Section 5.5 of [TLS] and Section 6.6 of [RFC9001].
 
-   Exceeding the determined usage limit can be avoided using rekeying.
-   Rekeying uses a lightweight transform to produce new keys.  Rekeying
-   effectively resets progress toward single-key limits, allowing a
-   session to be extended without degrading security.  Rekeying can also
-   provide a measure of forward and backward (post-compromise) security.
-   [RFC8645] contains a thorough survey of rekeying and the consequences
-   of different design choices.  When considering rekeying, the multi-
-   user limits should be applied.
+   Exceeding the determined usage limit for a single key can be avoided
+   using rekeying.  Rekeying can also provide a measure of forward and
+   backward (post-compromise) security.  [RFC8645] contains a thorough
+   survey of rekeying and the consequences of different design choices.
+   When considering rekeying, the multi-user limits SHOULD be applied.
 
    Currently, AEAD limits and usage requirements are scattered among
    peer-reviewed papers, standards documents, and other RFCs.
@@ -227,6 +225,8 @@ Table of Contents
 
                              Table 1: Notation
 
+4.  Security Definitions
+
    For each AEAD algorithm, we define the chosen-plaintext
    confidentiality (IND-CPA) and ciphertext integrity (INT-CTXT)
    advantage roughly as the advantage an attacker has in breaking the
@@ -274,15 +274,30 @@ Table of Contents
    IA <= AEA
    AEA <= CA + IA
 
-   Each application requires an individual determination of limits in
-   order to keep CA and IA sufficiently small.  For instance, TLS aims
-   to keep CA below 2^-60 and IA below 2^-57 in the single-key setting;
-   see Section 5.5 of [TLS].
+   The AEADs described in this document all use ciphers in counter mode,
+   where a pseudorandom bitstream is XORed with plaintext to produce
+   ciphertext.
 
-4.  Calculating Limits
+   Confidentiality under definitions other than IND-CPA, such IND-CCA
+   definitions that allow an attacker to adaptivity select inputs,
+   depends critically on retaining integrity.  A cipher in counter mode
+   cannot guarantee confidentiality if integrity is not maintained.
 
-   Once upper bounds on CA, IA, or AEA are determined, this document
-   defines a process for determining three overall operational limits:
+   This combined risk to AE security is included in the definition of
+   AEA, which bounds the overall risk of attack on the AEAD.  This
+   document decomposes AEA into CA and IA as a way to help set specific
+   limits on different types of usage; AE security depends on retaining
+   both confidentiality and integrity.
+
+5.  Calculating Limits
+
+   Applications choose their own targets for AEA.  Each application
+   requires an analysis of how it uses an AEAD to determine what usage
+   limits will keep AEA sufficiently small.
+
+   Once an upper bound on AEA is determined (or bounds on CA and IA
+   separately), this document defines a process for determining three
+   overall operational limits:
 
    *  Confidentiality limit (CL): The number of messages an application
       can encrypt before giving the adversary a confidentiality
@@ -296,6 +311,13 @@ Table of Contents
       messages and number of ciphertexts an application can encrypt or
       decrypt before giving the adversary an authenticated encryption
       advantage higher than AEA.
+
+   As a general rule, a value for AEA can be evenly allocated to CA and
+   IA by halving the target.  This split allows for the computation of
+   separate limits, CL and IL.  Some applications might choose to set
+   different targets for CA and IA.  For example, TLS sets CA below
+   2^-60 and IA below 2^-57 in the single-key setting; see Section 5.5
+   of [TLS].
 
    When limits are expressed as a number of messages an application can
    encrypt or decrypt, this requires assumptions about the size of
@@ -324,7 +346,7 @@ Table of Contents
    (q and v respectively).  This requires that messages cannot exceed
    the maximum message size (L) that is chosen.
 
-4.1.  Approximations
+5.1.  Approximations
 
    This analysis assumes a message-based approach to setting limits.
    Implementations that use byte counting rather than message counting
@@ -357,7 +379,7 @@ Table of Contents
    guarantee that nonces will not repeat, a nonce-misuse resistant AEAD
    like AES-GCM-SIV [SIV] is likely to be a better choice.
 
-5.  Single-Key AEAD Limits
+6.  Single-Key AEAD Limits
 
    This section summarizes the confidentiality and integrity bounds and
    limits for modern AEAD algorithms used in IETF protocols, including:
@@ -366,7 +388,7 @@ Table of Contents
    AEAD_AES_128_CCM_8 [RFC6655].  The limits in this section apply to
    using these schemes with a single key; for settings where multiple
    keys are deployed (for example, when rekeying within a connection),
-   see Section 6.
+   the limits in Section 7 SHOULD be used.
 
    These algorithms, as cited, all define a nonce length (r) of 96 bits.
    Some definitions of these AEAD algorithms allow for other nonce
@@ -379,7 +401,7 @@ Table of Contents
    queries (q and v).  Alongside each advantage value, we also specify
    these bounds.
 
-5.1.  Offline Work
+6.1.  Offline Work
 
    Single-key analyses of different cipher modes typically concentrate
    on the advantage that an attacker might gain through the mode itself.
@@ -407,15 +429,18 @@ Table of Contents
    that a much greater advantage is likely achievable for a sufficiently
    motivated attacker.
 
-5.2.  AEAD_AES_128_GCM and AEAD_AES_256_GCM
+6.2.  AEAD_AES_128_GCM and AEAD_AES_256_GCM
 
-   The CL and IL values for AES-GCM are derived in [AEBounds] and
-   summarized below.  For this AEAD, n = 128 (the AES block length) and
-   t = 128 [GCM], [RFC5116].  In this example, the length s is the sum
-   of AAD and plaintext (in blocks of 128 bits), as described in
-   [GCMProofs].
+   The CL and IL values for AES-GCM are derived in [AEBounds], following
+   [GCMProofs], and summarized below.  For this AEAD, n = 128 (the AES
+   block length) and t = 128 [GCM], [RFC5116].  In this example, the
+   length s is the sum of AAD and plaintext (in blocks of 128 bits), as
+   described in [GCMProofs].
 
-5.2.1.  Confidentiality Limit
+6.2.1.  Confidentiality Limit
+
+   Applying Corollary 3 from [GCMProofs], assuming AES behaves like a
+   random permutation, the following bound applies:
 
    CA <= ((s + q + 1)^2) / 2^129
 
@@ -429,7 +454,7 @@ Table of Contents
 
    q <= (p^(1/2) * 2^(129/2) - 1) / (L + 1)
 
-5.2.2.  Integrity Limit
+6.2.2.  Integrity Limit
 
    Applying Equation (22) from [GCMProofs], in which the assumption of s
    + q + v < 2^64 ensures that the delta function cannot produce a value
@@ -446,7 +471,7 @@ Table of Contents
 
    v <= min(2^64, (p * 2^127) / (L + 1))
 
-5.3.  AEAD_CHACHA20_POLY1305
+6.3.  AEAD_CHACHA20_POLY1305
 
    The known single-user result for AEAD_CHACHA20_POLY1305
    [ChaCha20Poly1305-MU] (correcting the prior one from
@@ -456,14 +481,14 @@ Table of Contents
    is the sum of AAD and plaintext (in Poly1305 blocks of 128 bits), see
    [ChaCha20Poly1305-MU].
 
-5.3.1.  Confidentiality Limit
+6.3.1.  Confidentiality Limit
 
    CA <= 0
 
    This implies there is no limit beyond the PRF security of the
    underlying ChaCha20 block function.
 
-5.3.2.  Integrity Limit
+6.3.2.  Integrity Limit
 
    IA <= (v * (L' + 1)) / 2^103
 
@@ -471,7 +496,7 @@ Table of Contents
 
    v <= (p * 2^103) / (L' + 1)
 
-5.4.  AEAD_AES_128_CCM
+6.4.  AEAD_AES_128_CCM
 
    The CL and IL values for AEAD_AES_128_CCM are derived from
    [CCM-ANALYSIS] and specified in the QUIC-TLS mapping specification
@@ -491,7 +516,7 @@ Table of Contents
 
    For this AEAD, n = 128 (the AES block length) and t = 128.
 
-5.4.1.  Confidentiality Limit
+6.4.1.  Confidentiality Limit
 
    CA <= (2L * q)^2 / 2^n
       <= (2L * q)^2 / 2^128
@@ -500,7 +525,7 @@ Table of Contents
 
    q <= sqrt(p) * 2^63 / L
 
-5.4.2.  Integrity Limit
+6.4.2.  Integrity Limit
 
    IA <= v / 2^t + (2L * (v + q))^2 / 2^n
       <= v / 2^128 + (2L * (v + q))^2 / 2^128
@@ -514,7 +539,7 @@ Table of Contents
 
    v + q <= sqrt(p) * 2^63 / L
 
-5.5.  AEAD_AES_128_CCM_8
+6.5.  AEAD_AES_128_CCM_8
 
    The analysis in [CCM-ANALYSIS] also applies to this AEAD, but the
    reduced tag length of 64 bits changes the integrity limit calculation
@@ -538,11 +563,11 @@ Table of Contents
    Alternative allocations tend to greatly reduce q without
    significantly increasing v.
 
-5.6.  Single-Key Examples
+6.6.  Single-Key Examples
 
    An example protocol might choose to aim for a single-key CA and IA
    that is at most 2^-50.  (This in particular limits offline work to o
-   <= 2^(k-50), see Section 5.1.)  If the messages exchanged in the
+   <= 2^(k-50), see Section 6.1.)  If the messages exchanged in the
    protocol are at most a common Internet MTU of around 1500 bytes, then
    a value for L might be set to 2^7.  Table 2 shows limits for q and v
    that might be chosen under these conditions.
@@ -577,7 +602,7 @@ Table of Contents
    TLS, which terminate sessions on decryption failure.  If v is limited
    to 1, q can be increased to 2^31 for both CCM AEADs.
 
-6.  Multi-Key AEAD Limits
+7.  Multi-Key AEAD Limits
 
    In the multi-key setting, each user is assumed to have an independent
    and uniformly distributed key, though nonces may be re-used across
@@ -590,12 +615,12 @@ Table of Contents
    and the number of keys.
 
    This section summarizes the confidentiality and integrity bounds and
-   limits for the same algorithms as in Section 5 for the multi-key
+   limits for the same algorithms as in Section 6 for the multi-key
    setting.  The CL and IL values bound the total number of encryption
    and forgery queries (q and v).  Alongside each value, we also specify
    these bounds.
 
-6.1.  AEAD_AES_128_GCM and AEAD_AES_256_GCM
+7.1.  AEAD_AES_128_GCM and AEAD_AES_256_GCM
 
    Concrete multi-key bounds for AEAD_AES_128_GCM and AEAD_AES_256_GCM
    exist due to Theorem 4.3 in [GCM-MU2], which covers protocols with
@@ -618,7 +643,7 @@ Table of Contents
    the key length is k = 128 or k = 256 for AEAD_AES_128_GCM and
    AEAD_AES_256_GCM respectively.
 
-6.1.1.  Authenticated Encryption Security Limit
+7.1.1.  Authenticated Encryption Security Limit
 
    Protocols with nonce randomization have a limit of:
 
@@ -652,7 +677,7 @@ Table of Contents
    AEA <= (((q+v)*o + (q+v)^2) / 2^154) + ((q+v)*L*B / 2^127)
    q + v <= min( sqrt(p) * 2^76,  p * 2^126 / (L * B) )
 
-6.1.2.  Confidentiality Limit
+7.1.2.  Confidentiality Limit
 
    The confidentiality advantage is essentially dominated by the same
    term as the AE advantage for protocols with nonce randomization:
@@ -669,7 +694,7 @@ Table of Contents
    CA <= ((q*o + q^2) / 2^(k+26)) + (q*L*B / 2^127)
    q <= min( sqrt(p) * 2^76,  p * 2^126 / (L * B) )
 
-6.1.3.  Integrity Limit
+7.1.3.  Integrity Limit
 
    There is currently no dedicated integrity multi-key bound available
    for AEAD_AES_128_GCM and AEAD_AES_256_GCM.  The AE limit can be used
@@ -677,9 +702,9 @@ Table of Contents
 
    IA <= AEA
 
-   Section 6.1.1 therefore contains the integrity limits.
+   Section 7.1.1 therefore contains the integrity limits.
 
-6.2.  AEAD_CHACHA20_POLY1305
+7.2.  AEAD_CHACHA20_POLY1305
 
    Concrete multi-key bounds for AEAD_CHACHA20_POLY1305 are given in
    Theorem 7.2 in [ChaCha20Poly1305-MU], covering protocols with nonce
@@ -689,7 +714,7 @@ Table of Contents
    and r = 96; the length (L') is the sum of AAD and plaintext (in
    Poly1305 blocks of 128 bits).
 
-6.2.1.  Authenticated Encryption Security Limit
+7.2.1.  Authenticated Encryption Security Limit
 
    Protocols with nonce randomization have a limit of:
 
@@ -703,7 +728,7 @@ Table of Contents
    that the total number of forgery attempts (v) and maximum message
    length in Poly1305 blocks (L') is calculated across all used keys.
 
-6.2.2.  Confidentiality Limit
+7.2.2.  Confidentiality Limit
 
    While the AE advantage is dominated by the number of forgery attempts
    v, those are irrelevant for the confidentiality advantage.  The
@@ -719,16 +744,16 @@ Table of Contents
 
    q <= min( p * 2^247 - o, 2^100 )
 
-6.2.3.  Integrity Limit
+7.2.3.  Integrity Limit
 
    The AE limit for AEAD_CHACHA20_POLY1305 essentially is the integrity
    (multi-key) bound.  The former hence also applies to the latter:
 
    IA <= AEA
 
-   Section 6.2.1 therefore contains the integrity limits.
+   Section 7.2.1 therefore contains the integrity limits.
 
-6.3.  AEAD_AES_128_CCM and AEAD_AES_128_CCM_8
+7.3.  AEAD_AES_128_CCM and AEAD_AES_128_CCM_8
 
    There are currently no concrete multi-key bounds for AEAD_AES_128_CCM
    or AEAD_AES_128_CCM_8.  Thus, to account for the additional factor u,
@@ -736,7 +761,7 @@ Table of Contents
    integrity limits is replaced with p / u.
 
    Note that this factor also applies to the generic exhaustive key
-   search attack discussed for single-key analyses in Section 5.1.
+   search attack discussed for single-key analyses in Section 6.1.
 
    The multi-key integrity limit for AEAD_AES_128_CCM is as follows.
 
@@ -747,7 +772,7 @@ Table of Contents
 
    v * 2^64 + (2L * (v + q))^2 <= (p / u) * 2^128
 
-6.4.  Multi-Key Examples
+7.4.  Multi-Key Examples
 
    An example protocol might choose to aim for a multi-key AEA, CA, and
    IA that is at most 2^-50.  If the messages exchanged in the protocol
@@ -789,9 +814,9 @@ Table of Contents
    the number of used keys (u), which further reduces them considerably.
    If v is limited to 1, q can be increased to 2^31/sqrt(u) for both CCM
    AEADs.  (In particular offline work is assumed limited to o <=
-   2^(k-50) / u = 2^78 / u, see Section 5.1.)
+   2^(k-50) / u = 2^78 / u, see Section 6.1.)
 
-7.  Security Considerations
+8.  Security Considerations
 
    The different analyses of AEAD functions that this work is based upon
    generally assume that the underlying primitives are ideal.  For
@@ -825,13 +850,13 @@ Table of Contents
    As an example, [MF05] describes such multiple forgery attacks in the
    context of AES-GCM in more detail.
 
-8.  IANA Considerations
+9.  IANA Considerations
 
    This document does not make any request of IANA.
 
-9.  References
+10.  References
 
-9.1.  Normative References
+10.1.  Normative References
 
    [AEAD]     Rogaway, P., "Authenticated-Encryption with Associated-
               Data", September 2002,
@@ -911,7 +936,7 @@ Table of Contents
               Protocols", RFC 8439, DOI 10.17487/RFC8439, June 2018,
               <https://www.rfc-editor.org/rfc/rfc8439>.
 
-9.2.  Informative References
+10.2.  Informative References
 
    [MF05]     McGrew, D. A. and S. R. Fluhrer, "Multiple forgery attacks
               against Message Authentication Codes", 31 May 2005,
@@ -955,8 +980,9 @@ Table of Contents
 Acknowledgments
 
    In addition to the authors of papers performing analysis of ciphers,
-   thanks are owed to Scott Fluhrer, Thomas Fossati, John Mattsson,
-   David McGrew, Yoav Nir, Thomas Pornin, and Alexander Tereschenko for
+   thanks are owed to Mihir Bellare, Thomas Bellebaum, Daniel
+   J. Bernstein, Scott Fluhrer, Thomas Fossati, John Mattsson, David
+   McGrew, Yoav Nir, Thomas Pornin, and Alexander Tereschenko for
    helping making this document better.
 
 Authors' Addresses
