@@ -279,8 +279,9 @@ if integrity is not maintained.
 This combined risk to AE security is included in the definition of AEA,
 which bounds the overall risk of attack on the AEAD.
 This document decomposes AEA into CA and IA as a way
-to help set specific limits on different types of usage;
-AE security depends on retaining both confidentiality and integrity.
+to help set specific limits on different types of usage.
+AE security depends on retaining both confidentiality and integrity,
+and SHOULD be the default basis for setting limits.
 
 
 # Calculating Limits
