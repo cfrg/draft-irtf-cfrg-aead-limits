@@ -222,6 +222,9 @@ This document defines limitations in part using the quantities in
 | B | Maximum number of blocks encrypted by any key (multi-key setting only) |
 {: #notation-table title="Notation"}
 
+
+# Security Definitions
+
 For each AEAD algorithm, we define the chosen-plaintext confidentiality (IND-CPA) and ciphertext
 integrity (INT-CTXT) advantage roughly as the advantage an attacker has in breaking the
 corresponding classical security property for the algorithm. An IND-CPA attacker
@@ -264,14 +267,31 @@ IA <= AEA
 AEA <= CA + IA
 ~~~
 
-Each application requires an individual determination of limits in order to keep CA
-and IA sufficiently small.  For instance, TLS aims to keep CA below 2<sup>-60</sup> and IA
-below 2<sup>-57</sup> in the single-key setting; see {{Section 5.5 of TLS}}.
+The AEADs described in this document all use ciphers in counter mode,
+where a pseudorandom bitstream is XORed with plaintext to produce ciphertext.
+
+Confidentiality under definitions other than IND-CPA,
+such IND-CCA definitions that allow an attacker to adaptivity select inputs,
+depends critically on retaining integrity.
+A cipher in counter mode cannot guarantee confidentiality
+if integrity is not maintained.
+
+This combined risk to AE security is included in the definition of AEA,
+which bounds the overall risk of attack on the AEAD.
+This document decomposes AEA into CA and IA as a way
+to help set specific limits on different types of usage.
+AE security depends on retaining both confidentiality and integrity,
+and SHOULD be the default basis for setting limits.
+
 
 # Calculating Limits
 
-Once upper bounds on CA, IA, or AEA are determined, this document
-defines a process for determining three overall operational limits:
+Applications choose their own targets for AEA.
+Each application requires an analysis of how it uses an AEAD
+to determine what usage limits will keep AEA sufficiently small.
+
+Once an upper bound on AEA is determined (or bounds on CA and IA separately),
+this document defines a process for determining three overall operational limits:
 
 - Confidentiality limit (CL): The number of messages an application can encrypt
   before giving the adversary a confidentiality advantage higher than CA.
@@ -283,6 +303,13 @@ defines a process for determining three overall operational limits:
 - Authenticated encryption limit (AEL): The combined number of messages and
   number of ciphertexts an application can encrypt or decrypt before giving the
   adversary an authenticated encryption advantage higher than AEA.
+
+As a general rule, a value for AEA can be evenly allocated to CA and IA
+by halving the target.  This split allows for the computation of separate limits,
+CL and IL.
+Some applications might choose to set different targets for CA and IA.
+For example, TLS sets CA below 2<sup>-60</sup> and IA below 2<sup>-57</sup>
+in the single-key setting; see {{Section 5.5 of TLS}}.
 
 When limits are expressed as a number of messages an application can encrypt or
 decrypt, this requires assumptions about the size of messages and any
@@ -1075,6 +1102,7 @@ This document does not make any request of IANA.
 In addition to the authors of papers performing analysis of ciphers, thanks are
 owed to
 {{{Mihir Bellare}}},
+{{{Thomas Bellebaum}}},
 {{{Daniel J. Bernstein}}},
 {{{Scott Fluhrer}}},
 {{{Thomas Fossati}}},
