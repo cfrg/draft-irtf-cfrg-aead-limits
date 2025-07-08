@@ -5,10 +5,10 @@
 Network Working Group                                         F. Günther
 Internet-Draft                              IBM Research Europe - Zurich
 Intended status: Informational                                M. Thomson
-Expires: 20 December 2025                                        Mozilla
+Expires: 9 January 2026                                          Mozilla
                                                               C. A. Wood
                                                               Cloudflare
-                                                            18 June 2025
+                                                             8 July 2025
 
 
                     Usage Limits on AEAD Algorithms
@@ -50,7 +50,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 20 December 2025.
+   This Internet-Draft will expire on 9 January 2026.
 
 Copyright Notice
 
@@ -286,8 +286,9 @@ Table of Contents
    This combined risk to AE security is included in the definition of
    AEA, which bounds the overall risk of attack on the AEAD.  This
    document decomposes AEA into CA and IA as a way to help set specific
-   limits on different types of usage; AE security depends on retaining
-   both confidentiality and integrity.
+   limits on different types of usage.  AE security depends on retaining
+   both confidentiality and integrity, and SHOULD be the default basis
+   for setting limits.
 
 5.  Calculating Limits
 
