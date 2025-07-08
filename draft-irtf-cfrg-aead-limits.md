@@ -99,6 +99,14 @@ normative:
       - ins: J. Govinden
       - ins: F. Günther
       - ins: K. G. Paterson
+  CCM-MU:
+    title: "Tight Multi-User Security of CCM and Enhancement by Tag-Based Key Derivation Applied to GCM and CCM"
+    target: https://eprint.iacr.org/2025/953.pdf
+    date: 2018-10-15
+    author:
+      - ins: Y. Naito
+      - ins: Y. Sasaki
+      - ins: T. Sugawara
 
 
 informative:
@@ -220,6 +228,7 @@ This document defines limitations in part using the quantities in
 | o | Offline adversary work (measured in number of encryption and decryption queries) |
 | u | Number of keys (multi-key setting only) |
 | B | Maximum number of blocks encrypted by any key (multi-key setting only) |
+| C | Maximum number of blocks encrypted or decrypted by any key (multi-key setting only) |
 {: #notation-table title="Notation"}
 
 For each AEAD algorithm, we define the chosen-plaintext confidentiality (IND-CPA) and ciphertext
@@ -526,7 +535,7 @@ For this AEAD, `n = 128` (the AES block length) and `t = 128`.
 
 ~~~
 CA <= (2L * q)^2 / 2^n
-   <= (2L * q)^2 / 2^128
+    = (2L * q)^2 / 2^128
 ~~~
 
 This implies the following limit:
@@ -539,7 +548,7 @@ q <= sqrt(p) * 2^63 / L
 
 ~~~
 IA <= v / 2^t + (2L * (v + q))^2 / 2^n
-   <= v / 2^128 + (2L * (v + q))^2 / 2^128
+    = v / 2^128 + (2L * (v + q))^2 / 2^128
 ~~~
 
 This implies the following limit:
@@ -562,7 +571,7 @@ length of 64 bits changes the integrity limit calculation considerably.
 
 ~~~
 IA <= v / 2^t + (2L * (v + q))^2 / 2^n
-   <= v / 2^64 + (2L * (v + q))^2 / 2^128
+    = v / 2^64 + (2L * (v + q))^2 / 2^128
 ~~~
 
 This results in reducing the limit on `v` by a factor of 2<sup>64</sup>.
@@ -978,25 +987,68 @@ IA <= AEA
 
 ## AEAD_AES_128_CCM and AEAD_AES_128_CCM_8
 
-There are currently no concrete multi-key bounds for AEAD_AES_128_CCM or
-AEAD_AES_128_CCM_8. Thus, to account for the additional
-factor `u`, i.e., the number of keys, each `p` term in the confidentiality and
-integrity limits is replaced with `p / u`.
+Concrete multi-key bounds for AEAD_AES_128_CCM and AEAD_AES_128_CCM_8 are given
+in Theorem 7.2 in {{CCM-MU}}, covering protocols with nonce randomization like
+TLS 1.3 {{TLS}} and QUIC {{?RFC9001}}.
 
-Note that this factor also applies to the generic exhaustive key search attack
-discussed for single-key analyses in {{offline-work}}.
+For this AEAD, `n = 128` (the AES block length), `k = 128`, `r = 96`, and the tag
+length is `t = 128` (for AEAD_AES_128_CCM) or `t = 64` (for AEAD_AES_128_CCM_8).
 
-The multi-key integrity limit for AEAD_AES_128_CCM is as follows.
+<!--
+    From {{CCM-MU}} Theorem 7.2; for d-bound adversaries assuming nonce randomization.
+
+    Let:
+        - #blocks encrypted/verified overall:   \sigma = (q + v) * L
+        - #blocks encrypted/verified per user:  \sigma_u = C
+        - nonce length r = 96, block length n = 128
+        - d-bound for d = 96 / log(96) ~ 15,
+          ensured up to q = 2^96 total encryption queries
+
+    Following the discussion of Theorem 7.2, the dominant terms in the bound are:
+        - 1st term:   q_d / 2^t
+        - 2nd term:   \sigma_u * \sigma / 2^n
+        - 3rd term:   (d + n/log(n))*o / 2^k  <=  o / 2^(k-6)
+
+    Going from d-bound adversaries to unbounded introduces an additional term of
+      2^-(\delta * r)
+    ({{ChaCha20Poly1305-MU}} Theorem 7.1)
+    for which \delta can be chosen as \delta = 2 for d < 2^9.
+    As d < 2^9 does not affect the above simplifications, this makes this
+    term negligible (2^-192 for nonce length r=96), and allows to omit it.
+-->
+Protocols with nonce randomization have a limit of:
 
 ~~~
-v + q <= sqrt(p / u) * 2^63 / L
+AEA <= (q+v)*L*B / 2^127 + v / 2^t + o / 2^(k-6)
 ~~~
 
-Likewise, the multi-key integrity limit for AEAD_AES_128_CCM_8 is as follows.
+Assuming `o <= q + v` (i.e., that the attacker does not spend more work than all
+legitimate protocol users together), this implies the following two limits
+(distributing the attack probability evenly among the first two terms):
+
+<!--
+    Simplifying
+      p >= (q+v)*L*B / 2^n + v / 2^t
+
+    to
+
+      p/2 >= (q+v)*L*C / 2^n
+      AND
+      p/2 >= v / 2^t
+
+    (and assuming o <= q+v meaning the 3rd term is dominated)
+    yields, for n = 128,
+
+      q+v <= p * 2^127 / (L * C)
+      AND
+      v <= p * 2^(t-1)
+-->
 
 ~~~
-v * 2^64 + (2L * (v + q))^2 <= (p / u) * 2^128
+q + v <= p * 2^127 / (L * C)
+v <= p * 2^(t-1)
 ~~~
+
 
 
 ## Multi-Key Examples
@@ -1012,26 +1064,22 @@ might be chosen under these conditions.
 | AEAD_AES_128_GCM       | 2<sup>69</sup>/B         | 2<sup>69</sup>/B       |
 | AEAD_AES_256_GCM       | 2<sup>69</sup>/B         | 2<sup>69</sup>/B       |
 | AEAD_CHACHA20_POLY1305 | 2<sup>100</sup>          | 2<sup>46</sup>         |
-| AEAD_AES_128_CCM       | 2<sup>30</sup>/sqrt(u)   | 2<sup>30</sup>/sqrt(u) |
-| AEAD_AES_128_CCM_8     | 2<sup>30.9</sup>/sqrt(u) | 2<sup>13</sup>/u |
+| AEAD_AES_128_CCM       | 2<sup>69</sup>/C         | 2<sup>69</sup>/C       |
+| AEAD_AES_128_CCM_8     | 2<sup>69</sup>/C         | 2<sup>13</sup>         |
 {: #ex-table-mu title="Example multi-key limits; see text for parameter details"}
 
 The limits for AEAD_AES_128_GCM, AEAD_AES_256_GCM, AEAD_AES_128_CCM, and
 AEAD_AES_128_CCM_8 assume equal proportions for `q` and `v`. The limits for
-AEAD_AES_128_GCM, AEAD_AES_256_GCM and AEAD_CHACHA20_POLY1305 assume the use
+all schemes assume the use
 of nonce randomization, like in TLS 1.3 {{TLS}} and QUIC {{?RFC9001}}, and
 offline work limited to `o <= 2^70`.
 
-The limits for AEAD_AES_128_GCM and AEAD_AES_256_GCM further depend on the
-maximum number (`B`) of 128-bit blocks encrypted by any single key. For example,
+The limits for AEAD_AES_128_GCM, AEAD_AES_256_GCM, AEAD_AES_128_CCM and
+AEAD_AES_128_CCM_8 further depend on the maximum number (`B` resp. `C`) of 128-bit
+blocks encrypted resp. encrypted or decrypted by any single key. For example,
 limiting the number of messages (of size <= 2<sup>7</sup> blocks) to at most
 2<sup>20</sup> (about a million) per key results in `B` of 2<sup>27</sup>, which
-limits both `q` and `v` to 2<sup>42</sup> messages.
-
-Only the limits for AEAD_AES_128_CCM and AEAD_AES_128_CCM_8 depend on the number
-of used keys (`u`), which further reduces them considerably. If `v` is limited to 1,
-`q` can be increased to 2<sup>31</sup>/sqrt(u) for both CCM AEADs. (In particular
-offline work is assumed limited to `o <= 2^(k-50) / u = 2^78 / u`, see {{offline-work}}.)
+limits both `q` and `v` to 2<sup>42</sup> messages for GCM.
 
 
 # Security Considerations {#sec-considerations}
@@ -1078,6 +1126,7 @@ owed to
 {{{Daniel J. Bernstein}}},
 {{{Scott Fluhrer}}},
 {{{Thomas Fossati}}},
+{{{Jérôme Govinden}}},
 {{{John Mattsson}}},
 {{{David McGrew}}},
 {{{Yoav Nir}}},
