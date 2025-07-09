@@ -1077,9 +1077,11 @@ offline work limited to `o <= 2^70`.
 The limits for AEAD_AES_128_GCM, AEAD_AES_256_GCM, AEAD_AES_128_CCM and
 AEAD_AES_128_CCM_8 further depend on the maximum number (`B` resp. `C`) of 128-bit
 blocks encrypted resp. encrypted or decrypted by any single key. For example,
-limiting the number of messages (of size <= 2<sup>7</sup> blocks) to at most
-2<sup>20</sup> (about a million) per key results in `B` of 2<sup>27</sup>, which
-limits both `q` and `v` to 2<sup>42</sup> messages for GCM.
+limiting the number of messages (of size <= 2<sup>7</sup> blocks) encrypted,
+resp. encrypted or decrypted, to at most 2<sup>20</sup> (about a million) per key
+results in `B` resp. `C` of 2<sup>27</sup>, which
+limits both `q` and `v` to 2<sup>42</sup> messages for GCM and CCM, except
+for CCM_8 where the short tag length limits `v` to 2<sup>13</sup>.
 
 
 # Security Considerations {#sec-considerations}
