@@ -5,10 +5,10 @@
 Network Working Group                                         F. Günther
 Internet-Draft                              IBM Research Europe - Zurich
 Intended status: Informational                                M. Thomson
-Expires: 9 January 2026                                          Mozilla
+Expires: 10 January 2026                                         Mozilla
                                                               C. A. Wood
                                                               Cloudflare
-                                                             8 July 2025
+                                                             9 July 2025
 
 
                     Usage Limits on AEAD Algorithms
@@ -50,7 +50,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 9 January 2026.
+   This Internet-Draft will expire on 10 January 2026.
 
 Copyright Notice
 
@@ -187,43 +187,45 @@ Table of Contents
    This document defines limitations in part using the quantities in
    Table 1 below.
 
-          +========+============================================+
-          | Symbol | Description                                |
-          +========+============================================+
-          |      n | AEAD block length (in bits), of the        |
-          |        | underlying block cipher                    |
-          +--------+--------------------------------------------+
-          |      k | AEAD key length (in bits)                  |
-          +--------+--------------------------------------------+
-          |      r | AEAD nonce length (in bits)                |
-          +--------+--------------------------------------------+
-          |      t | Size of the authentication tag (in bits)   |
-          +--------+--------------------------------------------+
-          |      L | Maximum length of each message, including  |
-          |        | both plaintext and AAD (in blocks)         |
-          +--------+--------------------------------------------+
-          |      s | Total plaintext length in all messages (in |
-          |        | blocks)                                    |
-          +--------+--------------------------------------------+
-          |      q | Number of protected messages (AEAD         |
-          |        | encryption invocations)                    |
-          +--------+--------------------------------------------+
-          |      v | Number of attacker forgery attempts        |
-          |        | (failed AEAD decryption invocations + 1)   |
-          +--------+--------------------------------------------+
-          |      p | Upper bound on adversary attack            |
-          |        | probability                                |
-          +--------+--------------------------------------------+
-          |      o | Offline adversary work (measured in number |
-          |        | of encryption and decryption queries)      |
-          +--------+--------------------------------------------+
-          |      u | Number of keys (multi-key setting only)    |
-          +--------+--------------------------------------------+
-          |      B | Maximum number of blocks encrypted by any  |
-          |        | key (multi-key setting only)               |
-          +--------+--------------------------------------------+
+        +========+===============================================+
+        | Symbol | Description                                   |
+        +========+===============================================+
+        |      n | AEAD block length (in bits), of the           |
+        |        | underlying block cipher                       |
+        +--------+-----------------------------------------------+
+        |      k | AEAD key length (in bits)                     |
+        +--------+-----------------------------------------------+
+        |      r | AEAD nonce length (in bits)                   |
+        +--------+-----------------------------------------------+
+        |      t | Size of the authentication tag (in bits)      |
+        +--------+-----------------------------------------------+
+        |      L | Maximum length of each message, including     |
+        |        | both plaintext and AAD (in blocks)            |
+        +--------+-----------------------------------------------+
+        |      s | Total plaintext length in all messages (in    |
+        |        | blocks)                                       |
+        +--------+-----------------------------------------------+
+        |      q | Number of protected messages (AEAD encryption |
+        |        | invocations)                                  |
+        +--------+-----------------------------------------------+
+        |      v | Number of attacker forgery attempts (failed   |
+        |        | AEAD decryption invocations + 1)              |
+        +--------+-----------------------------------------------+
+        |      p | Upper bound on adversary attack probability   |
+        +--------+-----------------------------------------------+
+        |      o | Offline adversary work (measured in number of |
+        |        | encryption and decryption queries)            |
+        +--------+-----------------------------------------------+
+        |      u | Number of keys (multi-key setting only)       |
+        +--------+-----------------------------------------------+
+        |      B | Maximum number of blocks encrypted by any key |
+        |        | (multi-key setting only)                      |
+        +--------+-----------------------------------------------+
+        |      C | Maximum number of blocks encrypted or         |
+        |        | decrypted by any key (multi-key setting only) |
+        +--------+-----------------------------------------------+
 
-                             Table 1: Notation
+                            Table 1: Notation
 
 4.  Security Definitions
 
@@ -520,7 +522,7 @@ Table of Contents
 6.4.1.  Confidentiality Limit
 
    CA <= (2L * q)^2 / 2^n
-      <= (2L * q)^2 / 2^128
+       = (2L * q)^2 / 2^128
 
    This implies the following limit:
 
@@ -529,7 +531,7 @@ Table of Contents
 6.4.2.  Integrity Limit
 
    IA <= v / 2^t + (2L * (v + q))^2 / 2^n
-      <= v / 2^128 + (2L * (v + q))^2 / 2^128
+       = v / 2^128 + (2L * (v + q))^2 / 2^128
 
    This implies the following limit:
 
@@ -547,7 +549,7 @@ Table of Contents
    considerably.
 
    IA <= v / 2^t + (2L * (v + q))^2 / 2^n
-      <= v / 2^64 + (2L * (v + q))^2 / 2^128
+       = v / 2^64 + (2L * (v + q))^2 / 2^128
 
    This results in reducing the limit on v by a factor of 2^64.
 
@@ -756,22 +758,25 @@ Table of Contents
 
 7.3.  AEAD_AES_128_CCM and AEAD_AES_128_CCM_8
 
-   There are currently no concrete multi-key bounds for AEAD_AES_128_CCM
-   or AEAD_AES_128_CCM_8.  Thus, to account for the additional factor u,
-   i.e., the number of keys, each p term in the confidentiality and
-   integrity limits is replaced with p / u.
+   Concrete multi-key bounds for AEAD_AES_128_CCM and AEAD_AES_128_CCM_8
+   are given in Theorem 7.2 in [CCM-MU], covering protocols with nonce
+   randomization like TLS 1.3 [TLS] and QUIC [RFC9001].
 
-   Note that this factor also applies to the generic exhaustive key
-   search attack discussed for single-key analyses in Section 6.1.
+   For this AEAD, n = 128 (the AES block length), k = 128, r = 96, and
+   the tag length is t = 128 (for AEAD_AES_128_CCM) or t = 64 (for
+   AEAD_AES_128_CCM_8).
 
-   The multi-key integrity limit for AEAD_AES_128_CCM is as follows.
+   Protocols with nonce randomization have a limit of:
 
-   v + q <= sqrt(p / u) * 2^63 / L
+   AEA <= (q+v)*L*B / 2^127 + v / 2^t + o / 2^(k-6)
 
-   Likewise, the multi-key integrity limit for AEAD_AES_128_CCM_8 is as
-   follows.
+   Assuming o <= q + v (i.e., that the attacker does not spend more work
+   than all legitimate protocol users together), this implies the
+   following two limits (distributing the attack probability evenly
+   among the first two terms):
 
-   v * 2^64 + (2L * (v + q))^2 <= (p / u) * 2^128
+   q + v <= p * 2^127 / (L * C)
+   v <= p * 2^(t-1)
 
 7.4.  Multi-Key Examples
 
@@ -781,41 +786,37 @@ Table of Contents
    for L might be set to 2^7.  Table 3 shows limits for q and v across
    all keys that might be chosen under these conditions.
 
-        +========================+================+==============+
-        | AEAD                   |      Maximum q |    Maximum v |
-        +========================+================+==============+
-        | AEAD_AES_128_GCM       |         2^69/B |       2^69/B |
-        +------------------------+----------------+--------------+
-        | AEAD_AES_256_GCM       |         2^69/B |       2^69/B |
-        +------------------------+----------------+--------------+
-        | AEAD_CHACHA20_POLY1305 |          2^100 |         2^46 |
-        +------------------------+----------------+--------------+
-        | AEAD_AES_128_CCM       |   2^30/sqrt(u) | 2^30/sqrt(u) |
-        +------------------------+----------------+--------------+
-        | AEAD_AES_128_CCM_8     | 2^30.9/sqrt(u) |       2^13/u |
-        +------------------------+----------------+--------------+
+            +========================+===========+===========+
+            | AEAD                   | Maximum q | Maximum v |
+            +========================+===========+===========+
+            | AEAD_AES_128_GCM       |    2^69/B |    2^69/B |
+            +------------------------+-----------+-----------+
+            | AEAD_AES_256_GCM       |    2^69/B |    2^69/B |
+            +------------------------+-----------+-----------+
+            | AEAD_CHACHA20_POLY1305 |     2^100 |      2^46 |
+            +------------------------+-----------+-----------+
+            | AEAD_AES_128_CCM       |    2^69/C |    2^69/C |
+            +------------------------+-----------+-----------+
+            | AEAD_AES_128_CCM_8     |    2^69/C |      2^13 |
+            +------------------------+-----------+-----------+
 
-             Table 3: Example multi-key limits; see text for
-                            parameter details
+               Table 3: Example multi-key limits; see text
+                          for parameter details
 
    The limits for AEAD_AES_128_GCM, AEAD_AES_256_GCM, AEAD_AES_128_CCM,
    and AEAD_AES_128_CCM_8 assume equal proportions for q and v.  The
-   limits for AEAD_AES_128_GCM, AEAD_AES_256_GCM and
-   AEAD_CHACHA20_POLY1305 assume the use of nonce randomization, like in
+   limits for all schemes assume the use of nonce randomization, like in
    TLS 1.3 [TLS] and QUIC [RFC9001], and offline work limited to o <=
    2^70.
 
-   The limits for AEAD_AES_128_GCM and AEAD_AES_256_GCM further depend
-   on the maximum number (B) of 128-bit blocks encrypted by any single
-   key.  For example, limiting the number of messages (of size <= 2^7
-   blocks) to at most 2^20 (about a million) per key results in B of
-   2^27, which limits both q and v to 2^42 messages.
-
-   Only the limits for AEAD_AES_128_CCM and AEAD_AES_128_CCM_8 depend on
-   the number of used keys (u), which further reduces them considerably.
-   If v is limited to 1, q can be increased to 2^31/sqrt(u) for both CCM
-   AEADs.  (In particular offline work is assumed limited to o <=
-   2^(k-50) / u = 2^78 / u, see Section 6.1.)
+   The limits for AEAD_AES_128_GCM, AEAD_AES_256_GCM, AEAD_AES_128_CCM
+   and AEAD_AES_128_CCM_8 further depend on the maximum number (B resp.
+   C) of 128-bit blocks encrypted resp. encrypted or decrypted by any
+   single key.  For example, limiting the number of messages (of size <=
+   2^7 blocks) encrypted, resp. encrypted or decrypted, to at most 2^20
+   (about a million) per key results in B resp. C of 2^27, which limits
+   both q and v to 2^42 messages for GCM and CCM, except for CCM_8 where
+   the short tag length limits v to 2^13.
 
 8.  Security Considerations
 
@@ -879,6 +880,11 @@ Table of Contents
               76-93, DOI 10.1007/3-540-36492-7_7, ISBN ["9783540006220",
               "9783540364924"], 2003,
               <https://doi.org/10.1007/3-540-36492-7_7>.
+
+   [CCM-MU]   Naito, Y., Sasaki, Y., and T. Sugawara, "Tight Multi-User
+              Security of CCM and Enhancement by Tag-Based Key
+              Derivation Applied to GCM and CCM", 15 October 2018,
+              <https://eprint.iacr.org/2025/953.pdf>.
 
    [ChaCha20Poly1305-MU]
               Degabriele, J. P., Govinden, J., Günther, F., and K. G.
@@ -982,9 +988,9 @@ Acknowledgments
 
    In addition to the authors of papers performing analysis of ciphers,
    thanks are owed to Mihir Bellare, Thomas Bellebaum, Daniel
-   J. Bernstein, Scott Fluhrer, Thomas Fossati, John Mattsson, David
-   McGrew, Yoav Nir, Thomas Pornin, and Alexander Tereschenko for
-   helping making this document better.
+   J. Bernstein, Scott Fluhrer, Thomas Fossati, Jérôme Govinden, John
+   Mattsson, David McGrew, Yoav Nir, Thomas Pornin, and Alexander
+   Tereschenko for helping making this document better.
 
 Authors' Addresses
 
