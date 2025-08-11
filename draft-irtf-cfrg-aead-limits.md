@@ -280,7 +280,7 @@ The AEADs described in this document all use ciphers in counter mode,
 where a pseudorandom bitstream is XORed with plaintext to produce ciphertext.
 
 Confidentiality under definitions other than IND-CPA,
-such IND-CCA definitions that allow an attacker to adaptivity select inputs,
+such IND-CCA definitions that allows an active attacker to adaptivity decrypt ciphertexts,
 depends critically on retaining integrity.
 A cipher in counter mode cannot guarantee confidentiality
 if integrity is not maintained.
@@ -315,7 +315,9 @@ this document defines a process for determining three overall operational limits
 
 As a general rule, a value for AEA can be evenly allocated to CA and IA
 by halving the target.  This split allows for the computation of separate limits,
-CL and IL.
+CL and IL. For example, given a value `AEA <= 2^-60` one may choose
+`IA <= 2^-61` and `CA <= 2^-61`.
+
 Some applications might choose to set different targets for CA and IA.
 For example, TLS sets CA below 2<sup>-60</sup> and IA below 2<sup>-57</sup>
 in the single-key setting; see {{Section 5.5 of TLS}}.
