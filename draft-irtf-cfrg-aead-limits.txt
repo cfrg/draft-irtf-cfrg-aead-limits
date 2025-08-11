@@ -5,10 +5,10 @@
 Network Working Group                                         F. Günther
 Internet-Draft                              IBM Research Europe - Zurich
 Intended status: Informational                                M. Thomson
-Expires: 10 January 2026                                         Mozilla
+Expires: 12 February 2026                                        Mozilla
                                                               C. A. Wood
                                                               Cloudflare
-                                                             9 July 2025
+                                                          11 August 2025
 
 
                     Usage Limits on AEAD Algorithms
@@ -50,7 +50,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 10 January 2026.
+   This Internet-Draft will expire on 12 February 2026.
 
 Copyright Notice
 
@@ -281,9 +281,10 @@ Table of Contents
    ciphertext.
 
    Confidentiality under definitions other than IND-CPA, such IND-CCA
-   definitions that allow an attacker to adaptivity select inputs,
-   depends critically on retaining integrity.  A cipher in counter mode
-   cannot guarantee confidentiality if integrity is not maintained.
+   definitions that allows an active attacker to adaptivity decrypt
+   ciphertexts, depends critically on retaining integrity.  A cipher in
+   counter mode cannot guarantee confidentiality if integrity is not
+   maintained.
 
    This combined risk to AE security is included in the definition of
    AEA, which bounds the overall risk of attack on the AEAD.  This
@@ -317,10 +318,12 @@ Table of Contents
 
    As a general rule, a value for AEA can be evenly allocated to CA and
    IA by halving the target.  This split allows for the computation of
-   separate limits, CL and IL.  Some applications might choose to set
-   different targets for CA and IA.  For example, TLS sets CA below
-   2^-60 and IA below 2^-57 in the single-key setting; see Section 5.5
-   of [TLS].
+   separate limits, CL and IL.  For example, given a value AEA <= 2^-60
+   one may choose IA <= 2^-61 and CA <= 2^-61.
+
+   Some applications might choose to set different targets for CA and
+   IA.  For example, TLS sets CA below 2^-60 and IA below 2^-57 in the
+   single-key setting; see Section 5.5 of [TLS].
 
    When limits are expressed as a number of messages an application can
    encrypt or decrypt, this requires assumptions about the size of

@@ -16,13 +16,13 @@ guidance for users of common AEAD functions about how to limit the use of keys
 in order to bound the advantage given to an attacker.  It considers limits in
 both single- and multi-key settings. 
     " name="description">
-<meta content="xml2rfc 3.29.0" name="generator">
+<meta content="xml2rfc 3.30.0" name="generator">
 <meta content="safe" name="keyword">
 <meta content="limits" name="keyword">
 <meta content="crypto" name="keyword">
 <meta content="draft-irtf-cfrg-aead-limits-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.29.0
+  xml2rfc 3.30.0
     Python 3.12.11
     ConfigArgParse 1.7
     google-i18n-address 3.1.1
@@ -1053,11 +1053,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">AEAD Limits</td>
-<td class="right">July 2025</td>
+<td class="right">August 2025</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Günther, et al.</td>
-<td class="center">Expires 10 January 2026</td>
+<td class="center">Expires 12 February 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1070,12 +1070,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-irtf-cfrg-aead-limits-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-07-09" class="published">9 July 2025</time>
+<time datetime="2025-08-11" class="published">11 August 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-01-10">10 January 2026</time></dd>
+<dd class="expires"><time datetime="2026-02-12">12 February 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1133,7 +1133,7 @@ both single- and multi-key settings.<a href="#section-abstract-1" class="pilcrow
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 10 January 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 12 February 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1495,7 +1495,7 @@ AEA &lt;= CA + IA
 <p id="section-4-6">The AEADs described in this document all use ciphers in counter mode,
 where a pseudorandom bitstream is XORed with plaintext to produce ciphertext.<a href="#section-4-6" class="pilcrow">¶</a></p>
 <p id="section-4-7">Confidentiality under definitions other than IND-CPA,
-such IND-CCA definitions that allow an attacker to adaptivity select inputs,
+such IND-CCA definitions that allows an active attacker to adaptivity decrypt ciphertexts,
 depends critically on retaining integrity.
 A cipher in counter mode cannot guarantee confidentiality
 if integrity is not maintained.<a href="#section-4-7" class="pilcrow">¶</a></p>
@@ -1535,30 +1535,31 @@ adversary an authenticated encryption advantage higher than AEA.<a href="#sectio
       </ul>
 <p id="section-5-4">As a general rule, a value for AEA can be evenly allocated to CA and IA
 by halving the target.  This split allows for the computation of separate limits,
-CL and IL.
-Some applications might choose to set different targets for CA and IA.
+CL and IL. For example, given a value <code>AEA &lt;= 2^-60</code> one may choose
+<code>IA &lt;= 2^-61</code> and <code>CA &lt;= 2^-61</code>.<a href="#section-5-4" class="pilcrow">¶</a></p>
+<p id="section-5-5">Some applications might choose to set different targets for CA and IA.
 For example, TLS sets CA below 2<sup>-60</sup> and IA below 2<sup>-57</sup>
-in the single-key setting; see <span><a href="https://rfc-editor.org/rfc/rfc8446#section-5.5" class="relref">Section 5.5</a> of [<a href="#TLS" class="cite xref">TLS</a>]</span>.<a href="#section-5-4" class="pilcrow">¶</a></p>
-<p id="section-5-5">When limits are expressed as a number of messages an application can encrypt or
+in the single-key setting; see <span><a href="https://rfc-editor.org/rfc/rfc8446#section-5.5" class="relref">Section 5.5</a> of [<a href="#TLS" class="cite xref">TLS</a>]</span>.<a href="#section-5-5" class="pilcrow">¶</a></p>
+<p id="section-5-6">When limits are expressed as a number of messages an application can encrypt or
 decrypt, this requires assumptions about the size of messages and any
 authenticated additional data (AAD).  Limits can instead be expressed in terms
-of the number of bytes, or blocks, of plaintext and maybe AAD in total.<a href="#section-5-5" class="pilcrow">¶</a></p>
-<p id="section-5-6">To aid in translating between message-based and byte/block-based limits,
+of the number of bytes, or blocks, of plaintext and maybe AAD in total.<a href="#section-5-6" class="pilcrow">¶</a></p>
+<p id="section-5-7">To aid in translating between message-based and byte/block-based limits,
 a formulation of limits that includes a maximum message size (<code>L</code>) and the AEAD
-schemes' block length in bits (<code>n</code>) is provided.<a href="#section-5-6" class="pilcrow">¶</a></p>
-<p id="section-5-7">All limits are based on the total number of messages, either the number of
+schemes' block length in bits (<code>n</code>) is provided.<a href="#section-5-7" class="pilcrow">¶</a></p>
+<p id="section-5-8">All limits are based on the total number of messages, either the number of
 protected messages (<code>q</code>) or the number of forgery attempts (<code>v</code>); which correspond
-to CL and IL respectively.<a href="#section-5-7" class="pilcrow">¶</a></p>
-<p id="section-5-8">Limits are then derived from those bounds using a target attacker probability.
+to CL and IL respectively.<a href="#section-5-8" class="pilcrow">¶</a></p>
+<p id="section-5-9">Limits are then derived from those bounds using a target attacker probability.
 For example, given an integrity advantage of <code>IA = v * (8L / 2^106)</code> and a
 targeted maximum attacker success probability of <code>IA = p</code>, the algorithm remains
 secure, i.e., the adversary's advantage does not exceed the targeted probability
 of success, provided that <code>v &lt;= (p * 2^106) / 8L</code>. In turn, this implies that
-<code>v &lt;= (p * 2^103) / L</code> is the corresponding limit.<a href="#section-5-8" class="pilcrow">¶</a></p>
-<p id="section-5-9">To apply these limits, implementations can count the number of messages that are
+<code>v &lt;= (p * 2^103) / L</code> is the corresponding limit.<a href="#section-5-9" class="pilcrow">¶</a></p>
+<p id="section-5-10">To apply these limits, implementations can count the number of messages that are
 protected or rejected against the determined limits (<code>q</code> and <code>v</code> respectively).
 This requires that messages cannot exceed the maximum message size (<code>L</code>) that is
-chosen.<a href="#section-5-9" class="pilcrow">¶</a></p>
+chosen.<a href="#section-5-10" class="pilcrow">¶</a></p>
 <div id="approximations">
 <section id="section-5.1">
         <h3 id="name-approximations">
