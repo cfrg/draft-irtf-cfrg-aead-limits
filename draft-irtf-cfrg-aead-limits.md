@@ -384,7 +384,8 @@ used in IETF protocols, including: AEAD_AES_128_GCM {{!RFC5116}}, AEAD_AES_256_G
 AEAD_AES_128_CCM {{!RFC5116}}, AEAD_CHACHA20_POLY1305 {{!RFC8439}}, AEAD_AES_128_CCM_8 {{!RFC6655}}.
 The limits in this section apply to using these schemes with a single key;
 for settings where multiple keys are deployed (for example, when rekeying within
-a connection), the limits in {{mu-limits}} SHOULD be used.
+a connection, or when using multiple connections between two parties), the limits
+in this section MUST NOT be used.
 
 These algorithms, as cited, all define a nonce length (`r`) of 96 bits.  Some
 definitions of these AEAD algorithms allow for other nonce lengths, but the
@@ -619,39 +620,6 @@ v * 2^64 <= p * 2^127
 
 This approach produces much smaller values for `v` than for `q`.  Alternative
 allocations tend to greatly reduce `q` without significantly increasing `v`.
-
-
-## Single-Key Examples
-
-An example protocol might choose to aim for a single-key CA and IA that is at
-most 2<sup>-50</sup>.  (This in particular limits offline work to `o <= 2^(k-50)`,
-see {{offline-work}}.)  If the messages exchanged in the protocol are at most a
-common Internet MTU of around 1500 bytes, then a value for `L` might be set to
-2<sup>7</sup>.  {{ex-table-su}} shows limits for `q` and `v` that might be
-chosen under these conditions.
-
-| AEAD                   | Maximum q        | Maximum v      |
-|:-----------------------|-----------------:|---------------:|
-| AEAD_AES_128_GCM       | 2<sup>32.5</sup> | 2<sup>64</sup> |
-| AEAD_AES_256_GCM       | 2<sup>32.5</sup> | 2<sup>64</sup> |
-| AEAD_CHACHA20_POLY1305 | n/a              | 2<sup>46</sup> |
-| AEAD_AES_128_CCM       | 2<sup>30</sup>   | 2<sup>30</sup> |
-| AEAD_AES_128_CCM_8     | 2<sup>30.4</sup> | 2<sup>13</sup> |
-{: #ex-table-su title="Example single-key limits; see text for parameter details"}
-
-AEAD_CHACHA20_POLY1305 provides no limit to `q` based on the provided single-user
-analyses.
-
-The limit for `q` on AEAD_AES_128_CCM and AEAD_AES_128_CCM_8 is reduced due to a
-need to reduce the value of `q` to ensure that IA does not exceed the target.
-This assumes equal proportions for `q` and `v` for AEAD_AES_128_CCM.
-AEAD_AES_128_CCM_8 permits a much smaller value of `v` due to the shorter tag,
-which permits a higher limit for `q`.
-
-Some protocols naturally limit `v` to 1, such as TCP-based variants of TLS, which
-terminate sessions on decryption failure.  If `v` is limited to 1, `q` can be
-increased to 2<sup>31</sup> for both CCM AEADs.
-
 
 
 # Multi-Key AEAD Limits {#mu-limits}
@@ -1077,40 +1045,6 @@ legitimate protocol users together), this implies the following two limits
 q + v <= p * 2^127 / (L * C)
 v <= p * 2^(t-1)
 ~~~
-
-
-
-## Multi-Key Examples
-
-An example protocol might choose to aim for a multi-key AEA, CA, and IA that is at
-most 2<sup>-50</sup>.  If the messages exchanged in the protocol are at most a
-common Internet MTU of around 1500 bytes, then a value for `L` might be set to
-2<sup>7</sup>.  {{ex-table-mu}} shows limits for `q` and `v` across all keys that
-might be chosen under these conditions.
-
-| AEAD                   | Maximum q                | Maximum v              |
-|:-----------------------|-------------------------:|-----------------------:|
-| AEAD_AES_128_GCM       | 2<sup>69</sup>/B         | 2<sup>69</sup>/B       |
-| AEAD_AES_256_GCM       | 2<sup>69</sup>/B         | 2<sup>69</sup>/B       |
-| AEAD_CHACHA20_POLY1305 | 2<sup>100</sup>          | 2<sup>46</sup>         |
-| AEAD_AES_128_CCM       | 2<sup>69</sup>/C         | 2<sup>69</sup>/C       |
-| AEAD_AES_128_CCM_8     | 2<sup>69</sup>/C         | 2<sup>13</sup>         |
-{: #ex-table-mu title="Example multi-key limits; see text for parameter details"}
-
-The limits for AEAD_AES_128_GCM, AEAD_AES_256_GCM, AEAD_AES_128_CCM, and
-AEAD_AES_128_CCM_8 assume equal proportions for `q` and `v`. The limits for
-all schemes assume the use
-of nonce randomization, like in TLS 1.3 {{TLS}} and QUIC {{?RFC9001}}, and
-offline work limited to `o <= 2^70`.
-
-The limits for AEAD_AES_128_GCM, AEAD_AES_256_GCM, AEAD_AES_128_CCM and
-AEAD_AES_128_CCM_8 further depend on the maximum number (`B` resp. `C`) of 128-bit
-blocks encrypted resp. encrypted or decrypted by any single key. For example,
-limiting the number of messages (of size <= 2<sup>7</sup> blocks) encrypted,
-resp. encrypted or decrypted, to at most 2<sup>20</sup> (about a million) per key
-results in `B` resp. `C` of 2<sup>27</sup>, which
-limits both `q` and `v` to 2<sup>42</sup> messages for GCM and CCM, except
-for CCM_8 where the short tag length limits `v` to 2<sup>13</sup>.
 
 
 # Security Considerations {#sec-considerations}
