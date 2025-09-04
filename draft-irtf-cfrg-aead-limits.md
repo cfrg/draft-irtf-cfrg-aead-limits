@@ -384,7 +384,8 @@ used in IETF protocols, including: AEAD_AES_128_GCM {{!RFC5116}}, AEAD_AES_256_G
 AEAD_AES_128_CCM {{!RFC5116}}, AEAD_CHACHA20_POLY1305 {{!RFC8439}}, AEAD_AES_128_CCM_8 {{!RFC6655}}.
 The limits in this section apply to using these schemes with a single key;
 for settings where multiple keys are deployed (for example, when rekeying within
-a connection), the limits in {{mu-limits}} SHOULD be used.
+a connection or when using multiple connections between two parties), the limits
+in this section MUST NOT be used, but instead those in {{mu-limits}}.
 
 These algorithms, as cited, all define a nonce length (`r`) of 96 bits.  Some
 definitions of these AEAD algorithms allow for other nonce lengths, but the
@@ -622,6 +623,13 @@ allocations tend to greatly reduce `q` without significantly increasing `v`.
 
 
 ## Single-Key Examples
+
+Note: The following example limits purely serve as illustration of the formulas
+given in this section. They do not constitute general guidance; every application
+has to choose their own advantage targets and consider their deployment properties,
+such as message sizes. As mentioned earlier, for settings where multiple keys are
+deployed (like rekeying, multiple connections, etc.), the examples in this section
+MUST NOT be used; refer instead to those in {{mu-limits}}.
 
 An example protocol might choose to aim for a single-key CA and IA that is at
 most 2<sup>-50</sup>.  (This in particular limits offline work to `o <= 2^(k-50)`,
@@ -1081,6 +1089,11 @@ v <= p * 2^(t-1)
 
 
 ## Multi-Key Examples
+
+Note: The following example limits purely serve as illustration of the formulas
+given in this section. They do not constitute general guidance; every application
+has to choose their own advantage targets and consider their deployment properties,
+such as message sizes.
 
 An example protocol might choose to aim for a multi-key AEA, CA, and IA that is at
 most 2<sup>-50</sup>.  If the messages exchanged in the protocol are at most a
