@@ -280,7 +280,7 @@ The AEADs described in this document all use ciphers in counter mode,
 where a pseudorandom bitstream is XORed with plaintext to produce ciphertext.
 
 Confidentiality under definitions other than IND-CPA,
-such asIND-CCA definitions that allows an active attacker to adaptivity decrypt ciphertexts,
+such as IND-CCA definition that allows an active attacker to adaptively decrypt ciphertexts,
 depends critically on retaining integrity.
 A cipher in counter mode cannot guarantee confidentiality
 if integrity is not maintained.
