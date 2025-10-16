@@ -5,10 +5,10 @@
 Network Working Group                                         F. Günther
 Internet-Draft                              IBM Research Europe - Zurich
 Intended status: Informational                                M. Thomson
-Expires: 13 April 2026                                           Mozilla
+Expires: 19 April 2026                                           Mozilla
                                                               C. A. Wood
                                                               Cloudflare
-                                                         10 October 2025
+                                                         16 October 2025
 
 
                     Usage Limits on AEAD Algorithms
@@ -50,7 +50,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 13 April 2026.
+   This Internet-Draft will expire on 19 April 2026.
 
 Copyright Notice
 
@@ -280,8 +280,8 @@ Table of Contents
    where a pseudorandom bitstream is XORed with plaintext to produce
    ciphertext.
 
-   Confidentiality under definitions other than IND-CPA, such asIND-CCA
-   definitions that allows an active attacker to adaptivity decrypt
+   Confidentiality under definitions other than IND-CPA, such as IND-CCA
+   definition that allows an active attacker to adaptively decrypt
    ciphertexts, depends critically on retaining integrity.  A cipher in
    counter mode cannot guarantee confidentiality if integrity is not
    maintained.
