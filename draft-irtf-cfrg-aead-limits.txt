@@ -5,10 +5,10 @@
 Network Working Group                                         F. Günther
 Internet-Draft                              IBM Research Europe - Zurich
 Intended status: Informational                                M. Thomson
-Expires: 19 April 2026                                           Mozilla
+Expires: 7 June 2026                                             Mozilla
                                                               C. A. Wood
                                                               Cloudflare
-                                                         16 October 2025
+                                                         4 December 2025
 
 
                     Usage Limits on AEAD Algorithms
@@ -50,7 +50,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 19 April 2026.
+   This Internet-Draft will expire on 7 June 2026.
 
 Copyright Notice
 
@@ -393,8 +393,9 @@ Table of Contents
    AEAD_AES_128_CCM [RFC5116], AEAD_CHACHA20_POLY1305 [RFC8439],
    AEAD_AES_128_CCM_8 [RFC6655].  The limits in this section apply to
    using these schemes with a single key; for settings where multiple
-   keys are deployed (for example, when rekeying within a connection),
-   the limits in Section 7 SHOULD be used.
+   keys are deployed (for example, when rekeying within a connection or
+   when using multiple connections between two parties), the limits in
+   this section MUST NOT be used, but instead those in Section 7.
 
    These algorithms, as cited, all define a nonce length (r) of 96 bits.
    Some definitions of these AEAD algorithms allow for other nonce
@@ -570,6 +571,14 @@ Table of Contents
    significantly increasing v.
 
 6.6.  Single-Key Examples
+
+   Note: The following example limits purely serve as illustration of
+   the formulas given in this section.  They do not constitute general
+   guidance; every application has to choose their own advantage targets
+   and consider their deployment properties, such as message sizes.  As
+   mentioned earlier, for settings where multiple keys are deployed
+   (like rekeying, multiple connections, etc.), the examples in this
+   section MUST NOT be used; refer instead to those in Section 7.
 
    An example protocol might choose to aim for a single-key CA and IA
    that is at most 2^-50.  (This in particular limits offline work to o
@@ -782,6 +791,11 @@ Table of Contents
    v <= p * 2^(t-1)
 
 7.4.  Multi-Key Examples
+
+   Note: The following example limits purely serve as illustration of
+   the formulas given in this section.  They do not constitute general
+   guidance; every application has to choose their own advantage targets
+   and consider their deployment properties, such as message sizes.
 
    An example protocol might choose to aim for a multi-key AEA, CA, and
    IA that is at most 2^-50.  If the messages exchanged in the protocol
