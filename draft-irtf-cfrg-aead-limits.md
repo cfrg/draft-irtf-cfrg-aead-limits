@@ -668,12 +668,12 @@ increased to 2<sup>31</sup> for both CCM AEADs.
 # Multi-Key AEAD Limits {#mu-limits}
 
 In the multi-key setting, each user is assumed to have an independent and
-uniformly distributed key, though nonces may be re-used across users with some
-very small probability. The success probability in attacking one of these many
-independent keys can be generically bounded by the success probability of
-attacking a single key multiplied by the number of keys present {{MUSecurity}}, {{GCM-MU}}.
-Absent concrete multi-key bounds, this means the attacker advantage in the multi-key
-setting is the product of the single-key advantage and the number of keys.
+uniformly distributed key, though nonces may be re-used. The success probability
+in attacking one of these many independent keys can be generically bounded by
+the success probability of attacking a single key multiplied by the number of
+keys present {{MUSecurity}}, {{GCM-MU}}.  Absent concrete multi-key bounds, this
+means the attacker advantage in the multi-key setting is the product of the
+single-key advantage and the number of keys.
 
 This section summarizes the confidentiality and integrity bounds and limits for
 the same algorithms as in {{su-limits}} for the multi-key setting. The CL
@@ -783,7 +783,7 @@ AEAD_AES_128_GCM and by 97 for AEAD_AES_256_GCM.  For AEAD_AES_128_GCM, it furth
         - 5th term (2^(-7R)):  = 2^-224, negligible.
 -->
 
-Protocols with random, partially implicit nonces have the following limit,
+Protocols with random, partially implicit nonces (like TLS 1.2) have the following limit,
 which is similar to that for nonce randomization:
 
 ~~~
