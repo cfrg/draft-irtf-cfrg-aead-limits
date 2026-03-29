@@ -432,8 +432,8 @@ Table of Contents
    could be assumed to have the resources to perform in the order of
    2^80 AES operations, an attacker gains an attack probability of 2^-
    48.  That might seem like it requires a lot of compute resources, but
-   amount of compute could cost less than 1 million USD in 2025.  That
-   cost can only reduce over time, suggesting that a much greater
+   that amount of compute could cost less than 1 million USD in 2025.
+   That cost can only reduce over time, suggesting that a much greater
    advantage is likely achievable for a sufficiently motivated attacker.
    Of course, for such a small chance of success (2^-48 is around one in
    250 trillion) this sort of attack seems like to remain impractical
