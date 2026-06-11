@@ -423,7 +423,7 @@ might seem like it requires a lot of compute resources, but that amount of
 compute could cost less than 1 million USD in 2025. That cost can only reduce
 over time, suggesting that a much greater advantage is likely achievable for a
 sufficiently motivated attacker.  Of course, for such a small chance of success
-(2<sup>-48</sup> is around one in 250 trillion) this sort of attack seems like
+(2<sup>-48</sup> is around one in 250 trillion) this sort of attack seems likely
 to remain impractical for some time.
 
 
