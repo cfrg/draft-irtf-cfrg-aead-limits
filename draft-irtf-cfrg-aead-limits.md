@@ -416,12 +416,15 @@ AEA <= o / 2^k
 This constrains the security that can be achieved for modes that use smaller key
 sizes, depending on what assumptions can be made about attacker resources.
 
-For example, if an attacker could be assumed to have the resources to perform in
-the order of 2^80 AES operations, an attacker gains an attack probability of
-2<sup>-48</sup>.  That might seem like it requires a lot of compute resources,
-but amount of compute could cost less than 1 million USD in 2025. That cost can
-only reduce over time, suggesting that a much greater advantage is likely
-achievable for a sufficiently motivated attacker.
+For example, given a 128-bit key and a single nonce, if an attacker could be
+assumed to have the resources to perform in the order of 2<sup>80</sup> AES
+operations, an attacker gains an attack probability of 2<sup>-48</sup>.  That
+might seem like it requires a lot of compute resources, but that amount of
+compute could cost less than 1 million USD in 2025. That cost can only reduce
+over time, suggesting that a much greater advantage is likely achievable for a
+sufficiently motivated attacker.  Of course, for such a small chance of success
+(2<sup>-48</sup> is around one in 250 trillion) this sort of attack seems likely
+to remain impractical for some time.
 
 
 ## AEAD_AES_128_GCM and AEAD_AES_256_GCM
@@ -665,12 +668,12 @@ increased to 2<sup>31</sup> for both CCM AEADs.
 # Multi-Key AEAD Limits {#mu-limits}
 
 In the multi-key setting, each user is assumed to have an independent and
-uniformly distributed key, though nonces may be re-used across users with some
-very small probability. The success probability in attacking one of these many
-independent keys can be generically bounded by the success probability of
-attacking a single key multiplied by the number of keys present {{MUSecurity}}, {{GCM-MU}}.
-Absent concrete multi-key bounds, this means the attacker advantage in the multi-key
-setting is the product of the single-key advantage and the number of keys.
+uniformly distributed key, though nonces may be re-used. The success probability
+in attacking one of these many independent keys can be generically bounded by
+the success probability of attacking a single key multiplied by the number of
+keys present {{MUSecurity}}, {{GCM-MU}}.  Absent concrete multi-key bounds, this
+means the attacker advantage in the multi-key setting is the product of the
+single-key advantage and the number of keys.
 
 This section summarizes the confidentiality and integrity bounds and limits for
 the same algorithms as in {{su-limits}} for the multi-key setting. The CL
@@ -780,7 +783,7 @@ AEAD_AES_128_GCM and by 97 for AEAD_AES_256_GCM.  For AEAD_AES_128_GCM, it furth
         - 5th term (2^(-7R)):  = 2^-224, negligible.
 -->
 
-Protocols with random, partially implicit nonces have the following limit,
+Protocols with random, partially implicit nonces (like TLS 1.2) have the following limit,
 which is similar to that for nonce randomization:
 
 ~~~
