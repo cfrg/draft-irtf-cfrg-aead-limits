@@ -5,10 +5,10 @@
 Network Working Group                                         F. Günther
 Internet-Draft                              IBM Research Europe - Zurich
 Intended status: Informational                                M. Thomson
-Expires: 30 September 2026                                       Mozilla
+Expires: 13 December 2026                                        Mozilla
                                                               C. A. Wood
                                                               Cloudflare
-                                                           29 March 2026
+                                                            11 June 2026
 
 
                     Usage Limits on AEAD Algorithms
@@ -50,7 +50,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 30 September 2026.
+   This Internet-Draft will expire on 13 December 2026.
 
 Copyright Notice
 
@@ -436,7 +436,7 @@ Table of Contents
    That cost can only reduce over time, suggesting that a much greater
    advantage is likely achievable for a sufficiently motivated attacker.
    Of course, for such a small chance of success (2^-48 is around one in
-   250 trillion) this sort of attack seems like to remain impractical
+   250 trillion) this sort of attack seems likely to remain impractical
    for some time.
 
 6.2.  AEAD_AES_128_GCM and AEAD_AES_256_GCM
