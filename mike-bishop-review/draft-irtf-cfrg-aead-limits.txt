@@ -5,10 +5,10 @@
 Network Working Group                                         F. Günther
 Internet-Draft                              IBM Research Europe - Zurich
 Intended status: Informational                                M. Thomson
-Expires: 7 June 2026                                             Mozilla
+Expires: 20 January 2027                                         Mozilla
                                                               C. A. Wood
                                                               Cloudflare
-                                                         4 December 2025
+                                                            19 July 2026
 
 
                     Usage Limits on AEAD Algorithms
@@ -50,11 +50,11 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 7 June 2026.
+   This Internet-Draft will expire on 20 January 2027.
 
 Copyright Notice
 
-   Copyright (c) 2025 IETF Trust and the persons identified as the
+   Copyright (c) 2026 IETF Trust and the persons identified as the
    document authors.  All rights reserved.
 
    This document is subject to BCP 78 and the IETF Trust's Legal
@@ -232,9 +232,12 @@ Table of Contents
    For each AEAD algorithm, we define the chosen-plaintext
    confidentiality (IND-CPA) and ciphertext integrity (INT-CTXT)
    advantage roughly as the advantage an attacker has in breaking the
-   corresponding classical security property for the algorithm.  An IND-
-   CPA attacker can query ciphertexts for arbitrary plaintexts.  An INT-
-   CTXT attacker can additionally query plaintexts for arbitrary
+   corresponding classical security property for the algorithm.
+   Mathematically rigorous definitions for these advantages can be found
+   in Chapter 5 of [INTRO].
+
+   An IND-CPA attacker can query ciphertexts for arbitrary plaintexts.
+   An INT-CTXT attacker can additionally query plaintexts for arbitrary
    ciphertexts.  Moreover, we define the combined authenticated
    encryption advantage guaranteeing both confidentiality and integrity
    against an active attacker.  Specifically:
@@ -261,8 +264,8 @@ Table of Contents
       function or is able to forge a ciphertext that will be accepted as
       valid.
 
-   Here, we consider advantages beyond distinguishing underyling
-   primitives from their ideal instances, for example, a blockcipher
+   Here, we consider advantages beyond distinguishing underlying
+   primitives from their ideal instances, for example, a block cipher
    from a random permutation (PRP advantage) or a pseudorandom function
    from a truly random function (PRF advantage).
 
@@ -428,13 +431,16 @@ Table of Contents
    smaller key sizes, depending on what assumptions can be made about
    attacker resources.
 
-   For example, if an attacker could be assumed to have the resources to
-   perform in the order of 2^80 AES operations, an attacker gains an
-   attack probability of 2^-48.  That might seem like it requires a lot
-   of compute resources, but amount of compute could cost less than 1
-   million USD in 2025.  That cost can only reduce over time, suggesting
-   that a much greater advantage is likely achievable for a sufficiently
-   motivated attacker.
+   For example, given a 128-bit key and a single nonce, if an attacker
+   could be assumed to have the resources to perform in the order of
+   2^80 AES operations, an attacker gains an attack probability of 2^-
+   48.  That might seem like it requires a lot of compute resources, but
+   that amount of compute could cost less than 1 million USD in 2025.
+   That cost can only reduce over time, suggesting that a much greater
+   advantage is likely achievable for a sufficiently motivated attacker.
+   Of course, for such a small chance of success (2^-48 is around one in
+   250 trillion) this sort of attack seems likely to remain impractical
+   for some time.
 
 6.2.  AEAD_AES_128_GCM and AEAD_AES_256_GCM
 
@@ -620,14 +626,13 @@ Table of Contents
 7.  Multi-Key AEAD Limits
 
    In the multi-key setting, each user is assumed to have an independent
-   and uniformly distributed key, though nonces may be re-used across
-   users with some very small probability.  The success probability in
-   attacking one of these many independent keys can be generically
-   bounded by the success probability of attacking a single key
-   multiplied by the number of keys present [MUSecurity], [GCM-MU].
-   Absent concrete multi-key bounds, this means the attacker advantage
-   in the multi-key setting is the product of the single-key advantage
-   and the number of keys.
+   and uniformly distributed key, though nonces may be re-used.  The
+   success probability in attacking one of these many independent keys
+   can be generically bounded by the success probability of attacking a
+   single key multiplied by the number of keys present [MUSecurity],
+   [GCM-MU].  Absent concrete multi-key bounds, this means the attacker
+   advantage in the multi-key setting is the product of the single-key
+   advantage and the number of keys.
 
    This section summarizes the confidentiality and integrity bounds and
    limits for the same algorithms as in Section 6 for the multi-key
@@ -674,8 +679,9 @@ Table of Contents
    AEAD_AES_256_GCM.  For AEAD_AES_128_GCM, it further assumes o <=
    2^70, otherwise a term in the order of o / 2^120 starts dominating.
 
-   Protocols with random, partially implicit nonces have the following
-   limit, which is similar to that for nonce randomization:
+   Protocols with random, partially implicit nonces (like TLS 1.2) have
+   the following limit, which is similar to that for nonce
+   randomization:
 
    AEA <= (((q+v)*o + (q+v)^2) / 2^(k+26)) + ((q+v)*L*B / 2^127)
 
@@ -846,7 +852,7 @@ Table of Contents
    is not able to exploit a weakness in an underlying primitive.
 
    Many of the formulae in this document depend on simplifying
-   assumptions, from differing models, which means that results are not
+   assumptions from differing models, which means that results are not
    universally applicable.  When using this document to set limits, it
    is necessary to validate all these assumptions for the setting in
    which the limits might apply.  In most cases, the goal is to use
@@ -882,7 +888,7 @@ Table of Contents
               <https://web.cs.ucdavis.edu/~rogaway/papers/ad.pdf>.
 
    [AEBounds] Luykx, A. and K. Paterson, "Limits on Authenticated
-              Encryption Use in TLS", 8 March 2016,
+              Encryption Use in TLS", 15 January 2024,
               <https://eprint.iacr.org/2024/051.pdf>.
 
    [AEComposition]
@@ -900,7 +906,7 @@ Table of Contents
 
    [CCM-MU]   Naito, Y., Sasaki, Y., and T. Sugawara, "Tight Multi-User
               Security of CCM and Enhancement by Tag-Based Key
-              Derivation Applied to GCM and CCM", 15 October 2018,
+              Derivation Applied to GCM and CCM", 29 May 2025,
               <https://eprint.iacr.org/2025/953.pdf>.
 
    [ChaCha20Poly1305-MU]
@@ -961,6 +967,11 @@ Table of Contents
               <https://www.rfc-editor.org/rfc/rfc8439>.
 
 10.2.  Informative References
+
+   [INTRO]    Bellare, M. and P. Rogaway, "Introduction to Modern
+              Cryptography", 11 May 2005,
+              <https://web.cs.ucdavis.edu/~rogaway/classes/227/spring05/
+              book/main.pdf>.
 
    [MF05]     McGrew, D. A. and S. R. Fluhrer, "Multiple forgery attacks
               against Message Authentication Codes", 31 May 2005,
