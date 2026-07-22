@@ -1182,6 +1182,7 @@ owed to
 {{{Mihir Bellare}}},
 {{{Thomas Bellebaum}}},
 {{{Daniel J. Bernstein}}},
+{{{Mike Bishop}}},
 {{{Scott Fluhrer}}},
 {{{Thomas Fossati}}},
 {{{Jérôme Govinden}}},
