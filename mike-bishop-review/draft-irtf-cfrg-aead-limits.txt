@@ -5,10 +5,10 @@
 Network Working Group                                         F. Günther
 Internet-Draft                              IBM Research Europe - Zurich
 Intended status: Informational                                M. Thomson
-Expires: 20 January 2027                                         Mozilla
+Expires: 23 January 2027                                         Mozilla
                                                               C. A. Wood
                                                               Cloudflare
-                                                            19 July 2026
+                                                            22 July 2026
 
 
                     Usage Limits on AEAD Algorithms
@@ -50,7 +50,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 20 January 2027.
+   This Internet-Draft will expire on 23 January 2027.
 
 Copyright Notice
 
@@ -1016,9 +1016,9 @@ Acknowledgments
 
    In addition to the authors of papers performing analysis of ciphers,
    thanks are owed to Mihir Bellare, Thomas Bellebaum, Daniel
-   J. Bernstein, Scott Fluhrer, Thomas Fossati, Jérôme Govinden, John
-   Mattsson, David McGrew, Yoav Nir, Thomas Pornin, and Alexander
-   Tereschenko for helping making this document better.
+   J. Bernstein, Mike Bishop, Scott Fluhrer, Thomas Fossati, Jérôme
+   Govinden, John Mattsson, David McGrew, Yoav Nir, Thomas Pornin, and
+   Alexander Tereschenko for helping making this document better.
 
 Authors' Addresses
 
