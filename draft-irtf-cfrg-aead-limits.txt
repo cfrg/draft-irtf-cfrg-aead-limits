@@ -5,10 +5,10 @@
 Network Working Group                                         F. Günther
 Internet-Draft                              IBM Research Europe - Zurich
 Intended status: Informational                                M. Thomson
-Expires: 13 December 2026                                        Mozilla
+Expires: 8 February 2027                                         Mozilla
                                                               C. A. Wood
                                                               Cloudflare
-                                                            11 June 2026
+                                                           7 August 2026
 
 
                     Usage Limits on AEAD Algorithms
@@ -50,7 +50,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 13 December 2026.
+   This Internet-Draft will expire on 8 February 2027.
 
 Copyright Notice
 
@@ -232,9 +232,12 @@ Table of Contents
    For each AEAD algorithm, we define the chosen-plaintext
    confidentiality (IND-CPA) and ciphertext integrity (INT-CTXT)
    advantage roughly as the advantage an attacker has in breaking the
-   corresponding classical security property for the algorithm.  An IND-
-   CPA attacker can query ciphertexts for arbitrary plaintexts.  An INT-
-   CTXT attacker can additionally query plaintexts for arbitrary
+   corresponding classical security property for the algorithm.
+   Mathematically rigorous definitions for these advantages can be
+   found, e.g., in Chapters 5 and 9 of [INTRO].
+
+   An IND-CPA attacker can query ciphertexts for arbitrary plaintexts.
+   An INT-CTXT attacker can additionally query plaintexts for arbitrary
    ciphertexts.  Moreover, we define the combined authenticated
    encryption advantage guaranteeing both confidentiality and integrity
    against an active attacker.  Specifically:
@@ -261,8 +264,8 @@ Table of Contents
       function or is able to forge a ciphertext that will be accepted as
       valid.
 
-   Here, we consider advantages beyond distinguishing underyling
-   primitives from their ideal instances, for example, a blockcipher
+   Here, we consider advantages beyond distinguishing underlying
+   primitives from their ideal instances, for example, a block cipher
    from a random permutation (PRP advantage) or a pseudorandom function
    from a truly random function (PRF advantage).
 
@@ -849,7 +852,7 @@ Table of Contents
    is not able to exploit a weakness in an underlying primitive.
 
    Many of the formulae in this document depend on simplifying
-   assumptions, from differing models, which means that results are not
+   assumptions from differing models, which means that results are not
    universally applicable.  When using this document to set limits, it
    is necessary to validate all these assumptions for the setting in
    which the limits might apply.  In most cases, the goal is to use
@@ -885,7 +888,7 @@ Table of Contents
               <https://web.cs.ucdavis.edu/~rogaway/papers/ad.pdf>.
 
    [AEBounds] Luykx, A. and K. Paterson, "Limits on Authenticated
-              Encryption Use in TLS", 8 March 2016,
+              Encryption Use in TLS", 15 January 2024,
               <https://eprint.iacr.org/2024/051.pdf>.
 
    [AEComposition]
@@ -903,7 +906,7 @@ Table of Contents
 
    [CCM-MU]   Naito, Y., Sasaki, Y., and T. Sugawara, "Tight Multi-User
               Security of CCM and Enhancement by Tag-Based Key
-              Derivation Applied to GCM and CCM", 15 October 2018,
+              Derivation Applied to GCM and CCM", 29 May 2025,
               <https://eprint.iacr.org/2025/953.pdf>.
 
    [ChaCha20Poly1305-MU]
@@ -965,6 +968,10 @@ Table of Contents
 
 10.2.  Informative References
 
+   [INTRO]    Boneh, D. and V. Shoup, "A Graduate Course in Applied
+              Cryptography", 19 January 2023,
+              <https://toc.cryptobook.us/book.pdf>.
+
    [MF05]     McGrew, D. A. and S. R. Fluhrer, "Multiple forgery attacks
               against Message Authentication Codes", 31 May 2005,
               <https://csrc.nist.gov/CSRC/media/Projects/Block-Cipher-
@@ -1008,9 +1015,9 @@ Acknowledgments
 
    In addition to the authors of papers performing analysis of ciphers,
    thanks are owed to Mihir Bellare, Thomas Bellebaum, Daniel
-   J. Bernstein, Scott Fluhrer, Thomas Fossati, Jérôme Govinden, John
-   Mattsson, David McGrew, Yoav Nir, Thomas Pornin, and Alexander
-   Tereschenko for helping making this document better.
+   J. Bernstein, Mike Bishop, Scott Fluhrer, Thomas Fossati, Jérôme
+   Govinden, John Mattsson, David McGrew, Yoav Nir, Thomas Pornin, and
+   Alexander Tereschenko for helping making this document better.
 
 Authors' Addresses
 
