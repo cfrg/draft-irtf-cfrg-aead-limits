@@ -129,12 +129,12 @@ informative:
     date: 2005-05-31
   TLS: RFC8446
   INTRO:
-    title: "Introduction to Modern Cryptography"
-    target: "https://web.cs.ucdavis.edu/~rogaway/classes/227/spring05/book/main.pdf"
-    date: 2005-05-11
+    title: "A Graduate Course in Applied Cryptography"
+    target: "https://toc.cryptobook.us/book.pdf"
+    date: 2023-01-19
     author:
-      - name: Mihir Bellare
-      - name: Phillip Rogaway
+      - name: Dan Boneh
+      - name: Victor Shoup
 
 --- abstract
 
@@ -244,7 +244,7 @@ This document defines limitations in part using the quantities in
 For each AEAD algorithm, we define the chosen-plaintext confidentiality (IND-CPA) and ciphertext
 integrity (INT-CTXT) advantage roughly as the advantage an attacker has in breaking the
 corresponding classical security property for the algorithm.
-Mathematically rigorous definitions for these advantages can be found in Chapter 5 of {{INTRO}}.
+Mathematically rigorous definitions for these advantages can be found, e.g., in Chapters 5 and 9 of {{INTRO}}.
 
 An IND-CPA attacker
 can query ciphertexts for arbitrary plaintexts. An INT-CTXT attacker can additionally
