@@ -143,7 +143,8 @@ confidentiality and integrity.  Excessive use of the same key can give an
 attacker advantages in breaking these properties.  This document provides simple
 guidance for users of common AEAD functions about how to limit the use of keys
 in order to bound the advantage given to an attacker.  It considers limits in
-both single- and multi-key settings.
+both single- and multi-key settings. This document is a product of the Crypto
+Forum Research Group (CFRG) in the IRTF.
 
 --- middle
 
@@ -214,7 +215,7 @@ simple limit.
 The intent of this document is to collate all relevant information about the
 proper usage and limits of AEAD algorithms in one place.  This may serve as a
 standard reference when considering which AEAD algorithm to use, and how to use
-it.
+it. This document represents the consensus of the Crypto Forum Research Group (CFRG).
 
 # Requirements Notation
 
