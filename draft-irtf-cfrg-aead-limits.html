@@ -1338,7 +1338,11 @@ simplifying assumption that records are the same size; see <span><a href="https:
 <p id="section-1-6">Exceeding the determined usage limit for a single key can be avoided using rekeying.
 Rekeying can also provide a measure of forward and backward (post-compromise) security.
 <span>[<a href="#RFC8645" class="cite xref">RFC8645</a>]</span> contains a thorough survey of rekeying and the consequences of different
-design choices.  When considering rekeying, the multi-user limits SHOULD be applied.<a href="#section-1-6" class="pilcrow">¶</a></p>
+design choices. Additional rekeying mechanisms, such as running an ephemeral asymmetric
+key exchange, can provide further security guarantees such as post-compromise security
+(PCS); they are out of scope for this document, which focuses on AEAD advantage bounds
+resulting from for limiting the use of keys.  When considering rekeying, the multi-user
+limits SHOULD be applied.<a href="#section-1-6" class="pilcrow">¶</a></p>
 <p id="section-1-7">Currently, AEAD limits and usage requirements are scattered among peer-reviewed
 papers, standards documents, and other RFCs. Determining the correct limits for
 a given setting is challenging as papers do not use consistent labels or
