@@ -5,10 +5,10 @@
 Network Working Group                                         F. Günther
 Internet-Draft                              IBM Research Europe - Zurich
 Intended status: Informational                                M. Thomson
-Expires: 23 January 2027                                         Mozilla
+Expires: 8 February 2027                                         Mozilla
                                                               C. A. Wood
                                                               Cloudflare
-                                                            22 July 2026
+                                                           7 August 2026
 
 
                     Usage Limits on AEAD Algorithms
@@ -50,7 +50,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 23 January 2027.
+   This Internet-Draft will expire on 8 February 2027.
 
 Copyright Notice
 
@@ -233,8 +233,8 @@ Table of Contents
    confidentiality (IND-CPA) and ciphertext integrity (INT-CTXT)
    advantage roughly as the advantage an attacker has in breaking the
    corresponding classical security property for the algorithm.
-   Mathematically rigorous definitions for these advantages can be found
-   in Chapter 5 of [INTRO].
+   Mathematically rigorous definitions for these advantages can be
+   found, e.g., in Chapters 5 and 9 of [INTRO].
 
    An IND-CPA attacker can query ciphertexts for arbitrary plaintexts.
    An INT-CTXT attacker can additionally query plaintexts for arbitrary
@@ -968,10 +968,9 @@ Table of Contents
 
 10.2.  Informative References
 
-   [INTRO]    Bellare, M. and P. Rogaway, "Introduction to Modern
-              Cryptography", 11 May 2005,
-              <https://web.cs.ucdavis.edu/~rogaway/classes/227/spring05/
-              book/main.pdf>.
+   [INTRO]    Boneh, D. and V. Shoup, "A Graduate Course in Applied
+              Cryptography", 19 January 2023,
+              <https://toc.cryptobook.us/book.pdf>.
 
    [MF05]     McGrew, D. A. and S. R. Fluhrer, "Multiple forgery attacks
               against Message Authentication Codes", 31 May 2005,
