@@ -199,7 +199,11 @@ TLS}} and {{Section 6.6 of RFC9001}}.
 Exceeding the determined usage limit for a single key can be avoided using rekeying.
 Rekeying can also provide a measure of forward and backward (post-compromise) security.
 {{?RFC8645}} contains a thorough survey of rekeying and the consequences of different
-design choices.  When considering rekeying, the multi-user limits SHOULD be applied.
+design choices. Additional rekeying mechanisms, such as running an ephemeral asymmetric
+key exchange, can provide further security guarantees such as post-compromise security
+(PCS); they are out of scope for this document, which focuses on AEAD advantage bounds
+resulting from for limiting the use of keys.  When considering rekeying, the multi-user
+limits SHOULD be applied.
 
 Currently, AEAD limits and usage requirements are scattered among peer-reviewed
 papers, standards documents, and other RFCs. Determining the correct limits for
