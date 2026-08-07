@@ -52,7 +52,7 @@ normative:
     author:
       - ins: A. Luykx
       - ins: K. Paterson
-    date: 2016-03-08
+    date: 2024-01-15
     target: https://eprint.iacr.org/2024/051.pdf
   AEComposition:
     title: "Authenticated Encryption: Relations among notions and analysis of the generic composition paradigm"
@@ -102,7 +102,7 @@ normative:
   CCM-MU:
     title: "Tight Multi-User Security of CCM and Enhancement by Tag-Based Key Derivation Applied to GCM and CCM"
     target: https://eprint.iacr.org/2025/953.pdf
-    date: 2018-10-15
+    date: 2025-05-29
     author:
       - ins: Y. Naito
       - ins: Y. Sasaki
@@ -128,6 +128,13 @@ informative:
       - ins: S. R. Fluhrer
     date: 2005-05-31
   TLS: RFC8446
+  INTRO:
+    title: "A Graduate Course in Applied Cryptography"
+    target: "https://toc.cryptobook.us/book.pdf"
+    date: 2023-01-19
+    author:
+      - name: Dan Boneh
+      - name: Victor Shoup
 
 --- abstract
 
@@ -236,7 +243,10 @@ This document defines limitations in part using the quantities in
 
 For each AEAD algorithm, we define the chosen-plaintext confidentiality (IND-CPA) and ciphertext
 integrity (INT-CTXT) advantage roughly as the advantage an attacker has in breaking the
-corresponding classical security property for the algorithm. An IND-CPA attacker
+corresponding classical security property for the algorithm.
+Mathematically rigorous definitions for these advantages can be found, e.g., in Chapters 5 and 9 of {{INTRO}}.
+
+An IND-CPA attacker
 can query ciphertexts for arbitrary plaintexts. An INT-CTXT attacker can additionally
 query plaintexts for arbitrary ciphertexts. Moreover, we define the combined
 authenticated encryption advantage guaranteeing both confidentiality and integrity
@@ -260,8 +270,8 @@ advantage roughly is the probability that an attacker successfully distinguishes
 the ciphertext outputs of the AEAD scheme from the outputs of a random function
 or is able to forge a ciphertext that will be accepted as valid.
 
-Here, we consider advantages beyond distinguishing underyling primitives from their
-ideal instances, for example, a blockcipher from a random permutation (PRP advantage)
+Here, we consider advantages beyond distinguishing underlying primitives from their
+ideal instances, for example, a block cipher from a random permutation (PRP advantage)
 or a pseudorandom function from a truly random function (PRF advantage).
 
 See {{AEComposition}}, {{AEAD}} for the formal definitions of and relations
@@ -1138,7 +1148,7 @@ random function or that a pseudorandom permutation (PRP) is indistinguishable
 from a truly random permutation. Thus, the advantage estimates assume that the
 attacker is not able to exploit a weakness in an underlying primitive.
 
-Many of the formulae in this document depend on simplifying assumptions, from
+Many of the formulae in this document depend on simplifying assumptions from
 differing models, which means that results are not universally applicable. When
 using this document to set limits, it is necessary to validate all these
 assumptions for the setting in which the limits might apply. In most cases, the
@@ -1172,6 +1182,7 @@ owed to
 {{{Mihir Bellare}}},
 {{{Thomas Bellebaum}}},
 {{{Daniel J. Bernstein}}},
+{{{Mike Bishop}}},
 {{{Scott Fluhrer}}},
 {{{Thomas Fossati}}},
 {{{Jérôme Govinden}}},
