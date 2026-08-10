@@ -5,10 +5,10 @@
 Network Working Group                                         F. Günther
 Internet-Draft                              IBM Research Europe - Zurich
 Intended status: Informational                                M. Thomson
-Expires: 8 February 2027                                         Mozilla
+Expires: 11 February 2027                                        Mozilla
                                                               C. A. Wood
                                                               Cloudflare
-                                                           7 August 2026
+                                                          10 August 2026
 
 
                     Usage Limits on AEAD Algorithms
@@ -22,7 +22,8 @@ Abstract
    This document provides simple guidance for users of common AEAD
    functions about how to limit the use of keys in order to bound the
    advantage given to an attacker.  It considers limits in both single-
-   and multi-key settings.
+   and multi-key settings.  This document is a product of the Crypto
+   Forum Research Group (CFRG) in the IRTF.
 
 Discussion Venues
 
@@ -50,7 +51,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 8 February 2027.
+   This Internet-Draft will expire on 11 February 2027.
 
 Copyright Notice
 
@@ -177,7 +178,8 @@ Table of Contents
    The intent of this document is to collate all relevant information
    about the proper usage and limits of AEAD algorithms in one place.
    This may serve as a standard reference when considering which AEAD
-   algorithm to use, and how to use it.
+   algorithm to use, and how to use it.  This document represents the
+   consensus of the Crypto Forum Research Group (CFRG).
 
 2.  Requirements Notation
 
