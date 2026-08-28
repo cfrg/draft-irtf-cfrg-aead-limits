@@ -5,10 +5,10 @@
 Network Working Group                                         F. Günther
 Internet-Draft                              IBM Research Europe - Zurich
 Intended status: Informational                                M. Thomson
-Expires: 29 January 2027                                         Mozilla
+Expires: 1 March 2027                                            Mozilla
                                                               C. A. Wood
                                                               Cloudflare
-                                                            28 July 2026
+                                                          28 August 2026
 
 
                     Usage Limits on AEAD Algorithms
@@ -22,7 +22,8 @@ Abstract
    This document provides simple guidance for users of common AEAD
    functions about how to limit the use of keys in order to bound the
    advantage given to an attacker.  It considers limits in both single-
-   and multi-key settings.
+   and multi-key settings.  This document is a product of the Crypto
+   Forum Research Group (CFRG) in the IRTF.
 
 Discussion Venues
 
@@ -50,7 +51,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 29 January 2027.
+   This Internet-Draft will expire on 1 March 2027.
 
 Copyright Notice
 
@@ -177,7 +178,8 @@ Table of Contents
    The intent of this document is to collate all relevant information
    about the proper usage and limits of AEAD algorithms in one place.
    This may serve as a standard reference when considering which AEAD
-   algorithm to use, and how to use it.
+   algorithm to use, and how to use it.  This document represents the
+   consensus of the Crypto Forum Research Group (CFRG).
 
 2.  Requirements Notation
 
@@ -237,9 +239,12 @@ Table of Contents
    For each AEAD algorithm, we define the chosen-plaintext
    confidentiality (IND-CPA) and ciphertext integrity (INT-CTXT)
    advantage roughly as the advantage an attacker has in breaking the
-   corresponding classical security property for the algorithm.  An IND-
-   CPA attacker can query ciphertexts for arbitrary plaintexts.  An INT-
-   CTXT attacker can additionally query plaintexts for arbitrary
+   corresponding classical security property for the algorithm.
+   Mathematically rigorous definitions for these advantages can be
+   found, e.g., in Chapters 5 and 9 of [INTRO].
+
+   An IND-CPA attacker can query ciphertexts for arbitrary plaintexts.
+   An INT-CTXT attacker can additionally query plaintexts for arbitrary
    ciphertexts.  Moreover, we define the combined authenticated
    encryption advantage guaranteeing both confidentiality and integrity
    against an active attacker.  Specifically:
@@ -266,8 +271,8 @@ Table of Contents
       function or is able to forge a ciphertext that will be accepted as
       valid.
 
-   Here, we consider advantages beyond distinguishing underyling
-   primitives from their ideal instances, for example, a blockcipher
+   Here, we consider advantages beyond distinguishing underlying
+   primitives from their ideal instances, for example, a block cipher
    from a random permutation (PRP advantage) or a pseudorandom function
    from a truly random function (PRF advantage).
 
@@ -477,10 +482,8 @@ Table of Contents
 
    IA <= 2 * (v * (L + 1)) / 2^128
 
-   For the assumption of s + q + v < 2^64, observe that this applies
-   when p > L / 2^63. s + q <= q * (L + 1) is always small relative to
-   2^64 if the same advantage is applied to the confidentiality limit on
-   q.
+   When p * 2^127 / (L + 1) approaches or exceeds 2^64, the additional
+   condition s + q + v < 2^64 becomes the binding constraint.
 
    This produces the following limit:
 
@@ -788,10 +791,16 @@ Table of Contents
 
    Protocols with nonce randomization have a limit of:
 
-   AEA <= (q+v)*L*B / 2^127 + v / 2^t + o / 2^(k-6)
+   AEA <= (q+v)*L*C / 2^128 + v / 2^t + o / 2^(k-6)
 
-   Assuming o <= q + v (i.e., that the attacker does not spend more work
-   than all legitimate protocol users together), this implies the
+   Firstly, observe that offline work dominates if the target advantage
+   is small relative to the final term.  Thus, where p is very small
+   (for instance, 2^-60), this requires an assumption that o is also
+   small (in the example, less than 2^62).
+
+   Where o is not constrained by the final term, the simplifying
+   assumption that o <= q + v (i.e., that the attacker does not spend
+   more work than all legitimate protocol users together) implies the
    following two limits (distributing the attack probability evenly
    among the first two terms):
 
@@ -854,7 +863,7 @@ Table of Contents
    is not able to exploit a weakness in an underlying primitive.
 
    Many of the formulae in this document depend on simplifying
-   assumptions, from differing models, which means that results are not
+   assumptions from differing models, which means that results are not
    universally applicable.  When using this document to set limits, it
    is necessary to validate all these assumptions for the setting in
    which the limits might apply.  In most cases, the goal is to use
@@ -890,7 +899,7 @@ Table of Contents
               <https://web.cs.ucdavis.edu/~rogaway/papers/ad.pdf>.
 
    [AEBounds] Luykx, A. and K. Paterson, "Limits on Authenticated
-              Encryption Use in TLS", 8 March 2016,
+              Encryption Use in TLS", 15 January 2024,
               <https://eprint.iacr.org/2024/051.pdf>.
 
    [AEComposition]
@@ -908,7 +917,7 @@ Table of Contents
 
    [CCM-MU]   Naito, Y., Sasaki, Y., and T. Sugawara, "Tight Multi-User
               Security of CCM and Enhancement by Tag-Based Key
-              Derivation Applied to GCM and CCM", 15 October 2018,
+              Derivation Applied to GCM and CCM", 29 May 2025,
               <https://eprint.iacr.org/2025/953.pdf>.
 
    [ChaCha20Poly1305-MU]
@@ -970,6 +979,10 @@ Table of Contents
 
 10.2.  Informative References
 
+   [INTRO]    Boneh, D. and V. Shoup, "A Graduate Course in Applied
+              Cryptography", 19 January 2023,
+              <https://toc.cryptobook.us/book.pdf>.
+
    [MF05]     McGrew, D. A. and S. R. Fluhrer, "Multiple forgery attacks
               against Message Authentication Codes", 31 May 2005,
               <https://csrc.nist.gov/CSRC/media/Projects/Block-Cipher-
@@ -1013,9 +1026,9 @@ Acknowledgments
 
    In addition to the authors of papers performing analysis of ciphers,
    thanks are owed to Mihir Bellare, Thomas Bellebaum, Daniel
-   J. Bernstein, Scott Fluhrer, Thomas Fossati, Jérôme Govinden, John
-   Mattsson, David McGrew, Yoav Nir, Thomas Pornin, and Alexander
-   Tereschenko for helping making this document better.
+   J. Bernstein, Mike Bishop, Scott Fluhrer, Thomas Fossati, Jérôme
+   Govinden, John Mattsson, David McGrew, Yoav Nir, Thomas Pornin, and
+   Alexander Tereschenko for helping making this document better.
 
 Authors' Addresses
 
