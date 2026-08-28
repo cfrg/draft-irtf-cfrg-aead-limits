@@ -189,8 +189,8 @@ This document focuses on AEAD schemes requiring non-repeating nonces.
 
 It is good practice to have limits on how many times the same key (or
 key-nonce pair) is used.  Setting a limit based on some measurable property of
-the usage, such as number of protected messages, amount of data transferred, or
-time passed ensures that it is easy to apply limits.  This might require the
+the usage -- such as the number of protected messages, the amount of data transferred, or
+elapsed time -- ensures that it is easy to apply limits.  This might require the
 application of simplifying assumptions.  For example, TLS 1.3 and QUIC both
 specify limits on the number of records that can be protected, using the
 simplifying assumption that records are the same size; see {{Section 5.5 of
