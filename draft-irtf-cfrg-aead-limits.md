@@ -650,7 +650,7 @@ deployed (like rekeying, multiple connections, etc.), the examples in this secti
 MUST NOT be used; refer instead to those in {{mu-limits}}.
 
 An example protocol might choose to aim for a single-key CA and IA that is at
-most 2<sup>-50</sup>.  (This in particular limits offline work to `o <= 2^(k-50)`,
+most 2<sup>-50</sup>.  (This assumes limits to offline work of `o <= 2^(k-50)`,
 see {{offline-work}}.)  If the messages exchanged in the protocol are at most a
 common Internet MTU of around 1500 bytes, then a value for `L` might be set to
 2<sup>7</sup>.  {{ex-table-su}} shows limits for `q` and `v` that might be
@@ -670,9 +670,9 @@ analyses.
 
 The limit for `q` on AEAD_AES_128_CCM and AEAD_AES_128_CCM_8 is reduced due to a
 need to reduce the value of `q` to ensure that IA does not exceed the target.
-This assumes equal proportions for `q` and `v` for AEAD_AES_128_CCM.
-AEAD_AES_128_CCM_8 permits a much smaller value of `v` due to the shorter tag,
-which permits a higher limit for `q`.
+AEAD_AES_128_CCM_8 only permits small value of `v` due to the shorter tag,
+which leaves a higher limit available for `q`.
+The table assumes equal allocations to `q` and `v` for AEAD_AES_128_CCM.
 
 Some protocols naturally limit `v` to 1, such as TCP-based variants of TLS, which
 terminate sessions on decryption failure.  If `v` is limited to 1, `q` can be
