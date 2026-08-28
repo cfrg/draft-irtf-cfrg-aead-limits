@@ -683,8 +683,9 @@ increased to 2<sup>31</sup> for both CCM AEADs.
 # Multi-Key AEAD Limits {#mu-limits}
 
 In the multi-key setting, each user is assumed to have an independent and
-uniformly distributed key, though nonces may be re-used under different keys
-(but not repeated under the same key). The success probability
+uniformly distributed key. The same nonce can be used, but only with
+different keys (all of these modes are broken if key and nonce repeat).
+The success probability
 in attacking one of these many independent keys can be generically bounded by
 the success probability of attacking a single key multiplied by the number of
 keys present {{MUSecurity}}, {{GCM-MU}}.  Absent concrete multi-key bounds, this
