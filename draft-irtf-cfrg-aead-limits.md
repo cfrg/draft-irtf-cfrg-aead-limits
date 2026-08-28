@@ -161,8 +161,8 @@ plaintext bytes and an authentication tag.
 The generic AEAD interface does not describe usage limits.  Each AEAD algorithm
 does describe limits on its inputs, but these are formulated as strict
 functional limits, such as the maximum length of inputs, which are determined by
-the properties of the underlying AEAD composition.  The security degradation caused
-by repeated use of a single key is not given the same thorough treatment.
+the properties of the underlying AEAD composition.  The security degradation
+caused by repeated use of a single key is not given the same thorough treatment.
 
 Effective limits can be influenced by the number of "users" of
 a given key. In the traditional setting, there is one key shared between two
@@ -175,7 +175,7 @@ multi-key security setting, often referred to as the multi-user setting in the
 academic literature, considers an attacker's advantage in breaking security of
 any of these many keys, further assuming the attacker may have done some offline
 work (measuring time, but not memory) to help break any key. As a result, AEAD
-algorithm limits may depend on offline work and the number of keys. However,
+algorithm limits can depend on offline work and the number of keys. However,
 given that a multi-key attacker does not target any specific key, acceptable
 advantage levels may differ from that of the single-key setting.
 
