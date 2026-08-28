@@ -1074,11 +1074,19 @@ length is `t = 128` (for AEAD_AES_128_CCM) or `t = 64` (for AEAD_AES_128_CCM_8).
 Protocols with nonce randomization have a limit of:
 
 ~~~
-AEA <= (q+v)*L*C / 2^127 + v / 2^t + o / 2^(k-6)
+AEA <= (q+v)*L*C / 2^128 + v / 2^t + o / 2^(k-6)
 ~~~
 
-Assuming `o <= q + v` (i.e., that the attacker does not spend more work than all
-legitimate protocol users together), this implies the following two limits
+Firstly, observe that offline work dominates
+if the target advantage is small relative to the final term.
+Thus, where `p` is very small (for instance, 2<sup>-60</sup>),
+this requires an assumption that `o` is also small
+(in the example, less than 2<sup>62</sup>).
+
+Where `o` is not constrained by the final term,
+the simplifying assumption that `o <= q + v`
+(i.e., that the attacker does not spend more work than all
+legitimate protocol users together) implies the following two limits
 (distributing the attack probability evenly among the first two terms):
 
 <!--
@@ -1103,7 +1111,6 @@ legitimate protocol users together), this implies the following two limits
 q + v <= p * 2^127 / (L * C)
 v <= p * 2^(t-1)
 ~~~
-
 
 
 ## Multi-Key Examples
