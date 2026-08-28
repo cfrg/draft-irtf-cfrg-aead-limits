@@ -434,7 +434,8 @@ For example, given a 128-bit key and a single nonce, if an attacker could be
 assumed to have the resources to perform in the order of 2<sup>80</sup> AES
 operations, an attacker gains an attack probability of 2<sup>-48</sup>.  That
 might seem like it requires a lot of compute resources, but that amount of
-compute could cost less than 1 million USD in 2025. That cost can only reduce
+compute could cost a significant, but not completely implausible sum in 2025.
+That cost can only reduce
 over time, suggesting that a much greater advantage is likely achievable for a
 sufficiently motivated attacker.  Of course, for such a small chance of success
 (2<sup>-48</sup> is less than one in 281 trillion) this sort of attack seems
