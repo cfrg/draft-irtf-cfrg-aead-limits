@@ -490,9 +490,8 @@ greater than 2, the following bound applies:
 IA <= 2 * (v * (L + 1)) / 2^128
 ~~~
 
-For the assumption of `s + q + v < 2^64`, observe that this applies when `p > L / 2^63`.
-`s + q <= q * (L + 1)` is always small relative to `2^64` if the same advantage is
-applied to the confidentiality limit on `q`.
+When `p * 2^127 / (L + 1)` approaches or exceeds 2<sup>64</sup>,
+the additional condition `s + q + v < 2^64` becomes the binding constraint.
 
 This produces the following limit:
 
