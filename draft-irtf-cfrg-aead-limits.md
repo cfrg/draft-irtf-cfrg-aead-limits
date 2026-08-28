@@ -768,9 +768,12 @@ This implies the following limit:
 q + v <= p * 2^127 / (L * B)
 ~~~
 
-This assumes `B > 96`; that is, some user enciphers more than 1536 bytes of data.
-Otherwise, `B` should be fixed to 96. For AEAD_AES_128_GCM, it further assumes
-`o <= 2^70`, otherwise a term in the order of `o / 2^120` starts dominating.
+This assumes that `B` is much larger than 100; that is, each user enciphers
+significantly more than 1600 bytes of data.
+For smaller values of `B`, the value of `B` should be replaced
+by `B+161` for AEAD_AES_128_GCM and by `B+97` for AEAD_AES_256_GCM.
+For AEAD_AES_128_GCM, it further assumes
+`o <= 2^70`, otherwise a term in the order of `o / 2^120` becomes relevant.
 
 
 <!--
