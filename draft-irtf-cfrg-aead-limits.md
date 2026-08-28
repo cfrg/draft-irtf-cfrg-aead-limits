@@ -177,7 +177,7 @@ any of these many keys, further assuming the attacker may have done some offline
 work (measuring time, but not memory) to help break any key. As a result, AEAD
 algorithm limits can depend on offline work and the number of keys. However,
 given that a multi-key attacker does not target any specific key, acceptable
-advantage levels may differ from that of the single-key setting.
+advantage levels could be higher than those chosen in the single-key setting.
 
 The number of times a single pair of key and nonce can be used might also be
 relevant to security.  For some algorithms, such as AEAD_AES_128_GCM or
