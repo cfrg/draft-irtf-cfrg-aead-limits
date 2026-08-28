@@ -1074,7 +1074,7 @@ length is `t = 128` (for AEAD_AES_128_CCM) or `t = 64` (for AEAD_AES_128_CCM_8).
 Protocols with nonce randomization have a limit of:
 
 ~~~
-AEA <= (q+v)*L*B / 2^127 + v / 2^t + o / 2^(k-6)
+AEA <= (q+v)*L*C / 2^127 + v / 2^t + o / 2^(k-6)
 ~~~
 
 Assuming `o <= q + v` (i.e., that the attacker does not spend more work than all
