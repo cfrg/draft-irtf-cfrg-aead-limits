@@ -5,10 +5,10 @@
 Network Working Group                                         F. Günther
 Internet-Draft                              IBM Research Europe - Zurich
 Intended status: Informational                                M. Thomson
-Expires: 1 March 2027                                            Mozilla
+Expires: 4 March 2027                                            Mozilla
                                                               C. A. Wood
                                                               Cloudflare
-                                                          28 August 2026
+                                                          31 August 2026
 
 
                     Usage Limits on AEAD Algorithms
@@ -51,7 +51,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 1 March 2027.
+   This Internet-Draft will expire on 4 March 2027.
 
 Copyright Notice
 
@@ -119,8 +119,8 @@ Table of Contents
    algorithm does describe limits on its inputs, but these are
    formulated as strict functional limits, such as the maximum length of
    inputs, which are determined by the properties of the underlying AEAD
-   composition.  Degradation of the security of the AEAD as a single key
-   is used multiple times is not given the same thorough treatment.
+   composition.  The security degradation caused by repeated use of a
+   single key is not given the same thorough treatment.
 
    Effective limits can be influenced by the number of "users" of a
    given key.  In the traditional setting, there is one key shared
@@ -137,7 +137,8 @@ Table of Contents
    memory) to help break any key.  As a result, AEAD algorithm limits
    may depend on offline work and the number of keys.  However, given
    that a multi-key attacker does not target any specific key,
-   acceptable advantages may differ from that of the single-key setting.
+   acceptable advantage levels may differ from that of the single-key
+   setting.
 
    The number of times a single pair of key and nonce can be used might
    also be relevant to security.  For some algorithms, such as
@@ -149,14 +150,14 @@ Table of Contents
    requiring non-repeating nonces.
 
    It is good practice to have limits on how many times the same key (or
-   pair of key and nonce) are used.  Setting a limit based on some
-   measurable property of the usage, such as number of protected
-   messages, amount of data transferred, or time passed ensures that it
-   is easy to apply limits.  This might require the application of
-   simplifying assumptions.  For example, TLS 1.3 and QUIC both specify
-   limits on the number of records that can be protected, using the
-   simplifying assumption that records are the same size; see
-   Section 5.5 of [TLS] and Section 6.6 of [RFC9001].
+   key-nonce pair) are used.  Setting a limit based on some measurable
+   property of the usage, such as the number of protected messages,
+   amount of data transferred, or elapsed time, ensures that it is easy
+   to apply limits.  This might require the application of simplifying
+   assumptions.  For example, TLS 1.3 and QUIC both specify limits on
+   the number of records that can be protected, using the simplifying
+   assumption that records are the same size; see Section 5.5 of [TLS]
+   and Section 6.6 of [RFC9001].
 
    Exceeding the determined usage limit for a single key can be avoided
    using rekeying.  Rekeying can also provide a measure of forward and
@@ -165,7 +166,7 @@ Table of Contents
    Additional rekeying mechanisms, such as running an ephemeral
    asymmetric key exchange, can provide further security guarantees such
    as post-compromise security (PCS); they are out of scope for this
-   document, which focuses on AEAD advantage bounds resulting from for
+   document, which focuses on AEAD advantage bounds resulting from
    limiting the use of keys.  When considering rekeying, the multi-user
    limits SHOULD be applied.
 
@@ -209,8 +210,8 @@ Table of Contents
         |      L | Maximum length of each message, including     |
         |        | both plaintext and AAD (in blocks)            |
         +--------+-----------------------------------------------+
-        |      s | Total plaintext length in all messages (in    |
-        |        | blocks)                                       |
+        |      s | Total plaintext and AAD length in all         |
+        |        | messages (in blocks)                          |
         +--------+-----------------------------------------------+
         |      q | Number of protected messages (AEAD encryption |
         |        | invocations)                                  |
@@ -290,8 +291,8 @@ Table of Contents
    where a pseudorandom bitstream is XORed with plaintext to produce
    ciphertext.
 
-   Confidentiality under definitions other than IND-CPA, such as IND-CCA
-   definition that allows an active attacker to adaptively decrypt
+   Confidentiality under definitions other than IND-CPA, such as an IND-
+   CCA definition that allows an active attacker to adaptively decrypt
    ciphertexts, depends critically on retaining integrity.  A cipher in
    counter mode cannot guarantee confidentiality if integrity is not
    maintained.
@@ -337,7 +338,7 @@ Table of Contents
 
    When limits are expressed as a number of messages an application can
    encrypt or decrypt, this requires assumptions about the size of
-   messages and any authenticated additional data (AAD).  Limits can
+   messages and any additional authenticated data (AAD).  Limits can
    instead be expressed in terms of the number of bytes, or blocks, of
    plaintext and maybe AAD in total.
 
@@ -446,7 +447,7 @@ Table of Contents
    That cost can only reduce over time, suggesting that a much greater
    advantage is likely achievable for a sufficiently motivated attacker.
    Of course, for such a small chance of success (2^-48 is around one in
-   250 trillion) this sort of attack seems likely to remain impractical
+   280 trillion) this sort of attack seems likely to remain impractical
    for some time.
 
 6.2.  AEAD_AES_128_GCM and AEAD_AES_256_GCM
@@ -553,7 +554,7 @@ Table of Contents
    v + (2L * (v + q))^2 <= p * 2^128
 
    In a setting where v or q is sufficiently large, v is negligible
-   compared to (2L * (v + q))^2, so this this can be simplified to:
+   compared to (2L * (v + q))^2, so this can be simplified to:
 
    v + q <= sqrt(p) * 2^63 / L
 
@@ -631,13 +632,14 @@ Table of Contents
 7.  Multi-Key AEAD Limits
 
    In the multi-key setting, each user is assumed to have an independent
-   and uniformly distributed key, though nonces may be re-used.  The
-   success probability in attacking one of these many independent keys
-   can be generically bounded by the success probability of attacking a
-   single key multiplied by the number of keys present [MUSecurity],
-   [GCM-MU].  Absent concrete multi-key bounds, this means the attacker
-   advantage in the multi-key setting is the product of the single-key
-   advantage and the number of keys.
+   and uniformly distributed key, though nonces may be re-used under
+   different keys (but not repeated under the same key).  The success
+   probability in attacking one of these many independent keys can be
+   generically bounded by the success probability of attacking a single
+   key multiplied by the number of keys present [MUSecurity], [GCM-MU].
+   Absent concrete multi-key bounds, this means the attacker advantage
+   in the multi-key setting is the product of the single-key advantage
+   and the number of keys.
 
    This section summarizes the confidentiality and integrity bounds and
    limits for the same algorithms as in Section 6 for the multi-key
@@ -654,7 +656,7 @@ Table of Contents
    nonce randomization was further improved in [ChaCha20Poly1305-MU].
 
    Results for AES-GCM with random, partially implicit nonces [RFC5288]
-   are captured by Theorem 5.3 in [GCM-MU2], which apply to protocols
+   are captured by Theorem 5.3 in [GCM-MU2], which applies to protocols
    such as TLS 1.2 [RFC5246].  Here, the implicit part of the nonce is a
    random value, of length at least 32 bits and fixed per key, while we
    assume that the explicit part of the nonce is chosen using a non-
@@ -678,11 +680,10 @@ Table of Contents
 
    q + v <= p * 2^127 / (L * B)
 
-   This assumes that B is much larger than 100; that is, each user
-   enciphers significantly more than 1600 bytes of data.  Otherwise, B
-   should be increased by 161 for AEAD_AES_128_GCM and by 97 for
-   AEAD_AES_256_GCM.  For AEAD_AES_128_GCM, it further assumes o <=
-   2^70, otherwise a term in the order of o / 2^120 starts dominating.
+   This assumes B > 96; that is, some user enciphers more than 1536
+   bytes of data.  Otherwise, B should be fixed to 96.  For
+   AEAD_AES_128_GCM, it further assumes o <= 2^70, otherwise a term in
+   the order of o / 2^120 starts dominating.
 
    Protocols with random, partially implicit nonces (like TLS 1.2) have
    the following limit, which is similar to that for nonce
@@ -837,11 +838,10 @@ Table of Contents
                Table 3: Example multi-key limits; see text
                           for parameter details
 
-   The limits for AEAD_AES_128_GCM, AEAD_AES_256_GCM, AEAD_AES_128_CCM,
-   and AEAD_AES_128_CCM_8 assume equal proportions for q and v.  The
-   limits for all schemes assume the use of nonce randomization, like in
-   TLS 1.3 [TLS] and QUIC [RFC9001], and offline work limited to o <=
-   2^70.
+   The limits for AEAD_AES_128_GCM, AEAD_AES_256_GCM and
+   AEAD_AES_128_CCM, assume equal proportions for q and v.  The limits
+   for all schemes assume the use of nonce randomization, like in TLS
+   1.3 [TLS] and QUIC [RFC9001], and offline work limited to o <= 2^70.
 
    The limits for AEAD_AES_128_GCM, AEAD_AES_256_GCM, AEAD_AES_128_CCM
    and AEAD_AES_128_CCM_8 further depend on the maximum number (B resp.
@@ -1028,7 +1028,7 @@ Acknowledgments
    thanks are owed to Mihir Bellare, Thomas Bellebaum, Daniel
    J. Bernstein, Mike Bishop, Scott Fluhrer, Thomas Fossati, Jérôme
    Govinden, John Mattsson, David McGrew, Yoav Nir, Thomas Pornin, and
-   Alexander Tereschenko for helping making this document better.
+   Alexander Tereschenko for helping make this document better.
 
 Authors' Addresses
 
