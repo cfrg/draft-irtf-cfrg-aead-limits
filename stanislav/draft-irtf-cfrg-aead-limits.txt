@@ -1027,8 +1027,9 @@ Acknowledgments
    In addition to the authors of papers performing analysis of ciphers,
    thanks are owed to Mihir Bellare, Thomas Bellebaum, Daniel
    J. Bernstein, Mike Bishop, Scott Fluhrer, Thomas Fossati, Jérôme
-   Govinden, John Mattsson, David McGrew, Yoav Nir, Thomas Pornin, and
-   Alexander Tereschenko for helping make this document better.
+   Govinden, John Mattsson, David McGrew, Yoav Nir, Thomas Pornin,
+   Stanislav Smyshlyaev, and Alexander Tereschenko for helping make this
+   document better.
 
 Authors' Addresses
 
