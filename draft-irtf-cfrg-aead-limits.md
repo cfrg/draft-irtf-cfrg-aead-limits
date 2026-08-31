@@ -161,9 +161,8 @@ plaintext bytes and an authentication tag.
 The generic AEAD interface does not describe usage limits.  Each AEAD algorithm
 does describe limits on its inputs, but these are formulated as strict
 functional limits, such as the maximum length of inputs, which are determined by
-the properties of the underlying AEAD composition.  Degradation of the security
-of the AEAD as a single key is used multiple times is not given the same
-thorough treatment.
+the properties of the underlying AEAD composition.  The security degradation caused
+by repeated use of a single key is not given the same thorough treatment.
 
 Effective limits can be influenced by the number of "users" of
 a given key. In the traditional setting, there is one key shared between two
@@ -178,7 +177,7 @@ any of these many keys, further assuming the attacker may have done some offline
 work (measuring time, but not memory) to help break any key. As a result, AEAD
 algorithm limits may depend on offline work and the number of keys. However,
 given that a multi-key attacker does not target any specific key, acceptable
-advantages may differ from that of the single-key setting.
+advantage levels may differ from that of the single-key setting.
 
 The number of times a single pair of key and nonce can be used might also be
 relevant to security.  For some algorithms, such as AEAD_AES_128_GCM or
@@ -188,10 +187,10 @@ serious consequences for both confidentiality and integrity; see
 AEAD_AES_128_GCM_SIV can tolerate a limited amount of nonce reuse.
 This document focuses on AEAD schemes requiring non-repeating nonces.
 
-It is good practice to have limits on how many times the same key (or pair of
-key and nonce) are used.  Setting a limit based on some measurable property of
-the usage, such as number of protected messages, amount of data transferred, or
-time passed ensures that it is easy to apply limits.  This might require the
+It is good practice to have limits on how many times the same key (or key-nonce
+pair) are used.  Setting a limit based on some measurable property of
+the usage, such as the number of protected messages, amount of data transferred, or
+elapsed time, ensures that it is easy to apply limits.  This might require the
 application of simplifying assumptions.  For example, TLS 1.3 and QUIC both
 specify limits on the number of records that can be protected, using the
 simplifying assumption that records are the same size; see {{Section 5.5 of
@@ -203,7 +202,7 @@ Rekeying can also provide a measure of forward and backward (post-compromise) se
 design choices. Additional rekeying mechanisms, such as running an ephemeral asymmetric
 key exchange, can provide further security guarantees such as post-compromise security
 (PCS); they are out of scope for this document, which focuses on AEAD advantage bounds
-resulting from for limiting the use of keys.  When considering rekeying, the multi-user
+resulting from limiting the use of keys.  When considering rekeying, the multi-user
 limits SHOULD be applied.
 
 Currently, AEAD limits and usage requirements are scattered among peer-reviewed
@@ -233,7 +232,7 @@ This document defines limitations in part using the quantities in
 | r | AEAD nonce length (in bits) |
 | t | Size of the authentication tag (in bits) |
 | L | Maximum length of each message, including both plaintext and AAD (in blocks) |
-| s | Total plaintext length in all messages (in blocks) |
+| s | Total plaintext and AAD length in all messages (in blocks) |
 | q | Number of protected messages (AEAD encryption invocations) |
 | v | Number of attacker forgery attempts (failed AEAD decryption invocations + 1) |
 | p | Upper bound on adversary attack probability |
@@ -295,7 +294,7 @@ The AEADs described in this document all use ciphers in counter mode,
 where a pseudorandom bitstream is XORed with plaintext to produce ciphertext.
 
 Confidentiality under definitions other than IND-CPA,
-such as IND-CCA definition that allows an active attacker to adaptively decrypt ciphertexts,
+such as an IND-CCA definition that allows an active attacker to adaptively decrypt ciphertexts,
 depends critically on retaining integrity.
 A cipher in counter mode cannot guarantee confidentiality
 if integrity is not maintained.
@@ -339,7 +338,7 @@ in the single-key setting; see {{Section 5.5 of TLS}}.
 
 When limits are expressed as a number of messages an application can encrypt or
 decrypt, this requires assumptions about the size of messages and any
-authenticated additional data (AAD).  Limits can instead be expressed in terms
+additional authenticated data (AAD).  Limits can instead be expressed in terms
 of the number of bytes, or blocks, of plaintext and maybe AAD in total.
 
 To aid in translating between message-based and byte/block-based limits,
@@ -438,7 +437,7 @@ might seem like it requires a lot of compute resources, but that amount of
 compute could cost less than 1 million USD in 2025. That cost can only reduce
 over time, suggesting that a much greater advantage is likely achievable for a
 sufficiently motivated attacker.  Of course, for such a small chance of success
-(2<sup>-48</sup> is around one in 250 trillion) this sort of attack seems likely
+(2<sup>-48</sup> is around one in 280 trillion) this sort of attack seems likely
 to remain impractical for some time.
 
 
@@ -605,7 +604,7 @@ v + (2L * (v + q))^2 <= p * 2^128
 ~~~
 
 In a setting where `v` or `q` is sufficiently large, `v` is negligible compared to
-`(2L * (v + q))^2`, so this this can be simplified to:
+`(2L * (v + q))^2`, so this can be simplified to:
 
 ~~~
 v + q <= sqrt(p) * 2^63 / L
@@ -682,7 +681,8 @@ increased to 2<sup>31</sup> for both CCM AEADs.
 # Multi-Key AEAD Limits {#mu-limits}
 
 In the multi-key setting, each user is assumed to have an independent and
-uniformly distributed key, though nonces may be re-used. The success probability
+uniformly distributed key, though nonces may be re-used under different keys
+(but not repeated under the same key). The success probability
 in attacking one of these many independent keys can be generically bounded by
 the success probability of attacking a single key multiplied by the number of
 keys present {{MUSecurity}}, {{GCM-MU}}.  Absent concrete multi-key bounds, this
@@ -703,7 +703,7 @@ a secret, random offset. The bound for nonce randomization was further improved
 in {{ChaCha20Poly1305-MU}}.
 
 Results for AES-GCM with random, partially implicit nonces {{?RFC5288}} are
-captured by Theorem 5.3 in {{GCM-MU2}}, which apply to protocols such as TLS 1.2
+captured by Theorem 5.3 in {{GCM-MU2}}, which applies to protocols such as TLS 1.2
 {{?RFC5246}}. Here, the implicit part of the nonce is a random value, of length
 at least 32 bits and fixed per key, while we assume that the explicit part of
 the nonce is chosen using a non-repeating process. The full nonce is the
@@ -739,7 +739,8 @@ or `k = 256` for AEAD_AES_128_GCM and AEAD_AES_256_GCM respectively.
             we can add n*\sigma/2^128
         - 2nd term (../2^n):
           \sigma*(2B + cn + 2)/2^n = \sigma*(B + 97)/2^127
-          Assuming that B >> 100, the dominant term is \sigma*B/2^127
+          Assuming that B > 96, the dominant term is \sigma*B/2^127.
+          (Else, it's \sigma*cn/2^n = \sigma*96/2^127  (GHASH is c-AXU for c=1.5).)
         - 3rd term (../2^2n):  <= 2^-160, negligible.
         - 4th term (../2^(k+n)):  roughly <= (\sigma^2 + 2o(q+v)) / 2^256
           <= 2^-64, negligible.
@@ -764,9 +765,8 @@ This implies the following limit:
 q + v <= p * 2^127 / (L * B)
 ~~~
 
-This assumes that `B` is much larger than 100; that is, each user enciphers
-significantly more than 1600 bytes of data.  Otherwise, `B` should be increased by 161 for
-AEAD_AES_128_GCM and by 97 for AEAD_AES_256_GCM.  For AEAD_AES_128_GCM, it further assumes
+This assumes `B > 96`; that is, some user enciphers more than 1536 bytes of data.
+Otherwise, `B` should be fixed to 96. For AEAD_AES_128_GCM, it further assumes
 `o <= 2^70`, otherwise a term in the order of `o / 2^120` starts dominating.
 
 
@@ -1134,9 +1134,8 @@ might be chosen under these conditions.
 | AEAD_AES_128_CCM_8     | 2<sup>69</sup>/C         | 2<sup>13</sup>         |
 {: #ex-table-mu title="Example multi-key limits; see text for parameter details"}
 
-The limits for AEAD_AES_128_GCM, AEAD_AES_256_GCM, AEAD_AES_128_CCM, and
-AEAD_AES_128_CCM_8 assume equal proportions for `q` and `v`. The limits for
-all schemes assume the use
+The limits for AEAD_AES_128_GCM, AEAD_AES_256_GCM and AEAD_AES_128_CCM, assume
+equal proportions for `q` and `v`. The limits for all schemes assume the use
 of nonce randomization, like in TLS 1.3 {{TLS}} and QUIC {{?RFC9001}}, and
 offline work limited to `o <= 2^70`.
 
@@ -1202,4 +1201,4 @@ owed to
 {{{Yoav Nir}}},
 {{{Thomas Pornin}}}, and
 {{{Alexander Tereschenko}}}
-for helping making this document better.
+for helping make this document better.
