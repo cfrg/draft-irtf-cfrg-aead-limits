@@ -135,10 +135,10 @@ Table of Contents
    breaking security of any of these many keys, further assuming the
    attacker may have done some offline work (measuring time, but not
    memory) to help break any key.  As a result, AEAD algorithm limits
-   may depend on offline work and the number of keys.  However, given
+   can depend on offline work and the number of keys.  However, given
    that a multi-key attacker does not target any specific key,
-   acceptable advantage levels may differ from that of the single-key
-   setting.
+   acceptable advantage levels could be higher than those chosen in the
+   single-key setting.
 
    The number of times a single pair of key and nonce can be used might
    also be relevant to security.  For some algorithms, such as
@@ -150,14 +150,14 @@ Table of Contents
    requiring non-repeating nonces.
 
    It is good practice to have limits on how many times the same key (or
-   key-nonce pair) are used.  Setting a limit based on some measurable
-   property of the usage, such as the number of protected messages,
-   amount of data transferred, or elapsed time, ensures that it is easy
-   to apply limits.  This might require the application of simplifying
-   assumptions.  For example, TLS 1.3 and QUIC both specify limits on
-   the number of records that can be protected, using the simplifying
-   assumption that records are the same size; see Section 5.5 of [TLS]
-   and Section 6.6 of [RFC9001].
+   key-nonce pair) is used.  Setting a limit based on some measurable
+   property of the usage -- such as the number of protected messages,
+   the amount of data transferred, or elapsed time -- ensures that it is
+   easy to apply limits.  This might require the application of
+   simplifying assumptions.  For example, TLS 1.3 and QUIC both specify
+   limits on the number of records that can be protected, using the
+   simplifying assumption that records are the same size; see
+   Section 5.5 of [TLS] and Section 6.6 of [RFC9001].
 
    Exceeding the determined usage limit for a single key can be avoided
    using rekeying.  Rekeying can also provide a measure of forward and
@@ -443,33 +443,34 @@ Table of Contents
    could be assumed to have the resources to perform in the order of
    2^80 AES operations, an attacker gains an attack probability of 2^-
    48.  That might seem like it requires a lot of compute resources, but
-   that amount of compute could cost less than 1 million USD in 2025.
-   That cost can only reduce over time, suggesting that a much greater
-   advantage is likely achievable for a sufficiently motivated attacker.
-   Of course, for such a small chance of success (2^-48 is around one in
-   280 trillion) this sort of attack seems likely to remain impractical
-   for some time.
+   that amount of compute could cost a significant, but not completely
+   implausible sum in 2025.  That cost can only reduce over time,
+   suggesting that a much greater advantage is likely achievable for a
+   sufficiently motivated attacker.  Of course, for such a small chance
+   of success (2^-48 is less than one in 281 trillion) this sort of
+   attack seems likely to remain impractical for some time.
 
 6.2.  AEAD_AES_128_GCM and AEAD_AES_256_GCM
 
    The CL and IL values for AES-GCM are derived in [AEBounds], following
    [GCMProofs], and summarized below.  For this AEAD, n = 128 (the AES
-   block length) and t = 128 [GCM], [RFC5116].  In this example, the
-   length s is the sum of AAD and plaintext (in blocks of 128 bits), as
-   described in [GCMProofs].
+   block length) and t = 128 [GCM], [RFC5116].
+
+   Note that this analysis uses s' to mean the sum of AAD and plaintext
+   lengths (in blocks of 128 bits), as described in [GCMProofs].
 
 6.2.1.  Confidentiality Limit
 
    Applying Corollary 3 from [GCMProofs], assuming AES behaves like a
    random permutation, the following bound applies:
 
-   CA <= ((s + q + 1)^2) / 2^129
+   CA <= ((s' + q + 1)^2) / 2^129
 
    This implies the following usage limit:
 
-   q + s <= p^(1/2) * 2^(129/2) - 1
+   q + s' <= p^(1/2) * 2^(129/2) - 1
 
-   Which, for a message-based protocol with s <= q * L, if we assume
+   Which, for a message-based protocol with s' <= q * L, if we assume
    that every packet is size L (in blocks of 128 bits), produces the
    limit:
 
@@ -477,14 +478,14 @@ Table of Contents
 
 6.2.2.  Integrity Limit
 
-   Applying Equation (22) from [GCMProofs], in which the assumption of s
-   + q + v < 2^64 ensures that the delta function cannot produce a value
-   greater than 2, the following bound applies:
+   Applying Equation (22) from [GCMProofs], in which the assumption of
+   s' + q + v < 2^64 ensures that the delta function cannot produce a
+   value greater than 2, the following bound applies:
 
    IA <= 2 * (v * (L + 1)) / 2^128
 
    When p * 2^127 / (L + 1) approaches or exceeds 2^64, the additional
-   condition s + q + v < 2^64 becomes the binding constraint.
+   condition s' + q + v < 2^64 becomes the binding constraint.
 
    This produces the following limit:
 
@@ -593,8 +594,8 @@ Table of Contents
    section MUST NOT be used; refer instead to those in Section 7.
 
    An example protocol might choose to aim for a single-key CA and IA
-   that is at most 2^-50.  (This in particular limits offline work to o
-   <= 2^(k-50), see Section 6.1.)  If the messages exchanged in the
+   that is at most 2^-50.  (This assumes limits to offline work of o <=
+   2^(k-50), see Section 6.1.)  If the messages exchanged in the
    protocol are at most a common Internet MTU of around 1500 bytes, then
    a value for L might be set to 2^7.  Table 2 shows limits for q and v
    that might be chosen under these conditions.
@@ -621,9 +622,9 @@ Table of Contents
 
    The limit for q on AEAD_AES_128_CCM and AEAD_AES_128_CCM_8 is reduced
    due to a need to reduce the value of q to ensure that IA does not
-   exceed the target.  This assumes equal proportions for q and v for
-   AEAD_AES_128_CCM.  AEAD_AES_128_CCM_8 permits a much smaller value of
-   v due to the shorter tag, which permits a higher limit for q.
+   exceed the target.  AEAD_AES_128_CCM_8 only permits small value of v
+   due to the shorter tag, which leaves a higher limit available for q.
+   The table assumes equal allocations to q and v for AEAD_AES_128_CCM.
 
    Some protocols naturally limit v to 1, such as TCP-based variants of
    TLS, which terminate sessions on decryption failure.  If v is limited
@@ -632,14 +633,14 @@ Table of Contents
 7.  Multi-Key AEAD Limits
 
    In the multi-key setting, each user is assumed to have an independent
-   and uniformly distributed key, though nonces may be re-used under
-   different keys (but not repeated under the same key).  The success
-   probability in attacking one of these many independent keys can be
-   generically bounded by the success probability of attacking a single
-   key multiplied by the number of keys present [MUSecurity], [GCM-MU].
-   Absent concrete multi-key bounds, this means the attacker advantage
-   in the multi-key setting is the product of the single-key advantage
-   and the number of keys.
+   and uniformly distributed key.  The same nonce can be used, but only
+   with different keys (all of these modes are broken if key and nonce
+   repeat).  The success probability in attacking one of these many
+   independent keys can be generically bounded by the success
+   probability of attacking a single key multiplied by the number of
+   keys present [MUSecurity], [GCM-MU].  Absent concrete multi-key
+   bounds, this means the attacker advantage in the multi-key setting is
+   the product of the single-key advantage and the number of keys.
 
    This section summarizes the confidentiality and integrity bounds and
    limits for the same algorithms as in Section 6 for the multi-key
@@ -680,10 +681,12 @@ Table of Contents
 
    q + v <= p * 2^127 / (L * B)
 
-   This assumes B > 96; that is, some user enciphers more than 1536
-   bytes of data.  Otherwise, B should be fixed to 96.  For
+   This assumes that B is much larger than 100; that is, each user
+   enciphers significantly more than 1600 bytes of data.  For smaller
+   values of B, the value of B should be replaced by B+161 for
+   AEAD_AES_128_GCM and by B+97 for AEAD_AES_256_GCM.  For
    AEAD_AES_128_GCM, it further assumes o <= 2^70, otherwise a term in
-   the order of o / 2^120 starts dominating.
+   the order of o / 2^120 becomes relevant.
 
    Protocols with random, partially implicit nonces (like TLS 1.2) have
    the following limit, which is similar to that for nonce

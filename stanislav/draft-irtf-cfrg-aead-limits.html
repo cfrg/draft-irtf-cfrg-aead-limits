@@ -1306,8 +1306,8 @@ plaintext bytes and an authentication tag.<a href="#section-1-1" class="pilcrow"
 <p id="section-1-2">The generic AEAD interface does not describe usage limits.  Each AEAD algorithm
 does describe limits on its inputs, but these are formulated as strict
 functional limits, such as the maximum length of inputs, which are determined by
-the properties of the underlying AEAD composition.  The security degradation caused
-by repeated use of a single key is not given the same thorough treatment.<a href="#section-1-2" class="pilcrow">¶</a></p>
+the properties of the underlying AEAD composition.  The security degradation
+caused by repeated use of a single key is not given the same thorough treatment.<a href="#section-1-2" class="pilcrow">¶</a></p>
 <p id="section-1-3">Effective limits can be influenced by the number of "users" of
 a given key. In the traditional setting, there is one key shared between two
 parties. Any limits on the maximum length of inputs or encryption operations
@@ -1319,9 +1319,9 @@ multi-key security setting, often referred to as the multi-user setting in the
 academic literature, considers an attacker's advantage in breaking security of
 any of these many keys, further assuming the attacker may have done some offline
 work (measuring time, but not memory) to help break any key. As a result, AEAD
-algorithm limits may depend on offline work and the number of keys. However,
+algorithm limits can depend on offline work and the number of keys. However,
 given that a multi-key attacker does not target any specific key, acceptable
-advantage levels may differ from that of the single-key setting.<a href="#section-1-3" class="pilcrow">¶</a></p>
+advantage levels could be higher than those chosen in the single-key setting.<a href="#section-1-3" class="pilcrow">¶</a></p>
 <p id="section-1-4">The number of times a single pair of key and nonce can be used might also be
 relevant to security.  For some algorithms, such as AEAD_AES_128_GCM or
 AEAD_AES_256_GCM, this limit is 1 and using the same pair of key and nonce has
@@ -1329,10 +1329,10 @@ serious consequences for both confidentiality and integrity; see
 <span>[<a href="#NonceDisrespecting" class="cite xref">NonceDisrespecting</a>]</span>.  Nonce-reuse resistant algorithms like
 AEAD_AES_128_GCM_SIV can tolerate a limited amount of nonce reuse.
 This document focuses on AEAD schemes requiring non-repeating nonces.<a href="#section-1-4" class="pilcrow">¶</a></p>
-<p id="section-1-5">It is good practice to have limits on how many times the same key (or key-nonce
-pair) are used.  Setting a limit based on some measurable property of
-the usage, such as the number of protected messages, amount of data transferred, or
-elapsed time, ensures that it is easy to apply limits.  This might require the
+<p id="section-1-5">It is good practice to have limits on how many times the same key (or
+key-nonce pair) is used.  Setting a limit based on some measurable property of
+the usage -- such as the number of protected messages, the amount of data transferred, or
+elapsed time -- ensures that it is easy to apply limits.  This might require the
 application of simplifying assumptions.  For example, TLS 1.3 and QUIC both
 specify limits on the number of records that can be protected, using the
 simplifying assumption that records are the same size; see <span><a href="https://rfc-editor.org/rfc/rfc8446#section-5.5" class="relref">Section 5.5</a> of [<a href="#TLS" class="cite xref">TLS</a>]</span> and <span><a href="https://rfc-editor.org/rfc/rfc9001#section-6.6" class="relref">Section 6.6</a> of [<a href="#RFC9001" class="cite xref">RFC9001</a>]</span>.<a href="#section-1-5" class="pilcrow">¶</a></p>
@@ -1639,11 +1639,12 @@ sizes, depending on what assumptions can be made about attacker resources.<a hre
 assumed to have the resources to perform in the order of 2<sup>80</sup> AES
 operations, an attacker gains an attack probability of 2<sup>-48</sup>.  That
 might seem like it requires a lot of compute resources, but that amount of
-compute could cost less than 1 million USD in 2025. That cost can only reduce
+compute could cost a significant, but not completely implausible sum in 2025.
+That cost can only reduce
 over time, suggesting that a much greater advantage is likely achievable for a
 sufficiently motivated attacker.  Of course, for such a small chance of success
-(2<sup>-48</sup> is around one in 280 trillion) this sort of attack seems likely
-to remain impractical for some time.<a href="#section-6.1-5" class="pilcrow">¶</a></p>
+(2<sup>-48</sup> is less than one in 281 trillion) this sort of attack seems
+likely to remain impractical for some time.<a href="#section-6.1-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="aeadaes128gcm-and-aeadaes256gcm">
@@ -1652,8 +1653,9 @@ to remain impractical for some time.<a href="#section-6.1-5" class="pilcrow">¶<
 <a href="#section-6.2" class="section-number selfRef">6.2. </a><a href="#name-aead_aes_128_gcm-and-aead_a" class="section-name selfRef">AEAD_AES_128_GCM and AEAD_AES_256_GCM</a>
         </h3>
 <p id="section-6.2-1">The CL and IL values for AES-GCM are derived in <span>[<a href="#AEBounds" class="cite xref">AEBounds</a>]</span>, following <span>[<a href="#GCMProofs" class="cite xref">GCMProofs</a>]</span>, and summarized below.
-For this AEAD, <code>n = 128</code> (the AES block length) and <code>t = 128</code> <span>[<a href="#GCM" class="cite xref">GCM</a>]</span>, <span>[<a href="#RFC5116" class="cite xref">RFC5116</a>]</span>. In this example,
-the length <code>s</code> is the sum of AAD and plaintext (in blocks of 128 bits), as described in <span>[<a href="#GCMProofs" class="cite xref">GCMProofs</a>]</span>.<a href="#section-6.2-1" class="pilcrow">¶</a></p>
+For this AEAD, <code>n = 128</code> (the AES block length) and <code>t = 128</code> <span>[<a href="#GCM" class="cite xref">GCM</a>]</span>, <span>[<a href="#RFC5116" class="cite xref">RFC5116</a>]</span>.<a href="#section-6.2-1" class="pilcrow">¶</a></p>
+<p id="section-6.2-2">Note that this analysis uses <code>s'</code> to mean the sum of AAD and plaintext
+lengths (in blocks of 128 bits), as described in <span>[<a href="#GCMProofs" class="cite xref">GCMProofs</a>]</span>.<a href="#section-6.2-2" class="pilcrow">¶</a></p>
 <div id="confidentiality-limit">
 <section id="section-6.2.1">
           <h4 id="name-confidentiality-limit">
@@ -1663,16 +1665,16 @@ the length <code>s</code> is the sum of AAD and plaintext (in blocks of 128 bits
 the following bound applies:<a href="#section-6.2.1-1" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-6.2.1-2">
 <pre>
-CA &lt;= ((s + q + 1)^2) / 2^129
+CA &lt;= ((s' + q + 1)^2) / 2^129
 </pre><a href="#section-6.2.1-2" class="pilcrow">¶</a>
 </div>
 <p id="section-6.2.1-3">This implies the following usage limit:<a href="#section-6.2.1-3" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-6.2.1-4">
 <pre>
-q + s &lt;= p^(1/2) * 2^(129/2) - 1
+q + s' &lt;= p^(1/2) * 2^(129/2) - 1
 </pre><a href="#section-6.2.1-4" class="pilcrow">¶</a>
 </div>
-<p id="section-6.2.1-5">Which, for a message-based protocol with <code>s &lt;= q * L</code>, if we assume that every
+<p id="section-6.2.1-5">Which, for a message-based protocol with <code>s' &lt;= q * L</code>, if we assume that every
 packet is size <code>L</code> (in blocks of 128 bits), produces the limit:<a href="#section-6.2.1-5" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-6.2.1-6">
 <pre>
@@ -1687,7 +1689,7 @@ q &lt;= (p^(1/2) * 2^(129/2) - 1) / (L + 1)
 <a href="#section-6.2.2" class="section-number selfRef">6.2.2. </a><a href="#name-integrity-limit" class="section-name selfRef">Integrity Limit</a>
           </h4>
 <p id="section-6.2.2-1">Applying Equation (22) from <span>[<a href="#GCMProofs" class="cite xref">GCMProofs</a>]</span>, in which the assumption of
-<code>s + q + v &lt; 2^64</code> ensures that the delta function cannot produce a value
+<code>s' + q + v &lt; 2^64</code> ensures that the delta function cannot produce a value
 greater than 2, the following bound applies:<a href="#section-6.2.2-1" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-6.2.2-2">
 <pre>
@@ -1695,7 +1697,7 @@ IA &lt;= 2 * (v * (L + 1)) / 2^128
 </pre><a href="#section-6.2.2-2" class="pilcrow">¶</a>
 </div>
 <p id="section-6.2.2-3">When <code>p * 2^127 / (L + 1)</code> approaches or exceeds 2<sup>64</sup>,
-the additional condition <code>s + q + v &lt; 2^64</code> becomes the binding constraint.<a href="#section-6.2.2-3" class="pilcrow">¶</a></p>
+the additional condition <code>s' + q + v &lt; 2^64</code> becomes the binding constraint.<a href="#section-6.2.2-3" class="pilcrow">¶</a></p>
 <p id="section-6.2.2-4">This produces the following limit:<a href="#section-6.2.2-4" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-6.2.2-5">
 <pre>
@@ -1855,7 +1857,7 @@ such as message sizes. As mentioned earlier, for settings where multiple keys ar
 deployed (like rekeying, multiple connections, etc.), the examples in this section
 MUST NOT be used; refer instead to those in <a href="#mu-limits" class="auto internal xref">Section 7</a>.<a href="#section-6.6-1" class="pilcrow">¶</a></p>
 <p id="section-6.6-2">An example protocol might choose to aim for a single-key CA and IA that is at
-most 2<sup>-50</sup>.  (This in particular limits offline work to <code>o &lt;= 2^(k-50)</code>,
+most 2<sup>-50</sup>.  (This assumes limits to offline work of <code>o &lt;= 2^(k-50)</code>,
 see <a href="#offline-work" class="auto internal xref">Section 6.1</a>.)  If the messages exchanged in the protocol are at most a
 common Internet MTU of around 1500 bytes, then a value for <code>L</code> might be set to
 2<sup>7</sup>.  <a href="#ex-table-su" class="auto internal xref">Table 2</a> shows limits for <code>q</code> and <code>v</code> that might be
@@ -1915,9 +1917,9 @@ chosen under these conditions.<a href="#section-6.6-2" class="pilcrow">¶</a></p
 analyses.<a href="#section-6.6-4" class="pilcrow">¶</a></p>
 <p id="section-6.6-5">The limit for <code>q</code> on AEAD_AES_128_CCM and AEAD_AES_128_CCM_8 is reduced due to a
 need to reduce the value of <code>q</code> to ensure that IA does not exceed the target.
-This assumes equal proportions for <code>q</code> and <code>v</code> for AEAD_AES_128_CCM.
-AEAD_AES_128_CCM_8 permits a much smaller value of <code>v</code> due to the shorter tag,
-which permits a higher limit for <code>q</code>.<a href="#section-6.6-5" class="pilcrow">¶</a></p>
+AEAD_AES_128_CCM_8 only permits small value of <code>v</code> due to the shorter tag,
+which leaves a higher limit available for <code>q</code>.
+The table assumes equal allocations to <code>q</code> and <code>v</code> for AEAD_AES_128_CCM.<a href="#section-6.6-5" class="pilcrow">¶</a></p>
 <p id="section-6.6-6">Some protocols naturally limit <code>v</code> to 1, such as TCP-based variants of TLS, which
 terminate sessions on decryption failure.  If <code>v</code> is limited to 1, <code>q</code> can be
 increased to 2<sup>31</sup> for both CCM AEADs.<a href="#section-6.6-6" class="pilcrow">¶</a></p>
@@ -1931,8 +1933,9 @@ increased to 2<sup>31</sup> for both CCM AEADs.<a href="#section-6.6-6" class="p
 <a href="#section-7" class="section-number selfRef">7. </a><a href="#name-multi-key-aead-limits" class="section-name selfRef">Multi-Key AEAD Limits</a>
       </h2>
 <p id="section-7-1">In the multi-key setting, each user is assumed to have an independent and
-uniformly distributed key, though nonces may be re-used under different keys
-(but not repeated under the same key). The success probability
+uniformly distributed key. The same nonce can be used, but only with
+different keys (all of these modes are broken if key and nonce repeat).
+The success probability
 in attacking one of these many independent keys can be generically bounded by
 the success probability of attacking a single key multiplied by the number of
 keys present <span>[<a href="#MUSecurity" class="cite xref">MUSecurity</a>]</span>, <span>[<a href="#GCM-MU" class="cite xref">GCM-MU</a>]</span>.  Absent concrete multi-key bounds, this
@@ -1980,9 +1983,12 @@ AEA &lt;= (q+v)*L*B / 2^127
 q + v &lt;= p * 2^127 / (L * B)
 </pre><a href="#section-7.1.1-4" class="pilcrow">¶</a>
 </div>
-<p id="section-7.1.1-5">This assumes <code>B &gt; 96</code>; that is, some user enciphers more than 1536 bytes of data.
-Otherwise, <code>B</code> should be fixed to 96. For AEAD_AES_128_GCM, it further assumes
-<code>o &lt;= 2^70</code>, otherwise a term in the order of <code>o / 2^120</code> starts dominating.<a href="#section-7.1.1-5" class="pilcrow">¶</a></p>
+<p id="section-7.1.1-5">This assumes that <code>B</code> is much larger than 100; that is, each user enciphers
+significantly more than 1600 bytes of data.
+For smaller values of <code>B</code>, the value of <code>B</code> should be replaced
+by <code>B+161</code> for AEAD_AES_128_GCM and by <code>B+97</code> for AEAD_AES_256_GCM.
+For AEAD_AES_128_GCM, it further assumes
+<code>o &lt;= 2^70</code>, otherwise a term in the order of <code>o / 2^120</code> becomes relevant.<a href="#section-7.1.1-5" class="pilcrow">¶</a></p>
 <p id="section-7.1.1-6">Protocols with random, partially implicit nonces (like TLS 1.2) have the following limit,
 which is similar to that for nonce randomization:<a href="#section-7.1.1-6" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-7.1.1-7">
