@@ -1199,6 +1199,7 @@ owed to
 {{{John Mattsson}}},
 {{{David McGrew}}},
 {{{Yoav Nir}}},
-{{{Thomas Pornin}}}, and
+{{{Thomas Pornin}}},
+{{{Stanislav Smyshlyaev}}}, and
 {{{Alexander Tereschenko}}}
 for helping make this document better.
