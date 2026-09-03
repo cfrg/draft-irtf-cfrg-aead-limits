@@ -454,23 +454,22 @@ Table of Contents
 
    The CL and IL values for AES-GCM are derived in [AEBounds], following
    [GCMProofs], and summarized below.  For this AEAD, n = 128 (the AES
-   block length) and t = 128 [GCM], [RFC5116].
-
-   Note that this analysis uses s' to mean the sum of AAD and plaintext
-   lengths (in blocks of 128 bits), as described in [GCMProofs].
+   block length) and t = 128 [GCM], [RFC5116].  In this example, the
+   length s is the sum of AAD and plaintext (in blocks of 128 bits), as
+   described in [GCMProofs].
 
 6.2.1.  Confidentiality Limit
 
    Applying Corollary 3 from [GCMProofs], assuming AES behaves like a
    random permutation, the following bound applies:
 
-   CA <= ((s' + q + 1)^2) / 2^129
+   CA <= ((s + q + 1)^2) / 2^129
 
    This implies the following usage limit:
 
-   q + s' <= p^(1/2) * 2^(129/2) - 1
+   q + s <= p^(1/2) * 2^(129/2) - 1
 
-   Which, for a message-based protocol with s' <= q * L, if we assume
+   Which, for a message-based protocol with s <= q * L, if we assume
    that every packet is size L (in blocks of 128 bits), produces the
    limit:
 
@@ -478,14 +477,14 @@ Table of Contents
 
 6.2.2.  Integrity Limit
 
-   Applying Equation (22) from [GCMProofs], in which the assumption of
-   s' + q + v < 2^64 ensures that the delta function cannot produce a
-   value greater than 2, the following bound applies:
+   Applying Equation (22) from [GCMProofs], in which the assumption of s
+   + q + v < 2^64 ensures that the delta function cannot produce a value
+   greater than 2, the following bound applies:
 
    IA <= 2 * (v * (L + 1)) / 2^128
 
    When p * 2^127 / (L + 1) approaches or exceeds 2^64, the additional
-   condition s' + q + v < 2^64 becomes the binding constraint.
+   condition s + q + v < 2^64 becomes the binding constraint.
 
    This produces the following limit:
 
