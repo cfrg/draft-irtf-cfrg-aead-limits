@@ -5,10 +5,10 @@
 Network Working Group                                         F. Günther
 Internet-Draft                              IBM Research Europe - Zurich
 Intended status: Informational                                M. Thomson
-Expires: 4 March 2027                                            Mozilla
+Expires: 7 March 2027                                            Mozilla
                                                               C. A. Wood
                                                               Cloudflare
-                                                          31 August 2026
+                                                        3 September 2026
 
 
                     Usage Limits on AEAD Algorithms
@@ -51,7 +51,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 4 March 2027.
+   This Internet-Draft will expire on 7 March 2027.
 
 Copyright Notice
 
@@ -681,10 +681,9 @@ Table of Contents
 
    q + v <= p * 2^127 / (L * B)
 
-   This assumes that B is much larger than 100; that is, each user
+   This assumes that B is much larger than 100; that is, any user
    enciphers significantly more than 1600 bytes of data.  For smaller
-   values of B, the value of B should be replaced by B+161 for
-   AEAD_AES_128_GCM and by B+97 for AEAD_AES_256_GCM.  For
+   values of B, the value of B should be replaced by B+98.  For
    AEAD_AES_128_GCM, it further assumes o <= 2^70, otherwise a term in
    the order of o / 2^120 becomes relevant.
 
