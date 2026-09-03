@@ -445,10 +445,8 @@ likely to remain impractical for some time.
 ## AEAD_AES_128_GCM and AEAD_AES_256_GCM
 
 The CL and IL values for AES-GCM are derived in {{AEBounds}}, following {{GCMProofs}}, and summarized below.
-For this AEAD, `n = 128` (the AES block length) and `t = 128` {{GCM}}, {{!RFC5116}}.
-
-Note that this analysis uses `s'` to mean the sum of AAD and plaintext
-lengths (in blocks of 128 bits), as described in {{GCMProofs}}.
+For this AEAD, `n = 128` (the AES block length) and `t = 128` {{GCM}}, {{!RFC5116}}. In this example,
+the length `s` is the sum of AAD and plaintext (in blocks of 128 bits), as described in {{GCMProofs}}.
 
 ### Confidentiality Limit
 
@@ -461,16 +459,16 @@ the following bound applies:
 -->
 
 ~~~
-CA <= ((s' + q + 1)^2) / 2^129
+CA <= ((s + q + 1)^2) / 2^129
 ~~~
 
 This implies the following usage limit:
 
 ~~~
-q + s' <= p^(1/2) * 2^(129/2) - 1
+q + s <= p^(1/2) * 2^(129/2) - 1
 ~~~
 
-Which, for a message-based protocol with `s' <= q * L`, if we assume that every
+Which, for a message-based protocol with `s <= q * L`, if we assume that every
 packet is size `L` (in blocks of 128 bits), produces the limit:
 
 ~~~
@@ -480,7 +478,7 @@ q <= (p^(1/2) * 2^(129/2) - 1) / (L + 1)
 ### Integrity Limit
 
 Applying Equation (22) from {{GCMProofs}}, in which the assumption of
-`s' + q + v < 2^64` ensures that the delta function cannot produce a value
+`s + q + v < 2^64` ensures that the delta function cannot produce a value
 greater than 2, the following bound applies:
 
 <!--
@@ -493,7 +491,7 @@ IA <= 2 * (v * (L + 1)) / 2^128
 ~~~
 
 When `p * 2^127 / (L + 1)` approaches or exceeds 2<sup>64</sup>,
-the additional condition `s' + q + v < 2^64` becomes the binding constraint.
+the additional condition `s + q + v < 2^64` becomes the binding constraint.
 
 This produces the following limit:
 
@@ -505,7 +503,7 @@ v <= min(2^64, (p * 2^127) / (L + 1))
 Note that values of p that cause v to exceed 2^64 are where `p > L / 2^63`.
 The same p value produces q = 2^33 * L^(-1/2) in the CA limit.
 L is at most 2^32 by construction (that's the block counter),
-so s' + q <= q * (L+1) would be at most 2^49 which can be ignored
+so s + q <= q * (L+1) would be at most 2^49 which can be ignored
 (ignoring the +1 as also being insignificant).
 -->
 
