@@ -743,8 +743,8 @@ or `k = 256` for AEAD_AES_128_GCM and AEAD_AES_256_GCM respectively.
             we can add n*\sigma/2^128
         - 2nd term (../2^n):
           \sigma*(2B + cn + 2)/2^n = \sigma*(B + 97)/2^127
-          Assuming that B > 96, the dominant term is \sigma*B/2^127.
-          (Else, it's \sigma*cn/2^n = \sigma*96/2^127  (GHASH is c-AXU for c=1.5).)
+          Assuming that B >> 100, the dominant term is \sigma*B/2^127.
+          Else, it's the full \sigma*(2B+cn+3)/2^n = \sigma*(B+98)/2^127.  (GHASH is c-AXU for c=1.5.)
         - 3rd term (../2^2n):  <= 2^-160, negligible.
         - 4th term (../2^(k+n)):  roughly <= (\sigma^2 + 2o(q+v)) / 2^256
           <= 2^-64, negligible.
@@ -769,10 +769,9 @@ This implies the following limit:
 q + v <= p * 2^127 / (L * B)
 ~~~
 
-This assumes that `B` is much larger than 100; that is, each user enciphers
+This assumes that `B` is much larger than 100; that is, any user enciphers
 significantly more than 1600 bytes of data.
-For smaller values of `B`, the value of `B` should be replaced
-by `B+161` for AEAD_AES_128_GCM and by `B+97` for AEAD_AES_256_GCM.
+For smaller values of `B`, the value of `B` should be replaced by `B+98`.
 For AEAD_AES_128_GCM, it further assumes
 `o <= 2^70`, otherwise a term in the order of `o / 2^120` becomes relevant.
 
